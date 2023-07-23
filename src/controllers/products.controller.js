@@ -40,10 +40,10 @@ const updateProduct = async (req, res) => {
     const id = req.params.id;
     const product = await productSchema.findById(id);
     if (product) {
-      product.name = req.params.name;
-      product.description = req.params.description;
-      product.price = req.params.price;
-      product.stock = req.params.stock;
+      product.name = req.body.name;
+      product.description = req.body.description;
+      product.price = req.body.price;
+      product.stock = req.body.stock;
       await product.save();
       res.status(200).json(product);
     } else {
