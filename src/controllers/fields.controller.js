@@ -68,5 +68,19 @@ const updateField = async (req, res) => {
 }
 
 //DELETE
+const deleteField = async (req, res) => {
+    try {
+        const deletedField = await fieldModel.findOneAndDelete({_id: {$eq: req.params.id}}); //$eq: req.params.id means that the id from params must be equa to the field's id
+        if(deletedField) {
+            res.status(200).json({message: "The Field has been Deleted", field: deletedField});
+        }
+        else {
+            res.status(404).send("Field Not Found");
+        }
+    }
+    catch(error) {
+        console.log(error);
+    }
+}
 
-export default {createField, getAllFields, getFieldByID, updateField};
+export default {createField, getAllFields, getFieldByID, updateField, deleteField};
