@@ -47,7 +47,26 @@ const createField = async (req, res) => {
 }
 
 //PUT
+const updateField = async (req, res) => {
+    try {
+        const field = await fieldModel.findById(req.params.id);
+        if(field) {
+            if(req.body.name) field.name = req.body.name;
+            if(req.body.openHour) field.openHour = req.body.openHour;
+            if(req.body.closeHour) field.closeHour = req.body.closeHour;
+            if(req.body.pricePerHour) field.pricePerHour = req.body.pricePerHour;
+            await field.save();
+            res.status(200).json(field);
+        }
+        else {
+            res.status(404).json("Field Not Found");
+        }
+    }
+    catch(error) {
+        console.log(error);
+    }
+}
 
 //DELETE
 
-export default {createField, getAllFields, getFieldByID};
+export default {createField, getAllFields, getFieldByID, updateField};
