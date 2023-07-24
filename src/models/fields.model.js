@@ -3,13 +3,16 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const fieldsSchema = new Schema({
-    idField: {
-        type: mongoose.Types.ObjectId,
-        required: true,
-        index: true,
-        unique: true,
-        immutable: true
-    },
+    //We'll use the auto-generated mongo's identifiers
+    
+    // idField: {
+    //     type: mongoose.Types.ObjectId,
+    //     required: true,
+    //     index: true,
+    //     unique: true,
+    //     immutable: true,
+    //     default: () => new mongoose.Types.ObjectId()
+    // },
     name: {
         type: String,
         required: true,
@@ -22,13 +25,13 @@ const fieldsSchema = new Schema({
         type: Number,
         required: true,
         min: 0,
-        max: 23,
+        max: 23
     },
     closeHour: {
         type: Number,
         required: true,
         min: 0,
-        max: 23,
+        max: 23
     },
     pricePerHour: {
         type: Number,
@@ -39,7 +42,8 @@ const fieldsSchema = new Schema({
     idSportCenter: {
         type: mongoose.Types.ObjectId,
         required: true,
-        immutable: true
+        immutable: true,
+        default: () => new mongoose.Types.ObjectId() //When SportCenter is created we will replace the default value
     }
 }, {versionKey: false});
 

@@ -8,18 +8,16 @@ import fieldModel from "../models/fields.model";
 //POST
 const createField = async (req, res) => {
     try {
-        // const newField = new fieldModel(req.body);
-        //data validation is missing
-        // await newField.save();
         const bodyfield = {
-            idField: ,
             name: req.body.name,
             openHour: req.body.openHour,
             closeHour: req.body.closeHour,
             pricePerHour: req.body.pricePerHour,
-            idSportCenter: 
         }
-        res.status(201).json(req.body.name);
+        const newField = new fieldModel(bodyfield);
+        //data validation is missing
+        await newField.save();
+        res.status(201).json(newField);
     }
     catch(error){
         console.log(error);
