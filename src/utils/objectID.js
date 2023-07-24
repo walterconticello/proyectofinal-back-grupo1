@@ -1,1 +1,1 @@
-//It file will create objectID type objects
+//Trash file

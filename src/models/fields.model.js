@@ -37,7 +37,7 @@ const fieldsSchema = new Schema({
         type: Number,
         required: true,
         min: 0,
-        max: 100000
+        max: 100000 //Max price $100.000
     },
     idSportCenter: {
         type: mongoose.Types.ObjectId,
