@@ -7,11 +7,25 @@ const getAllFields = async (req, res) => {
         res.status(200).json(allFields);
     }
     catch(error) {
-        console.log(error)
+        console.log(error);
     }
 }
 
 //GET by ID
+const getFieldByID = async (req, res) => {
+    try {
+        const field = await fieldModel.findById(req.params.id);
+        if(field) {
+            res.status(200).json(field);
+        }
+        else {
+            res.status(404).json("Field Not Found");
+        }
+    }
+    catch(error) {
+        console.log(error);
+    }
+}
 
 //POST
 const createField = async (req, res) => {
@@ -36,4 +50,4 @@ const createField = async (req, res) => {
 
 //DELETE
 
-export default {createField, getAllFields};
+export default {createField, getAllFields, getFieldByID};
