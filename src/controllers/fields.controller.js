@@ -1,4 +1,5 @@
 import fieldModel from "../models/fields.model";
+import validation from "../helpers/fields.validation";
 
 //GET
 const getAllFields = async (req, res) => {
@@ -36,10 +37,18 @@ const createField = async (req, res) => {
             closeHour: req.body.closeHour,
             pricePerHour: req.body.pricePerHour,
         }
-        //data validation is missing
-        const newField = new fieldModel(bodyfield);
-        await newField.save();
-        res.status(201).json(newField);
+        if(!validation.createFieldDataValidation(bodyfield)){
+            res.status(400).json("Some data is missing");
+        }
+
+        if(validation.nameValidation(bodyfield.name) && validation.hourValidation(bodyfield.openHour) && validation.hourValidation(bodyfield.closeHour) && validation.priceValidation(bodyfield.pricePerHour)){
+            const newField = new fieldModel(bodyfield);
+            await newField.save();
+            res.status(201).json(newField);
+        }
+        else {
+            res.status(400).json("The written data is invalid");
+        }
     }
     catch(error) {
         console.log(error);
@@ -55,9 +64,14 @@ const updateField = async (req, res) => {
             if(req.body.openHour) field.openHour = req.body.openHour;
             if(req.body.closeHour) field.closeHour = req.body.closeHour;
             if(req.body.pricePerHour) field.pricePerHour = req.body.pricePerHour;
-            //data validation is missing
-            await field.save();
-            res.status(200).json(field);
+            
+            if(validation.nameValidation(field.name) && validation.hourValidation(field.openHour) && validation.hourValidation(field.closeHour) && validation.priceValidation(field.pricePerHour)){
+                await field.save();
+                res.status(200).json(field);
+            }
+            else {
+                res.status(400).json("The written data is invalid");
+            }
         }
         else {
             res.status(404).json("Field Not Found");
