@@ -40,6 +40,6 @@ app.use(cors());
 
 
 // Descomentar cuando tengamos las rutas
-// app.use("/api", require("./routes/Rutes"));
+app.use("/api", require("./routes/fields.routes"));
 
 

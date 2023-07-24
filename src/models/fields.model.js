@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const fieldsSchema = new Schema({
     idField: {
-        type: ObjectId,
+        type: mongoose.Types.ObjectId,
         required: true,
         index: true,
         unique: true,
@@ -37,7 +37,7 @@ const fieldsSchema = new Schema({
         max: 100000
     },
     idSportCenter: {
-        type: ObjectId,
+        type: mongoose.Types.ObjectId,
         required: true,
         immutable: true
     }
