@@ -1,7 +1,15 @@
 import fieldModel from "../models/fields.model";
 
 //GET
-
+const getAllFields = async (req, res) => {
+    try {
+        const allFields = await fieldModel.find();
+        res.status(200).json(allFields);
+    }
+    catch(error) {
+        console.log(error)
+    }
+}
 
 //GET by ID
 
@@ -19,7 +27,7 @@ const createField = async (req, res) => {
         await newField.save();
         res.status(201).json(newField);
     }
-    catch(error){
+    catch(error) {
         console.log(error);
     }
 }
@@ -28,4 +36,4 @@ const createField = async (req, res) => {
 
 //DELETE
 
-export default {createField};
+export default {createField, getAllFields};
