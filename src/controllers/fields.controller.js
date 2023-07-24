@@ -14,8 +14,8 @@ const createField = async (req, res) => {
             closeHour: req.body.closeHour,
             pricePerHour: req.body.pricePerHour,
         }
-        const newField = new fieldModel(bodyfield);
         //data validation is missing
+        const newField = new fieldModel(bodyfield);
         await newField.save();
         res.status(201).json(newField);
     }
