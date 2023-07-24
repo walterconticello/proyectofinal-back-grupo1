@@ -55,6 +55,7 @@ const updateField = async (req, res) => {
             if(req.body.openHour) field.openHour = req.body.openHour;
             if(req.body.closeHour) field.closeHour = req.body.closeHour;
             if(req.body.pricePerHour) field.pricePerHour = req.body.pricePerHour;
+            //data validation is missing
             await field.save();
             res.status(200).json(field);
         }
