@@ -9,6 +9,7 @@ const getAllFields = async (req, res) => {
     }
     catch(error) {
         console.log(error);
+        res.status(500).json({message: error.message});
     }
 }
 
@@ -25,6 +26,7 @@ const getFieldByID = async (req, res) => {
     }
     catch(error) {
         console.log(error);
+        res.status(500).json({message: error.message});
     }
 }
 
@@ -40,8 +42,7 @@ const createField = async (req, res) => {
         if(!validation.createFieldDataValidation(bodyfield)){
             res.status(400).json("Some data is missing");
         }
-
-        if(validation.nameValidation(bodyfield.name) && validation.hourValidation(bodyfield.openHour) && validation.hourValidation(bodyfield.closeHour) && validation.priceValidation(bodyfield.pricePerHour)){
+        else if(validation.nameValidation(bodyfield.name) && validation.hourValidation(bodyfield.openHour) && validation.hourValidation(bodyfield.closeHour) && validation.priceValidation(bodyfield.pricePerHour)){
             const newField = new fieldModel(bodyfield);
             await newField.save();
             res.status(201).json(newField);
@@ -52,6 +53,7 @@ const createField = async (req, res) => {
     }
     catch(error) {
         console.log(error);
+        res.status(500).json({message: error.message});
     }
 }
 
@@ -79,6 +81,7 @@ const updateField = async (req, res) => {
     }
     catch(error) {
         console.log(error);
+        res.status(500).json({message: error.message});
     }
 }
 
@@ -95,6 +98,7 @@ const deleteField = async (req, res) => {
     }
     catch(error) {
         console.log(error);
+        res.status(500).json({message: error.message});
     }
 }
 
