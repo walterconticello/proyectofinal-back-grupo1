@@ -4,12 +4,9 @@ import cors from "cors";
 import morgan from "morgan";
 import connectDB from "./database/db";
 
-
 const app = express();
 
-
 app.set("port", process.env.PORT || 5500);
-
 
 const initApp = async () => {
   try {
@@ -32,14 +29,13 @@ initApp();
 
 //MIDDLEWARE
 
-app.use(express.json()); 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(morgan("dev")); 
-app.use(cors()); 
-
+app.use(morgan("dev"));
+app.use(cors());
 
 // Descomentar cuando tengamos las rutas
 app.use("/api", require("./routes/fields.routes"));
 
-
+// app.use("/api", require("./routes/Rutes"));
