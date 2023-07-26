@@ -1,34 +1,21 @@
 import express from "express";
-import "dotenv/config";
+import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
-import connectDb from "./database/db";
 import cookieParser from "cookie-parser";
 import authRoute from "./routes/auth.js"
 import usersRoute from "./routes/users.js"
+import mongoose from "mongoose";
+import connect from "./database/db.js"
 
 const app = express();
+dotenv.config()
 
-app.set("port", process.env.PORT || 5500);
+app.listen(process.env.PORT, () => {
+	connect()
+	console.log("Conectado al backend");
+})
 
-const initApp = async () => {
-  try {
-    await connectDb();
-    app
-      .listen(app.get("port"), () => {
-        console.log(`Backend conectado al puerto: ${app.get("port")}`);
-      })
-      .on("error", (error) => {
-        console.log("ERROR:", error);
-        process.exit(1);
-      });
-  } catch (error) {
-    console.log("ERROR:", error);
-    process.exit(1);
-  }
-};
-
-initApp();
 
 //MIDDLEWARE
 app.use(cookieParser());

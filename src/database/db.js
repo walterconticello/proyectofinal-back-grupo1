@@ -1,18 +1,17 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose"
 
-const uri = process.env.URI;
-const db = process.env.DB;
+export const connect = async (req, res) => {
+	try {
+		await mongoose.connect(process.env.MONGO)
+		console.log("Conectado a la base de datos")
+	} catch (err) {
+		throw err
+	} 
+}
 
-const connectDb = async () => {
-  try {
-    await mongoose.connect(`${uri}/${db}`, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log("DB Connected");
-  } catch (err) {
-    console.log(err);
-  }
-};
+mongoose.connection.on("disconnected", () => {
+	console.log("MongoDB esta desconectado")
+}
+)
 
-module.exports = connectDb;
+export default connect
