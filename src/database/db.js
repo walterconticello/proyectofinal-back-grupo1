@@ -11,8 +11,6 @@ const conectDb = async () => {
             useUnifiedTopology: true
         });
         console.log('Connected!');
-        const allReservation = await ReservationModel.find();
-        console.log(allReservation);
     }catch (error) {
         console.log(error)
     }

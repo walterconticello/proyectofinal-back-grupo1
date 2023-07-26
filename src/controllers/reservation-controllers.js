@@ -23,6 +23,25 @@ const getReservation = async(req ,res) => {
         res.status(400).json({ message: error.message });
       }
     };
-    
 
-module.exports = {postReservation, getReservation};
+const getReservationIdUser = async(req,res) => {
+        const idUser = req.params.id;
+        const reservation = await ReservationModel.findById(idUser);
+        if(reservation){
+            res.json(reservation)
+        }else{
+            res.status(404).json({ message: "Reservation not found" })
+        }
+    };
+
+const getReservationIdReservation = async(req,res) => {
+        const IdReservation = req.params.id;
+        const reservation = await ReservationModel.findById(IdReservation);
+        if(reservation){
+            res.json(reservation)
+        }else{
+            res.status(404).json({ message: "Reservation not found" })
+        }
+    };
+
+module.exports = {postReservation, getReservation , getReservationIdUser};
