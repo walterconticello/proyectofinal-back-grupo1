@@ -2,13 +2,14 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const reservationSchema = new Schema({
-    IdUser : {type: String , require : true} ,
-    IdSportCenter : { type: String, require : true},
-    IdField : { type: String, require : true},
-    IdReservation :{ type: String, require : true},
-    ReservationTime: { type: Date, require : true}
+    IdUser : {type: String , } ,
+    IdSportCenter : { type: String, },
+    IdField : { type: String, },
+    IdReservation :{ type: String, },
+    ReservationTime: { type: String, },
+    ReservationState: {type: String}
 }, {versionKey : false});
 
-const ReservactionModel = mongoose.model("reservation", reservationSchema); //Creamos la coleccion en la base de datos
+const ReservationModel = mongoose.model("reservation", reservationSchema); //Creamos la coleccion en la base de datos
 
-module.exports = ReservactionModel;
+module.exports = ReservationModel;
