@@ -4,6 +4,8 @@ import cors from "cors";
 import morgan from "morgan";
 import connectDb from "./database/db";
 import cookieParser from "cookie-parser";
+import authRoute from "./routes/auth.js"
+import usersRoute from "./routes/users.js"
 
 const app = express();
 
@@ -43,7 +45,7 @@ app.use("/api/users", usersRoute);
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
   const errorMessage = err.message || "Algo esta mal!"
-  return res.status(errorStatus).json ({
+  return res.status(errorStatus).json({
     success: false,
     status: errorStatus,
     message: errorMessage,
@@ -51,5 +53,3 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Descomentar cuando tengamos las rutas
-// app.use("/api", require("./routes/Rutes"));
