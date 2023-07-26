@@ -35,5 +35,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cors());
 
+app.use("/api/auth", authRoute);
+app.use("/api/users", usersRoute);
+
 // Descomentar cuando tengamos las rutas
 // app.use("/api", require("./routes/Rutes"));
