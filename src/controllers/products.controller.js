@@ -52,20 +52,41 @@ const createProduct = async (req, res) => {
 //PUT
 const updateProduct = async (req, res) => {
   try {
-    const id = req.params.id;
-    const product = await productSchema.findById(id);
-    if (product) {
-      product.name = req.body.name;
-      product.description = req.body.description;
-      product.price = req.body.price;
-      product.stock = req.body.stock;
-      await product.save();
-      res.status(200).json(product);
-    } else {
-      res.status(404).json({ error: "product not found" });
+    const { name, description, price, stock } = req.body;
+    const product = await productSchema.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json("Product Not Found");
     }
-  } catch (err) {
-    console.log(err);
+
+    if (name !== undefined) {
+      product.name = name;
+    }
+
+    if (description !== undefined) {
+      product.description = description;
+    }
+
+    if (price !== undefined) {
+      product.price = price;
+    }
+
+    if (stock !== undefined) {
+      product.stock = stock;
+    }
+
+    if (
+      validation.nameValidation(product.name) &&
+      validation.priceValidation(product.price)
+    ) {
+      await product.save();
+      return res.status(200).json(product);
+    } else {
+      return res.status(400).json("The written data is invalid");
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
   }
 };
 
