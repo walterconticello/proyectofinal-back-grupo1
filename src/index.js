@@ -38,5 +38,16 @@ app.use(cors());
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 
+app.use((err, req, res, next) => {
+  const errorStatus = err.status || 500;
+  const errorMessage = err.message || "Algo esta mal!"
+  return res.status(errorStatus).json ({
+    success: false,
+    status: errorStatus,
+    message: errorMessage,
+    stack: err.stack,
+  });
+});
+
 // Descomentar cuando tengamos las rutas
 // app.use("/api", require("./routes/Rutes"));
