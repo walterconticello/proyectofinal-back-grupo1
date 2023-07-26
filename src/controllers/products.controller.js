@@ -1,4 +1,5 @@
 const productSchema = require("../models/product.model");
+import validation from "../helpers/products.validation";
 
 //GET
 
@@ -26,11 +27,25 @@ const getProductById = async (req, res) => {
 //POST
 const createProduct = async (req, res) => {
   try {
-    const product = new productSchema(req.body);
-    await product.save();
-    res.status(201).json(product);
+    const productBody = {
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      stock: req.body.stock,
+    };
+    if (!validation.createProductDataValidation(productBody)) {
+      res.status(400).json({ message: "missing data" });
+    } else if (
+      validation.nameValidation(productBody.name) &&
+      validation.priceValidation(productBody.price)
+    ) {
+      const product = new productSchema(req.body);
+      await product.save();
+      res.status(201).json(product);
+    }
   } catch (err) {
     console.log(err);
+    res.status(500).json({ message: err.message });
   }
 };
 
