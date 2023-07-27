@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const reservationSchema = new Schema({
-    IdReservation :{ type: String, unique : true },
-    IdUser : {type: String , } ,
-    IdSportCenter : { type: String, },
-    IdField : { type: String, },
-    ReservationTime: { type: String, },
+    IdReservation :{ type: String},
+    IdUser : {type: String, require } ,
+    IdSportCenter : { type: String , require },
+    IdField : { type: String, require  },
+    ReservationTime: { type: String, require  },
     ReservationState: {type: String}
 }, {versionKey : false});
 

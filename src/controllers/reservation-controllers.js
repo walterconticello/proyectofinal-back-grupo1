@@ -1,11 +1,18 @@
-
+const { default: mongoose } = require("mongoose");
 const ReservationModel = require("../models/reservation-model");
 
 //CREATE O POST
 
 const postReservation = async (req , res) => {
     try{
-        const reservation = new ReservationModel(req.body);
+        const reservation = new ReservationModel({
+            IdReservation : new mongoose.Types.ObjectId(),
+            IdUser : req.body.IdUser,
+            IdSportCenter : req.body.IdSportCenter ,
+            IdField : req.body.IdField ,
+            ReservationTime: req.body.ReservationTime ,
+            ReservationState: "active" ,
+        });
         await reservation.save();
         res.status(201).json(reservation);
     }catch (error) {
@@ -24,19 +31,9 @@ const getReservation = async(req ,res) => {
       }
     };
 
-const getReservationIdUser = async(req,res) => {
-        const idUser = req.params.id;
-        const reservation = await ReservationModel.findById(idUser);
-        if(reservation){
-            res.json(reservation)
-        }else{
-            res.status(404).json({ message: "Reservation not found" })
-        }
-    };
-
 const getReservationIdReservation = async(req,res) => {
-        const IdReservation = req.params.id;
-        const reservation = await ReservationModel.findById(IdReservation);
+        const id = req.params.id;
+        const reservation = await ReservationModel.findOne({IdReservation : (id)});
         if(reservation){
             res.json(reservation)
         }else{
@@ -44,4 +41,14 @@ const getReservationIdReservation = async(req,res) => {
         }
     };
 
-module.exports = {postReservation, getReservation , getReservationIdUser};
+    const deleteProduct = async (req, res) => {
+        try {
+          const id = req.params.id;
+          await productSchema.findOneAndDelete({ _id: id });
+          res.status(200).json({ message: "product deleted" });
+        } catch (err) {
+          console.log(err);
+        }
+      };
+
+module.exports = {postReservation, getReservation , getReservationIdReservation};

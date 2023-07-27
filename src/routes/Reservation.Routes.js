@@ -10,7 +10,7 @@ router.post("/reservation" , reservationControllers.postReservation);
 // // GET's
 
  router.get("/reservation", reservationControllers.getReservation)
- router.get("/reservation/:id", reservationControllers.getReservationIdUser)
+ router.get("/reservation/:id", reservationControllers.getReservationIdReservation)
 
 
 module.exports = router;
