@@ -10,6 +10,16 @@ const complexSchema = new schema({
         minlenght: 3,
         maxlenght: 30,
     },
+
+    capacity
+    : { type: Number,
+        required: true,
+        trim: true,
+        lowercase: true,
+        minlenght: 3,
+        maxlenght: 30,
+    },
+
         address: { type: String,
             required: true,
             trim: true,
