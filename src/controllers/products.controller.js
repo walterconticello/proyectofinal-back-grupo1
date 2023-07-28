@@ -15,12 +15,17 @@ const getAllProducts = async (req, res) => {
 //GET BY ID
 
 const getProductById = async (req, res) => {
-  const id = req.params.id;
-  const product = await productSchema.findById(id);
-  if (product) {
-    res.json(product);
-  } else {
-    res.status(404).json({ message: "Product not found" });
+  try {
+    const id = req.params.id;
+    const product = await productSchema.findById(id);
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404).json({ message: "Product not found" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: err.message });
   }
 };
 
