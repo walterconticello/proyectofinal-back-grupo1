@@ -6,7 +6,6 @@ const ReservationModel = require("../models/reservation-model");
 const postReservation = async (req , res) => {
     try{
         const reservation = new ReservationModel({
-            IdReservation : new mongoose.Types.ObjectId(),
             IdUser : req.body.IdUser,
             IdSportCenter : req.body.IdSportCenter ,
             IdField : req.body.IdField ,
@@ -32,7 +31,7 @@ const getReservation = async(req ,res) => {
 
 const getReservationIdReservation = async(req,res) => {
         const id = req.params.id;
-        const reservation = await ReservationModel.findOne({IdReservation : (id)});
+        const reservation = await ReservationModel.findById(id);
         if(reservation){
             res.json(reservation)
         }else{
@@ -43,7 +42,7 @@ const getReservationIdReservation = async(req,res) => {
     const deleteIdReservation = async (req, res) => {
         try {
           const id = req.params.id;
-          const reservation = await ReservationModel.findOneAndDelete({ IdReservation: (id) });
+          const reservation = await ReservationModel.findByIdAndDelete(id);
           if(reservation){
             res.status(200).json({ message: "Reservation deleted" });
         }else{
@@ -61,14 +60,14 @@ const putReservation = async (req, res) => {
         const id = req.params.id;
         const reservation = await ReservationModel.findById(id);
         if(reservation){
-            if(req.body.IdField &&  req.body.ReservationTime){
+           // if(req.body.IdField &&  req.body.ReservationTime){
                 reservation.IdField = req.body.IdField;
-                reservation.ReservationTime = req.body.IdField
-                await cancha.save();
+                reservation.ReservationTime = req.body.ReservationTime;
+                await reservation.save();
                 res.status(200).json(reservation);
-            }else{
-                res.status(404).json({ error: "Cancha  o horario no disponible" });
-            }
+            // }else{
+            //     res.status(404).json({ error: "Cancha  o horario no disponible" });
+            // }
         }else{
             res.status(404).json({ error: "Reserva no encontrada" });
         }
@@ -79,4 +78,4 @@ const putReservation = async (req, res) => {
 
 
 
-module.exports = {postReservation, getReservation , getReservationIdReservation, deleteIdReservation};
+module.exports = {postReservation, getReservation , getReservationIdReservation, deleteIdReservation, putReservation};
