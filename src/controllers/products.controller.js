@@ -83,13 +83,15 @@ const updateProduct = async (req, res) => {
     }
 
     if (
-      validation.nameValidation(product.name) &&
-      validation.priceValidation(product.price)
+      validation.nameValidation(productBody.name) &&
+      validation.descriptionValidation(productBody.description) &&
+      validation.priceValidation(productBody.price) &&
+      validation.stockValidation(productBody.stock)
     ) {
       await product.save();
       return res.status(200).json(product);
     } else {
-      return res.status(400).json("The written data is invalid");
+      return res.status(400).json("invalid data");
     }
   } catch (error) {
     console.log(error);
