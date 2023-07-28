@@ -10,8 +10,7 @@ const postReservation = async (req , res) => {
             IdUser : req.body.IdUser,
             IdSportCenter : req.body.IdSportCenter ,
             IdField : req.body.IdField ,
-            ReservationTime: req.body.ReservationTime ,
-            ReservationState: "active" ,
+            ReservationTime: req.body.ReservationTime , 
         });
         await reservation.save();
         res.status(201).json(reservation);
@@ -41,14 +40,43 @@ const getReservationIdReservation = async(req,res) => {
         }
     };
 
-    const deleteProduct = async (req, res) => {
+    const deleteIdReservation = async (req, res) => {
         try {
           const id = req.params.id;
-          await productSchema.findOneAndDelete({ _id: id });
-          res.status(200).json({ message: "product deleted" });
+          const reservation = await ReservationModel.findOneAndDelete({ IdReservation: (id) });
+          if(reservation){
+            res.status(200).json({ message: "Reservation deleted" });
+        }else{
+            res.status(404).json({ message: "Reservation not found" })
+        }
         } catch (err) {
           console.log(err);
         }
       };
 
-module.exports = {postReservation, getReservation , getReservationIdReservation};
+// PUT
+
+const putReservation = async (req, res) => {
+    try{
+        const id = req.params.id;
+        const reservation = await ReservationModel.findById(id);
+        if(reservation){
+            if(req.body.IdField &&  req.body.ReservationTime){
+                reservation.IdField = req.body.IdField;
+                reservation.ReservationTime = req.body.IdField
+                await cancha.save();
+                res.status(200).json(reservation);
+            }else{
+                res.status(404).json({ error: "Cancha  o horario no disponible" });
+            }
+        }else{
+            res.status(404).json({ error: "Reserva no encontrada" });
+        }
+    }catch(error){
+        console.log(error);
+    }
+}
+
+
+
+module.exports = {postReservation, getReservation , getReservationIdReservation, deleteIdReservation};
