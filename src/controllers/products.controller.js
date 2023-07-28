@@ -59,8 +59,8 @@ const createProduct = async (req, res) => {
 //PUT
 const updateProduct = async (req, res) => {
   try {
-    const { name, description, price, stock } = req.body;
     const product = await productSchema.findById(req.params.id);
+    const { name, description, price, stock } = req.body;
 
     if (!product) {
       return res.status(404).json("Product Not Found");
@@ -83,10 +83,10 @@ const updateProduct = async (req, res) => {
     }
 
     if (
-      validation.nameValidation(productBody.name) &&
-      validation.descriptionValidation(productBody.description) &&
-      validation.priceValidation(productBody.price) &&
-      validation.stockValidation(productBody.stock)
+      validation.nameValidation(product.name) &&
+      validation.descriptionValidation(product.description) &&
+      validation.priceValidation(product.price) &&
+      validation.stockValidation(product.stock) // Use product.stock instead of productBody.stock
     ) {
       await product.save();
       return res.status(200).json(product);
