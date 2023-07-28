@@ -42,7 +42,9 @@ const createProduct = async (req, res) => {
       res.status(400).json({ message: "missing data" });
     } else if (
       validation.nameValidation(productBody.name) &&
-      validation.priceValidation(productBody.price)
+      validation.descriptionValidation(productBody.description) &&
+      validation.priceValidation(productBody.price) &&
+      validation.stockValidation(productBody.stock)
     ) {
       const product = new productSchema(productBody);
       await product.save();

@@ -3,6 +3,11 @@ const nameValidation = (name) => {
   return regex.test(name);
 };
 
+const descriptionValidation = (description) => {
+  const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`\n\r]+$/; //allows any character, including newlines and special characters.
+  return regex.test(description);
+};
+
 const priceValidation = (price) => {
   return typeof price === "number" && price >= 0 && price <= 100000;
 };
@@ -22,4 +27,10 @@ const createProductDataValidation = (product) => {
   return true;
 };
 
-export default { nameValidation, priceValidation, createProductDataValidation };
+export default {
+  nameValidation,
+  descriptionValidation,
+  priceValidation,
+  stockValidation,
+  createProductDataValidation,
+};
