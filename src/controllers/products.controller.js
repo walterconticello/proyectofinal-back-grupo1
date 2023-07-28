@@ -39,7 +39,7 @@ const createProduct = async (req, res) => {
       validation.nameValidation(productBody.name) &&
       validation.priceValidation(productBody.price)
     ) {
-      const product = new productSchema(req.body);
+      const product = new productSchema(productBody);
       await product.save();
       res.status(201).json(product);
     }
