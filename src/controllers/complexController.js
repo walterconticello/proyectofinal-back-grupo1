@@ -1,4 +1,4 @@
-import complexModel from "../model/complexModel";
+import complexModel from "../models/complexModel";
 import validation from "../helpers/complexValidation";  
 //Get 
 
@@ -93,4 +93,3 @@ const deleteComplex = async (req, res) => {
 
 export default { getAllComplex, getComplexById, postComplex, putComplex, deleteComplex };
 
-// Path: src\validation\complexValidation.js
