@@ -1,12 +1,12 @@
-import { Express } from "express";
-import { ComplexController } from "../controllers/complexController";
+import express from "express";
+import complexController from "../controllers/complexController";
 
 const router= express.Router(); 
 
-router.get("/", ComplexController.getComplex);
-router.post("/", ComplexController.postComplex);
-router.put("/:id", ComplexController.putComplex);
-router.delete("/:id", ComplexController.deleteComplex);
+router.get("/complex", complexController.getComplex);
+router.post("/complex", complexController.postComplex);
+router.put("/complex/:id", complexController.putComplex);
+router.delete("/complex/:id", complexController.deleteComplex);
 
 module.exports = router;
 //

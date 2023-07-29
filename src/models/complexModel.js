@@ -38,7 +38,8 @@ const complexSchema = new schema({
 
 const complexModel = mongoose.model("complex", complexSchema);
 
-export default mongoose.model("complex", complexSchema);
+export default complexModel;
+
 
 
 

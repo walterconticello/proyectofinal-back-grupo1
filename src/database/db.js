@@ -1,17 +1,16 @@
 import mongoose from "mongoose";
 
-export const connect = async () => {
-    try {
-        await mongoose.connect("mongodb://localhost:27017/complex", {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-        console.log("Database connected");
-    } catch (error) {
-        console.log(error.message);
-    }
-    mongoose.connection.on("disconnected", () => {
-        console.log("Database disconnected");
-    });
-};
+const URI = process.env.URI;
+const DB = process.env.DB; 
 
+const connectDB = async () => {
+    try {
+        await mongoose.connect(`${URI}/${DB}`, { useNewUrlParser: true, useUnifiedTopology: true });
+        console.log("Connected to database: " + DB);
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+export default connectDB;
