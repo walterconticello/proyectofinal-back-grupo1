@@ -37,6 +37,7 @@ const createProduct = async (req, res) => {
       description: req.body.description,
       price: req.body.price,
       stock: req.body.stock,
+      categories: req.body.categories,
     };
     if (!validation.createProductDataValidation(productBody)) {
       res.status(400).json({ message: "missing data" });
@@ -44,7 +45,8 @@ const createProduct = async (req, res) => {
       validation.nameValidation(productBody.name) &&
       validation.descriptionValidation(productBody.description) &&
       validation.priceValidation(productBody.price) &&
-      validation.stockValidation(productBody.stock)
+      validation.stockValidation(productBody.stock) &&
+      validation.categoriesValidation(productBody.categories)
     ) {
       const product = new productSchema(productBody);
       await product.save();
