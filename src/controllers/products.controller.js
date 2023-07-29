@@ -86,7 +86,7 @@ const updateProduct = async (req, res) => {
       validation.nameValidation(product.name) &&
       validation.descriptionValidation(product.description) &&
       validation.priceValidation(product.price) &&
-      validation.stockValidation(product.stock) // Use product.stock instead of productBody.stock
+      validation.stockValidation(product.stock)
     ) {
       await product.save();
       return res.status(200).json(product);
