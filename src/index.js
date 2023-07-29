@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import authRoute from "./routes/auth.js"
-import usersRoute from "./routes/users.js"
+import authRoute from "./routes/auth.route.js"
+import usersRoute from "./routes/users.route.js"
 import mongoose from "mongoose";
 import connect from "./database/db.js"
 
