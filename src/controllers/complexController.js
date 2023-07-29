@@ -1,6 +1,5 @@
-import { validateBoolOption } from "babel-preset-env/lib/normalize-options.js";
-import complexModel from "../model/complexModel.js";
-import validation from "../helpers/complexValidation.js";  
+import complexModel from "../model/complexModel";
+import validation from "../helpers/complexValidation";  
 //Get 
 
 const getAllComplex = async (req, res) => {

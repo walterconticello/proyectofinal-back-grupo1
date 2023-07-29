@@ -1,23 +1,23 @@
-import mongoose, { Mongoose, version } from "mongoose";
+import mongoose from "mongoose";
 
-const {schema}=mongoose;
+const { Schema } = mongoose;
 
-const complexSchema = new schema({   
+const complexSchema = new Schema({   
     name: { type: String, 
         required: true,
         trim: true,
         lowercase: true,
-        minlenght: 3,
-        maxlenght: 30,
+        minlength: 3,
+        
     },
 
-    capacity
-    : { type: Number,
+    capacity: { 
+        type: Number,  
         required: true,
         trim: true,
         lowercase: true,
-        minlenght: 3,
-        maxlenght: 30,
+        min: 1,
+        max: 100000,
     },
 
         address: { type: String,
@@ -28,10 +28,10 @@ const complexSchema = new schema({
             maxlenght: 30,
         },
 
-    idComplex: { type: Mongoose.types.ObjectId,
+    idComplex: { type: mongoose.Types.ObjectId,
         required: true,
         inmutable: true,
-        default:new Mongoose.types.ObjectId(),
+        default:new mongoose.Types.ObjectId(),
     }
 }
 , {versionKey: false});
