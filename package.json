@@ -1,15 +1,23 @@
 {
-  "name": "canchitasapp",
+  "name": "backgrupo1",
   "version": "1.0.0",
-  "description": "aplicacion para gestion y alquileres de canchas",
+  "description": "Backend del proyecto de canchas",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "babel-node src/index.js",
     "dev": "nodemon --exec babel-node src/index.js"
   },
-  "keywords": [],
-  "author": "Walter Conticello",
+  "keywords": [
+    "request",
+    "response",
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE"
+  ],
+  "author": "Grupo 1 (46i) - RollingCode",
   "license": "ISC",
   "dependencies": {
     "babel-cli": "^6.26.0",
