@@ -25,6 +25,10 @@ const productSchema = new Schema(
       required: true,
       min: 0,
     },
+    categories: {
+      type: [String],
+      required: true,
+    },
   },
   { versionKey: false }
 );
