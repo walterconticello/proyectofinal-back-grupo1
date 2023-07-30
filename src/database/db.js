@@ -1,3 +1,4 @@
+
 import mongoose from "mongoose";
 
 const URI = process.env.URI; //Getting URI from .env
@@ -14,3 +15,4 @@ const connectDB = async () => {
 }
 
 export default connectDB;
+
