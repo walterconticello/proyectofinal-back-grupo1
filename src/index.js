@@ -2,19 +2,40 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
+
 import cookieParser from "cookie-parser";
 import authRoute from "./routes/auth.route.js"
 import usersRoute from "./routes/users.route.js"
 import mongoose from "mongoose";
-import connect from "./database/db.js"
+
+import connectDB from "./database/db";
+
 
 const app = express();
 dotenv.config()
 
-app.listen(process.env.PORT, () => {
-	connect()
-	console.log("Conectado al backend");
-})
+
+
+app.set("port", process.env.PORT || 5500);
+
+const initApp = async () => {
+  try {
+    await connectDB();
+
+    app.listen(app.get("port"), () => {
+    console.log(`Backend conectado al puerto: ${app.get("port")}`);
+  })
+  .on("error", (error) => {
+    console.log("ERROR:", error);
+    process.exit(1);
+  });
+  } catch (error) {
+    console.log("ERROR:", error);
+    process.exit(1);
+  }
+};
+
+initApp();
 
 
 //MIDDLEWARE
@@ -39,4 +60,9 @@ app.use((err, req, res, next) => {
     stack: err.stack,
   });
 });
+
+// Descomentar cuando tengamos las rutas
+app.use("/api", require("./routes/fields.routes"));
+
+// app.use("/api", require("./routes/Rutes"));
 

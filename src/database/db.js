@@ -1,17 +1,18 @@
-import mongoose from "mongoose"
 
-export const connect = async (req, res) => {
-	try {
-		await mongoose.connect(process.env.MONGO)
-		console.log("Conectado a la base de datos")
-	} catch (err) {
-		throw err
-	} 
+import mongoose from "mongoose";
+
+const URI = process.env.URI; //Getting URI from .env
+const DB = process.env.DB; //Getting database name from .env
+
+const connectDB = async () => {
+    try {
+        await mongoose.connect(`${URI}/${DB}`, { useNewUrlParser: true, useUnifiedTopology: true });
+        console.log("Connected to database: " + DB);
+    }
+    catch (error) {
+        console.log(error);
+    }
 }
 
-mongoose.connection.on("disconnected", () => {
-	console.log("MongoDB esta desconectado")
-}
-)
+export default connectDB;
 
-export default connect
