@@ -65,4 +65,6 @@ app.use((err, req, res, next) => {
 app.use("/api", require("./routes/fields.routes"));
 
 // app.use("/api", require("./routes/Rutes"));
+app.use("/api", require("./routes/products.route"));
+
 
