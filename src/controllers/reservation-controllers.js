@@ -1,10 +1,21 @@
 const { default: mongoose } = require("mongoose");
 const ReservationModel = require("../models/reservation-model");
-
+const UserModel = require("../models/User.model");
+import { getUser } from "./user.controller";
 //CREATE O POST
 
 const postReservation = async (req , res) => {
     try{
+        const id = req.body.IdUser
+        console.log(id);
+        const user = getUser(id)
+        const IDUser = await UserModel.findOne({_id : (req.body.IdUser)});
+        console.log(IDUser + "4");
+        console.log(user , "1");
+        if(!user){
+            res.status(400).json({ message: "user no encontrado" });
+            return;
+        }
         const reservation = new ReservationModel({
             IdUser : req.body.IdUser,
             IdSportCenter : req.body.IdSportCenter ,
