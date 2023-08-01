@@ -48,6 +48,22 @@ const getCommentsByUser = async (req, res) => {
 }
 
 //GET by SportCenter
+const getCommentsBySportCenter = async (req, res) => {
+    try {
+        const comments = await commentModel.find({sportCenterId: req.params.sportCenter});
+        if(comments){
+            res.status(200).json(comments);
+        }
+        else {
+            res.status(404).json("There are no comments");
+        }
+    }
+    catch(error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
 //POST
 const createComment = async (req, res) => {
     try {
@@ -78,4 +94,4 @@ const createComment = async (req, res) => {
 //PUT
 //DELETE
 
-export default {getAllComments, getByID, createComment, getCommentsByUser};
+export default {getAllComments, getByID, createComment, getCommentsByUser, getCommentsBySportCenter};
