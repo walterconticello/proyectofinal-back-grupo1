@@ -50,7 +50,7 @@ const getCommentsByUser = async (req, res) => {
 //GET by SportCenter
 const getCommentsBySportCenter = async (req, res) => {
     try {
-        const comments = await commentModel.find({sportCenterId: req.params.sportCenter});
+        const comments = await commentModel.find({sportCenterId: req.params.sportcenter});
         if(comments){
             res.status(200).json(comments);
         }
