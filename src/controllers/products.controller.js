@@ -1,5 +1,5 @@
-const productSchema = require("../models/product.model");
-import validation from "../helpers/products.validation";
+import productSchema from "../models/product.model.js";
+import validation from "../helpers/products.validation.js";
 
 //GET
 
@@ -118,7 +118,7 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-module.exports = {
+export default {
   getAllProducts,
   getProductById,
   createProduct,

@@ -1,10 +1,13 @@
 import User from "../models/User.model.js";
+
 import bcrypt from "bcryptjs";
-import { createError } from "../utils/error.js";
+
 import jwt from "jsonwebtoken";
+
+import { createError } from "../utils/error.js";
 import { verifyToken } from "../utils/verifyToken.js";
 
-const register = async (req, res, next) => {
+export const register = async (req, res, next) => {
   try {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
@@ -22,7 +25,7 @@ const register = async (req, res, next) => {
   }
 };
 
-const login = async (req, res, next) => {
+export const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ username: req.body.username });
     if (!user) return next(createError(404, "Usuario no encontrado!"));
@@ -49,9 +52,4 @@ const login = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
-
-module.exports = {
-  register,
-  login,
 };
