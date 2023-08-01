@@ -32,6 +32,22 @@ const getByID = async (req, res) => {
 //GET by User
 //GET by SportCenter
 //POST
+const createComment = async (req, res) => {
+    try {
+        const bodyComment = {
+            text: req.body.text,
+            rating: req.body.rating,
+            // sportCenterId: ,
+            // userId: 
+        };
+        
+    }
+    catch(error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
 //PUT
 //DELETE
 
