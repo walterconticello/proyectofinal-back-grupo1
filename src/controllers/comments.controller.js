@@ -118,5 +118,20 @@ const updateComment = async (req, res) => {
 }
 
 //DELETE
+const deleteComment = async (req, res) => {
+    try {
+        const deletedComment = await commentModel.findOneAndDelete({ _id: { $eq: req.params.id }});
+        if(deletedComment) {
+            res.status(200).json({ message: "The Comment has been deleted", comment: deletedComment});
+        }
+        else {
+            res.status(404).json("Comment Not Found");
+        }
+    }
+    catch(error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+}
 
-export default {getAllComments, getByID, createComment, getCommentsByUser, getCommentsBySportCenter, updateComment};
+export default {getAllComments, getByID, createComment, getCommentsByUser, getCommentsBySportCenter, updateComment, deleteComment};
