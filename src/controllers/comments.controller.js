@@ -1,4 +1,4 @@
-import commentModel from "../models/comments.model";
+import commentModel from "../models/comments.model.js";
 
 //GET
 const getAllComments = async (req, res) => {
@@ -18,6 +18,4 @@ const getAllComments = async (req, res) => {
 //PUT
 //DELETE
 
-export default {
-    getAllComments
-};
+export default {getAllComments};
