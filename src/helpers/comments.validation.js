@@ -1,5 +1,5 @@
 const textValidation = (text) => {
-    return (typeof text === 'string') && text.length >= 5 && text.length <= 500;
+    return (typeof text === 'string') && text.trim().length >= 5 && text.trim().length <= 500;
 } //We could use a test() method of a regex instead of the typeof
 
 const ratingValidation = (rating) => {
