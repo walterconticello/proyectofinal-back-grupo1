@@ -39,5 +39,6 @@ app.use(cors());
 // Descomentar cuando tengamos las rutas
 // app.use("/api", require("./routes/Rutes"));
  app.use("/api", require("./routes/Reservation.Routes"));
+ app.use("/api", require("./routes/User.Routes"));
 
 

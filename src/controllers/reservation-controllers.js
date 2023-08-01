@@ -1,32 +1,39 @@
 const { default: mongoose } = require("mongoose");
 const ReservationModel = require("../models/reservation-model");
-const UserModel = require("../models/User.model");
-import { getUser } from "./user.controller";
+const UserModel = require("../models/user.model");
+import isValidObjectId from "../helpers/reservation.validation";
 //CREATE O POST
 
 const postReservation = async (req , res) => {
-    try{
-        const id = req.body.IdUser
-        console.log(id);
-        const user = getUser(id)
-        const IDUser = await UserModel.findOne({_id : (req.body.IdUser)});
-        console.log(IDUser + "4");
-        console.log(user , "1");
-        if(!user){
-            res.status(400).json({ message: "user no encontrado" });
-            return;
+    try {
+        if (!isValidObjectId(req.body.IdUser) || !isValidObjectId(req.body.IdSportCenter) || !isValidObjectId (req.body.IdField) ){
+            return res.status(400).json({ message: "El id proporcionado no es válido" });
         }
-        const reservation = new ReservationModel({
-            IdUser : req.body.IdUser,
-            IdSportCenter : req.body.IdSportCenter ,
-            IdField : req.body.IdField ,
-            ReservationTime: req.body.ReservationTime , 
-        });
-        await reservation.save();
-        res.status(201).json(reservation);
-    }catch (error) {
-        console.log(error);
-    }
+      
+        const IdUser = await UserModel.findById(req.body.IdUser);
+        // const IdSportCenter = await X.findById(req.body.IdSportCenter); Hay que remplazar X por el modelo de complejo
+        // const IdField = await X.findById(req.body.IdField);
+
+        if (!IdUser) {
+          return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+      
+        if (req.body.IdUser === IdUser._id.toString()) {
+          const reservation = new ReservationModel({
+            IdUser: req.body.IdUser,
+            IdSportCenter: req.body.IdSportCenter,
+            IdField: req.body.IdField,
+            ReservationTime: req.body.ReservationTime,
+          });
+          await reservation.save();
+          res.status(201).json(reservation);
+        } else {
+          res.status(400).json({ message: "Usuario no encontrado" });
+        }
+      } catch (error) {
+        res.status(500).json({ message: "Error interno del servidor" });
+      }
+      
 }
 
 //GET's
