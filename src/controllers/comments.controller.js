@@ -11,11 +11,28 @@ const getAllComments = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
 //GET by ID
+const getByID = async (req, res) => {
+    try {
+        const comment = await commentModel.findById(req.params.id);
+        if(comment){
+            res.status(200).json(comment);
+        }
+        else {
+            res.status(404).json("Comment not found");
+        }
+    }
+    catch(error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
 //GET by User
 //GET by SportCenter
 //POST
 //PUT
 //DELETE
 
-export default {getAllComments};
+export default {getAllComments, getByID};
