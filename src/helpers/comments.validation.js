@@ -6,4 +6,15 @@ const ratingValidation = (rating) => {
     return (typeof rating === 'number') && (rating >= 0) && (rating <= 5);
 }
 
-export default {textValidation};
+const createCommentDataValidation = (comment) => {
+    const keys = Object.keys(comment);
+    for (let i = 0; i < keys.length; i++) {
+        const value = comment[keys[i]];
+        if (value === undefined){
+            return false;
+        }
+    }
+    return true;
+}
+
+export default {textValidation, ratingValidation, createCommentDataValidation};

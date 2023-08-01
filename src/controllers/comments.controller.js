@@ -1,4 +1,5 @@
 import commentModel from "../models/comments.model.js";
+import commentsValidation from "../helpers/comments.validation.js";
 
 //GET
 const getAllComments = async (req, res) => {
@@ -40,7 +41,6 @@ const createComment = async (req, res) => {
             // sportCenterId: ,
             // userId: 
         };
-        
     }
     catch(error) {
         console.log(error);
