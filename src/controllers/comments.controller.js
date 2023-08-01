@@ -1,5 +1,5 @@
 import commentModel from "../models/comments.model.js";
-import commentsValidation from "../helpers/comments.validation.js";
+import validation from "../helpers/comments.validation.js";
 
 //GET
 const getAllComments = async (req, res) => {
@@ -41,6 +41,17 @@ const createComment = async (req, res) => {
             // sportCenterId: ,
             // userId: 
         };
+        if(!validation.createCommentDataValidation(bodyComment)){
+            res.status(400).json("Some data is missing");
+        }
+        else if(validation.ratingValidation(bodyComment.rating) && validation.textValidation(bodyComment.text)){
+            const newComment = new commentModel(bodyComment);
+            await newComment.save();
+            res.status(201).json(newComment);
+        }
+        else {
+            res.status(400).json("The written data is invalid");
+        }
     }
     catch(error) {
         console.log(error);
@@ -51,4 +62,4 @@ const createComment = async (req, res) => {
 //PUT
 //DELETE
 
-export default {getAllComments, getByID};
+export default {getAllComments, getByID, createComment};
