@@ -92,6 +92,31 @@ const createComment = async (req, res) => {
 }
 
 //PUT
+const updateComment = async (req, res) => {
+    try {
+        const comment = await commentModel.findById(req.params.id);
+        if(comment){
+            if(req.body.text) comment.text = req.body.text;
+            if(req.body.rating) comment.rating = req.body.rating;
+
+            if(validation.ratingValidation(comment.rating) && validation.textValidation(comment.text)){
+                await comment.save();
+                res.status(200).json(comment);
+            }
+            else {
+                res.status(400).json("The written data is invalid");
+            }
+        }
+        else {
+            res.status(404).json("Comment Not Found");
+        }
+    }
+    catch(error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
 //DELETE
 
-export default {getAllComments, getByID, createComment, getCommentsByUser, getCommentsBySportCenter};
+export default {getAllComments, getByID, createComment, getCommentsByUser, getCommentsBySportCenter, updateComment};
