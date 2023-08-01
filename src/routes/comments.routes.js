@@ -8,5 +8,6 @@ router.get("/comments/:id", commentsController.getByID);
 router.get("/comments/user/:user", commentsController.getCommentsByUser);
 router.get("/comments/sportcenter/:sportcenter", commentsController.getCommentsBySportCenter);
 router.post("/comments", commentsController.createComment);
+router.put("/comments/:id", commentsController.updateComment);
 
 export default router;
