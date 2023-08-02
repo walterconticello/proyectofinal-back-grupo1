@@ -1,19 +1,17 @@
-const mongoose = require('mongoose');
-const ReservationModel = require('../models/reservation-model');
+import mongoose from "mongoose";
+const URI = process.env.URI; //Getting URI from .env
+const DB = process.env.DB; //Getting database name from .env
 
-const uri = process.env.PORTDB;
-const db = process.env.DB;
+const connectDB = async () => {
+  try {
+    await mongoose.connect(`${URI}/${DB}`, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Connected to database: " + DB);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-const conectDb = async () => {
-    try{
-        mongoose.connect(`${uri}/${db}`, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
-        console.log('Connected!');
-    }catch (error) {
-        console.log(error)
-    }
-}
-
-module.exports = conectDb;
+export default connectDB;

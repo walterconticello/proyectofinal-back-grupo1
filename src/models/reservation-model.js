@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const reservationSchema = new Schema({
@@ -8,6 +8,4 @@ const reservationSchema = new Schema({
     ReservationTime: { type: String, require  }
 }, {versionKey : false});
 
-const ReservationModel = mongoose.model("reservations", reservationSchema); //Creamos la coleccion en la base de datos
-
-module.exports = ReservationModel;
+export default ReservationModel = mongoose.model("reservations", reservationSchema); //Creamos la coleccion en la base de datos

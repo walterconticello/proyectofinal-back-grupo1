@@ -1,5 +1,4 @@
-const { default: mongoose } = require("mongoose");
-const ReservationModel = require("../models/reservation-model");
+import {ReservationModel} from "../models/reservation-model";
 // const UserModel = require("../models/user.model"); aqui iria el modelo de usuarios
 import isValidObjectId from "../helpers/reservation.validation";
 //CREATE O POST
