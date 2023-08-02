@@ -1,6 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const ReservationModel = require("../models/reservation-model");
-const UserModel = require("../models/user.model");
+// const UserModel = require("../models/user.model"); aqui iria el modelo de usuarios
 import isValidObjectId from "../helpers/reservation.validation";
 //CREATE O POST
 
@@ -12,13 +12,16 @@ const postReservation = async (req , res) => {
       
         const IdUser = await UserModel.findById(req.body.IdUser);
         // const IdSportCenter = await X.findById(req.body.IdSportCenter); Hay que remplazar X por el modelo de complejo
-        // const IdField = await X.findById(req.body.IdField);
+        // const IdField = await X.findById(req.body.IdField); // Remplazar por el de Canchas
+        // const ReservationTime = awat x.findOnet(req.body.ReservationTime) este buscara que no existan horarios coincidentes
+
 
         if (!IdUser) {
           return res.status(404).json({ message: "Usuario no encontrado" });
         }
       
         if (req.body.IdUser === IdUser._id.toString()) {
+            //va otro IF y luego otro
           const reservation = new ReservationModel({
             IdUser: req.body.IdUser,
             IdSportCenter: req.body.IdSportCenter,
