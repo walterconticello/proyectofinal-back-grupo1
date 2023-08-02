@@ -1,6 +1,6 @@
 const nameValidation = (name) => {
     const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
-    return regex.test(name);
+    return regex.test(name) && name.length >= 3 && name.length <= 50;
 }
 
 const hourValidation = (hour) => {
