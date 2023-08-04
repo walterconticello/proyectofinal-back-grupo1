@@ -9,4 +9,4 @@ router.get("/complex/:id", complexController.getComplexById);
 router.put("/complex/:id", complexController.putComplex);
 router.delete("/complex/:id", complexController.deleteComplex);
 
-module.exports = router;
+export default router;
