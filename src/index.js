@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv/config.js";
 import cors from "cors";
 import morgan from "morgan";
+
 import cookieParser from "cookie-parser";
 import authRoute from "./routes/auth.route.js";
 import fieldsRoute from "./routes/fields.routes.js";
@@ -11,6 +12,7 @@ import commentsRoute from "./routes/comments.routes.js";
 import connectDB from "./database/db.js";
 
 // dotenv.config();
+
 const app = express();
 
 app.set("port", process.env.PORT || 5500);
@@ -18,7 +20,6 @@ app.set("port", process.env.PORT || 5500);
 const initApp = async () => {
   try {
     await connectDB();
-
     app
       .listen(app.get("port"), () => {
         console.log(`Backend conectado al puerto: ${app.get("port")}`);
@@ -44,6 +45,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cors());
 
+app.use("/api", require("./routes/Reservation.Routes"));
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 app.use("/api", fieldsRoute);
@@ -60,3 +62,4 @@ app.use((err, req, res, next) => {
     stack: err.stack,
   });
 });
+
