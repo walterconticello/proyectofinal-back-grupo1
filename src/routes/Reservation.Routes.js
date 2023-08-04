@@ -1,21 +1,12 @@
-const express = require('express');
+import express from "express";
+import reservationControllers from '../controllers/reservation-controllers.js';
+
 const router = express.Router();
 
-const reservationControllers = require('../controllers/reservation-controllers');
-
- //Create o POST
-
 router.post("/reservation" , reservationControllers.postReservation);
+router.get("/reservation", reservationControllers.getReservation);
+router.get("/reservation/:id", reservationControllers.getReservationIdReservation);
+router.delete("/reservation/:id", reservationControllers.deleteIdReservation);
+router.put("/reservation/:id",reservationControllers.putReservation);
 
-// GET's
-
- router.get("/reservation", reservationControllers.getReservation)
- router.get("/reservation/:id", reservationControllers.getReservationIdReservation)
-
- //Delete
- router.delete("/reservation/:id", reservationControllers.deleteIdReservation)
-
-//PUT 
-router.put("/reservation/:id",reservationControllers.putReservation)
-
-module.exports = router;
+export default router;

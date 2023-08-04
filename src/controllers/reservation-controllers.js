@@ -97,5 +97,10 @@ const putReservation = async (req, res) => {
 }
 
 
-
-module.exports = {postReservation, getReservation , getReservationIdReservation, deleteIdReservation, putReservation};
+export default {
+  postReservation, 
+  getReservation , 
+  getReservationIdReservation, 
+  deleteIdReservation, 
+  putReservation
+};

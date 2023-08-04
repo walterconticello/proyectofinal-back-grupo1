@@ -8,6 +8,7 @@ import fieldsRoute from "./routes/fields.routes.js";
 import productsRoute from "./routes/products.route.js";
 import usersRoute from "./routes/users.route.js";
 import commentsRoute from "./routes/comments.routes.js";
+import reservationroutes from "./routes/reservation.routes.js"
 import connectDB from "./database/db.js";
 
 // dotenv.config();
@@ -56,8 +57,8 @@ app.use("/api/users", usersRoute);
 app.use("/api", fieldsRoute);
 app.use("/api", productsRoute);
 app.use("/api", commentsRoute);
-app.use("/api", require("./routes/complexRouter"));
-app.use("/api", require("./routes/Reservation.Routes"));
+app.use("/api", reservationroutes);
+app.use("/api", require("./routes/reservation.routes.js"));
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
