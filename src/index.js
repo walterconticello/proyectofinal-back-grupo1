@@ -1,8 +1,17 @@
 import express from "express";
-import "dotenv/config";
+import dotenv from "dotenv/config.js";
 import cors from "cors";
 import morgan from "morgan";
-import connectDB from "./database/db";
+import cookieParser from "cookie-parser";
+import authRoute from "./routes/auth.route.js";
+import fieldsRoute from "./routes/fields.routes.js";
+import productsRoute from "./routes/products.route.js";
+import usersRoute from "./routes/users.route.js";
+import commentsRoute from "./routes/comments.routes.js";
+import connectDB from "./database/db.js";
+
+// dotenv.config();
+
 
 const app = express();
 
@@ -28,6 +37,7 @@ const initApp = async () => {
 initApp();
 
 //MIDDLEWARE
+app.use(cookieParser());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -35,7 +45,28 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cors());
 
-app.use("/api", require("./routes/complexRouter"));
 
-// Descomentar cuando tengamos las rutas
-// app.use("/api", require("./routes/Rutes"));
+
+
+
+
+
+app.use("/api/auth", authRoute);
+app.use("/api/users", usersRoute);
+app.use("/api", fieldsRoute);
+app.use("/api", productsRoute);
+app.use("/api", commentsRoute);
+app.use("/api", require("./routes/complexRouter"));
+app.use("/api", require("./routes/Reservation.Routes"));
+
+app.use((err, req, res, next) => {
+  const errorStatus = err.status || 500;
+  const errorMessage = err.message || "Algo esta mal!";
+  return res.status(errorStatus).json({
+    success: false,
+    status: errorStatus,
+    message: errorMessage,
+    stack: err.stack,
+  });
+});
+
