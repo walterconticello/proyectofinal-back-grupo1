@@ -1,5 +1,5 @@
-import complexModel from "../models/complexModel";
-import validation from "../helpers/complexValidation";
+import complexModel from "../models/complexModel.js";
+import validation from "../helpers/complexValidation.js";
 //Get
 
 const getAllComplex = async (req, res) => {
