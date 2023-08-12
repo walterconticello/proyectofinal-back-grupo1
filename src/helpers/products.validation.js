@@ -1,11 +1,15 @@
 const nameValidation = (name) => {
   const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
-  return regex.test(name);
+  return regex.test(name) && name.length >= 3 && name.length <= 45;
 };
 
 const descriptionValidation = (description) => {
   const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`\n\r]+$/;
-  return regex.test(description);
+  return (
+    regex.test(description) &&
+    description.length >= 5 &&
+    description.length <= 255
+  );
 };
 
 const categoriesValidation = (categories) => {
