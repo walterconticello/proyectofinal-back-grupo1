@@ -145,7 +145,12 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const id = req.params.id;
-    await productSchema.findOneAndDelete({ _id: id });
+    const deletedProduct = await productSchema.findOneAndDelete({ _id: id });
+
+    if (!deletedProduct) {
+      return res.status(404).json({ message: "product not found" });
+    }
+
     res.status(200).json({ message: "product deleted" });
   } catch (err) {
     console.log(err);
