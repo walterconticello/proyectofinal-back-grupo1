@@ -6,14 +6,14 @@ const productSchema = new Schema(
     name: {
       type: "string",
       required: true,
-      min: 3,
-      max: 45,
+      minLength: 3,
+      maxLength: 45,
     },
     description: {
       type: "string",
       required: true,
-      min: 5,
-      max: 255,
+      minLength: 5,
+      maxLength: 255,
     },
     price: {
       type: "number",
