@@ -1,6 +1,7 @@
 import productSchema from "../models/product.model.js";
 import validation from "../helpers/products.validation.js";
 import { uploadImage } from "../utils/cloudinary.js";
+import fs from "fs-extra";
 //GET
 
 const getAllProducts = async (req, res) => {
@@ -37,6 +38,7 @@ const createProduct = async (req, res) => {
 
     if (req.files && req.files.image) {
       const result = await uploadImage(req.files.image.tempFilePath);
+      await fs.remove(req.files.image.tempFilePath);
       image = {
         url: result.secure_url,
         public_id: result.public_id,
