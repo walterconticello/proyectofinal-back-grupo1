@@ -1,6 +1,6 @@
 import productSchema from "../models/product.model.js";
 import validation from "../helpers/products.validation.js";
-
+import { uploadImage } from "../utils/cloudinary.js";
 //GET
 
 const getAllProducts = async (req, res) => {
@@ -32,25 +32,58 @@ const getProductById = async (req, res) => {
 //POST
 const createProduct = async (req, res) => {
   try {
-    const productBody = {
-      name: req.body.name,
-      description: req.body.description,
-      price: req.body.price,
-      stock: req.body.stock,
-      categories: req.body.categories,
+    const { name, description, price, stock, categories } = req.body;
+    let image;
+
+    if (req.files && req.files.image) {
+      const result = await uploadImage(req.files.image.tempFilePath);
+      image = {
+        url: result.secure_url,
+        public_id: result.public_id,
+      };
+    }
+
+    const productData = {
+      name,
+      description,
+      price,
+      stock,
+      categories,
+      image,
     };
-    if (!validation.createProductDataValidation(productBody)) {
-      res.status(400).json({ message: "missing data" });
-    } else if (
-      validation.nameValidation(productBody.name) &&
-      validation.descriptionValidation(productBody.description) &&
-      validation.priceValidation(productBody.price) &&
-      validation.stockValidation(productBody.stock) &&
-      validation.categoriesValidation(productBody.categories)
+
+    if (!validation.createProductDataValidation(productData)) {
+      return res.status(400).json({ message: "missing data" });
+    }
+
+    if (
+      validation.nameValidation(name) &&
+      validation.descriptionValidation(description) &&
+      validation.priceValidation(price) &&
+      validation.stockValidation(stock) &&
+      validation.categoriesValidation(categories)
     ) {
-      const product = new productSchema(productBody);
+      const product = new productSchema(productData);
       await product.save();
-      res.status(201).json(product);
+      return res.status(201).json(product);
+    } else {
+      let invalidFields = [];
+      if (!validation.nameValidation(name)) {
+        invalidFields.push("name");
+      }
+      if (!validation.descriptionValidation(description)) {
+        invalidFields.push("description");
+      }
+      if (!validation.priceValidation(price)) {
+        invalidFields.push("price");
+      }
+      if (!validation.stockValidation(stock)) {
+        invalidFields.push("stock");
+      }
+      if (!validation.categoriesValidation(categories)) {
+        invalidFields.push("categories");
+      }
+      return res.status(400).json({ message: "invalid data", invalidFields });
     }
   } catch (err) {
     console.log(err);

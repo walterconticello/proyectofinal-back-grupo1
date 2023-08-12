@@ -30,12 +30,11 @@ const productSchema = new Schema(
       required: true,
     },
     image: {
-      url: String,
-      public_id: String,
+      url: "string",
+      public_id: "string",
     },
   },
   { versionKey: false }
 );
 
-const Product = mongoose.model("Product", productSchema);
-export default Product;
+export default mongoose.model("Product", productSchema);
