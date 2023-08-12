@@ -19,11 +19,13 @@ const productSchema = new Schema(
       type: "number",
       required: true,
       min: 0,
+      max: 100000,
     },
     stock: {
       type: "number",
       required: true,
       min: 0,
+      max: 10000,
     },
     categories: {
       type: [String],
