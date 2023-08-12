@@ -33,6 +33,9 @@ const productSchema = new Schema(
       url: "string",
       public_id: "string",
     },
+    isValid: {
+      type: "boolean",
+    },
   },
   { versionKey: false }
 );
