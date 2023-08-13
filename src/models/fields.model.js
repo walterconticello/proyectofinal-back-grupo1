@@ -3,16 +3,6 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const fieldsSchema = new Schema({
-    //We'll use the auto-generated mongo's identifiers
-    
-    // idField: {
-    //     type: mongoose.Types.ObjectId,
-    //     required: true,
-    //     index: true,
-    //     unique: true,
-    //     immutable: true,
-    //     default: () => new mongoose.Types.ObjectId()
-    // },
     name: {
         type: String,
         required: true,
@@ -38,6 +28,12 @@ const fieldsSchema = new Schema({
         required: true,
         min: 0,
         max: 100000 //Max price $100.000
+    },
+    size: {
+        type: Number,
+        required: true,
+        min: 5,
+        max: 11
     },
     idSportCenter: {
         type: mongoose.Types.ObjectId,

@@ -35,6 +35,7 @@ const createField = async (req, res) => {
       openHour: req.body.openHour,
       closeHour: req.body.closeHour,
       pricePerHour: req.body.pricePerHour,
+      size: req.body.size,
     };
     if (!validation.createFieldDataValidation(bodyfield)) {
       res.status(400).json("Some data is missing");
@@ -42,7 +43,8 @@ const createField = async (req, res) => {
       validation.nameValidation(bodyfield.name) &&
       validation.hourValidation(bodyfield.openHour) &&
       validation.hourValidation(bodyfield.closeHour) &&
-      validation.priceValidation(bodyfield.pricePerHour)
+      validation.priceValidation(bodyfield.pricePerHour) &&
+      validation.sizeValidation(bodyfield.size)
     ) {
       const newField = new fieldModel(bodyfield);
       await newField.save();
@@ -65,12 +67,14 @@ const updateField = async (req, res) => {
       if (req.body.openHour) field.openHour = req.body.openHour;
       if (req.body.closeHour) field.closeHour = req.body.closeHour;
       if (req.body.pricePerHour) field.pricePerHour = req.body.pricePerHour;
+      if (req.body.size) field.size = req.body.size;
 
       if (
         validation.nameValidation(field.name) &&
         validation.hourValidation(field.openHour) &&
         validation.hourValidation(field.closeHour) &&
-        validation.priceValidation(field.pricePerHour)
+        validation.priceValidation(field.pricePerHour) &&
+        validation.sizeValidation(field.size)
       ) {
         await field.save();
         res.status(200).json(field);
