@@ -60,7 +60,7 @@ const createField = async (req, res) => { //Only for the owner of the sportCente
       validation.hourValidation(bodyfield.closeHour) &&
       validation.priceValidation(bodyfield.pricePerHour) &&
       validation.sizeValidation(bodyfield.size) &&
-      validation.validateSportCenter(bodyfield.idSportCenter)
+      await validation.validateSportCenter(bodyfield.idSportCenter)
     ) {
       const newField = new fieldModel(bodyfield);
       await newField.save();
