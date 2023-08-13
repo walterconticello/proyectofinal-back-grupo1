@@ -14,7 +14,7 @@ const commentsSchema = new Schema({
         type: Number,
         required: true,
         min: 0,
-        max: 5
+        max: 10
     },
     sportCenterId: {
         type: mongoose.Types.ObjectId,

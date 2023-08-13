@@ -3,7 +3,7 @@ const textValidation = (text) => {
 } //We could use a test() method of a regex instead of the typeof
 
 const ratingValidation = (rating) => {
-    return (typeof rating === 'number') && (rating >= 0) && (rating <= 5);
+    return (typeof rating === 'number') && (rating >= 0) && (rating <= 10);
 }
 
 const createCommentDataValidation = (comment) => {
