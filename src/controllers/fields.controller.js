@@ -30,7 +30,7 @@ const getFieldByID = async (req, res) => {
 //GET by page
 const getPage = async (req, res) => {
   try {
-    page = parseInt(req.params.page);
+    const page = parseInt(req.params.page);
     const pagedFields = await fieldModel.find().limit(10).skip(10 * (page - 1));
     res.status(200).json(pagedFields);
   }
@@ -49,7 +49,8 @@ const createField = async (req, res) => { //Only for the owner of the sportCente
       closeHour: req.body.closeHour,
       pricePerHour: req.body.pricePerHour,
       size: req.body.size,
-      isActive: req.body.isActive
+      isActive: req.body.isActive,
+      //idSportCenter: req.body.idSportCenter
     };
     if (!validation.createFieldDataValidation(bodyfield)) {
       res.status(400).json("Some data is missing");
