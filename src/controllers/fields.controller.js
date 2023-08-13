@@ -50,7 +50,7 @@ const createField = async (req, res) => { //Only for the owner of the sportCente
       pricePerHour: req.body.pricePerHour,
       size: req.body.size,
       isActive: req.body.isActive,
-      //idSportCenter: req.body.idSportCenter
+      idSportCenter: req.body.idSportCenter,
     };
     if (!validation.createFieldDataValidation(bodyfield)) {
       res.status(400).json("Some data is missing");
@@ -59,7 +59,8 @@ const createField = async (req, res) => { //Only for the owner of the sportCente
       validation.hourValidation(bodyfield.openHour) &&
       validation.hourValidation(bodyfield.closeHour) &&
       validation.priceValidation(bodyfield.pricePerHour) &&
-      validation.sizeValidation(bodyfield.size)
+      validation.sizeValidation(bodyfield.size) &&
+      validation.validateSportCenter(bodyfield.idSportCenter)
     ) {
       const newField = new fieldModel(bodyfield);
       await newField.save();

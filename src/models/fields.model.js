@@ -44,7 +44,6 @@ const fieldsSchema = new Schema({
         type: mongoose.Types.ObjectId,
         required: true,
         immutable: true,
-        default: () => new mongoose.Types.ObjectId() //When SportCenter is created we will replace the default value
     }
 }, {versionKey: false});
 
