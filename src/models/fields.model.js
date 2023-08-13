@@ -35,6 +35,11 @@ const fieldsSchema = new Schema({
         min: 5,
         max: 11
     },
+    isActive: {
+        type: Boolean,
+        required: true,
+        default: true,
+    },
     idSportCenter: {
         type: mongoose.Types.ObjectId,
         required: true,

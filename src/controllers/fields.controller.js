@@ -36,6 +36,7 @@ const createField = async (req, res) => {
       closeHour: req.body.closeHour,
       pricePerHour: req.body.pricePerHour,
       size: req.body.size,
+      isActive: req.body.isActive
     };
     if (!validation.createFieldDataValidation(bodyfield)) {
       res.status(400).json("Some data is missing");
@@ -59,7 +60,7 @@ const createField = async (req, res) => {
 };
 
 //PUT
-const updateField = async (req, res) => {
+const updateField = async (req, res) => { //For activate or deactivate a field, update that
   try {
     const field = await fieldModel.findById(req.params.id);
     if (field) {
@@ -68,6 +69,7 @@ const updateField = async (req, res) => {
       if (req.body.closeHour) field.closeHour = req.body.closeHour;
       if (req.body.pricePerHour) field.pricePerHour = req.body.pricePerHour;
       if (req.body.size) field.size = req.body.size;
+      if (req.body.isActive) field.isActive = req.body.isActive;
 
       if (
         validation.nameValidation(field.name) &&
