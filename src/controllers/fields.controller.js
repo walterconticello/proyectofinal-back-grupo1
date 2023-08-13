@@ -2,7 +2,7 @@ import fieldModel from "../models/fields.model.js";
 import validation from "../helpers/fields.validation.js";
 
 //GET
-const getAllFields = async (req, res) => {
+const getAllFields = async (req, res) => { 
   try {
     const allFields = await fieldModel.find();
     res.status(200).json(allFields);
@@ -27,8 +27,21 @@ const getFieldByID = async (req, res) => {
   }
 };
 
+//GET by page
+const getPage = async (req, res) => {
+  try {
+    page = parseInt(req.params.page);
+    const pagedFields = await fieldModel.find().limit(10).skip(10 * (page - 1));
+    res.status(200).json(pagedFields);
+  }
+  catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+}
+
 //POST
-const createField = async (req, res) => {
+const createField = async (req, res) => { //Only for the owner of the sportCenter, validate that
   try {
     const bodyfield = {
       name: req.body.name,
@@ -61,6 +74,7 @@ const createField = async (req, res) => {
 
 //PUT
 const updateField = async (req, res) => { //For activate or deactivate a field, update that
+                                          //Only for the owner of the sportCenter, validate that
   try {
     const field = await fieldModel.findById(req.params.id);
     if (field) {
@@ -93,7 +107,7 @@ const updateField = async (req, res) => { //For activate or deactivate a field, 
 };
 
 //DELETE
-const deleteField = async (req, res) => {
+const deleteField = async (req, res) => { //Only for the owner of the sportCenter, validate that
   try {
     const deletedField = await fieldModel.findOneAndDelete({
       _id: { $eq: req.params.id },
@@ -117,4 +131,5 @@ export default {
   getFieldByID,
   updateField,
   deleteField,
+  getPage,
 };
