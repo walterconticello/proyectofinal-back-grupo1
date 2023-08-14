@@ -71,12 +71,12 @@ const createComment = async (req, res) => {
             text: req.body.text,
             rating: req.body.rating,
             sportCenterId: req.body.sportCenterId,
-            // userId: 
+            userId: req.body.userId, 
         };
         if(!validation.createCommentDataValidation(bodyComment)){
             res.status(400).json("Some data is missing");
         }
-        else if(validation.ratingValidation(bodyComment.rating) && validation.textValidation(bodyComment.text)){
+        else if(validation.ratingValidation(bodyComment.rating) && validation.textValidation(bodyComment.text) && await validation.userValidation(bodyComment.userId) && await validation.sportCenterValidation(bodyComment.sportCenterId)){
             const newComment = new commentModel(bodyComment);
             await newComment.save();
             res.status(201).json(newComment);
