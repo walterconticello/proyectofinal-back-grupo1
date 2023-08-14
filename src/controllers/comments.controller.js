@@ -34,7 +34,7 @@ const getByID = async (req, res) => {
 const getCommentsByUser = async (req, res) => {
     try {
         const comments = await commentModel.find({userId: req.params.user});
-        if(comments){
+        if(comments.length > 0){
             res.status(200).json(comments);
         }
         else {
@@ -51,7 +51,7 @@ const getCommentsByUser = async (req, res) => {
 const getCommentsBySportCenter = async (req, res) => {
     try {
         const comments = await commentModel.find({sportCenterId: req.params.sportcenter});
-        if(comments){
+        if(comments.length > 0){
             res.status(200).json(comments);
         }
         else {
@@ -70,7 +70,7 @@ const createComment = async (req, res) => {
         const bodyComment = {
             text: req.body.text,
             rating: req.body.rating,
-            // sportCenterId: ,
+            sportCenterId: req.body.sportCenterId,
             // userId: 
         };
         if(!validation.createCommentDataValidation(bodyComment)){
@@ -134,4 +134,25 @@ const deleteComment = async (req, res) => {
     }
 }
 
-export default {getAllComments, getByID, createComment, getCommentsByUser, getCommentsBySportCenter, updateComment, deleteComment};
+const getRating = async (req, res) => {
+    try {
+        const comments = await commentModel.find({sportCenterId: req.params.sportcenter});
+        if(comments.length>0){
+            let rating = 0;
+            for (let i = 0; i < comments.length; i++) {
+                rating += comments[i].rating;
+            }
+            rating = Math.floor(rating/comments.length);
+            res.status(200).json(rating);
+        }
+        else {
+            res.status(404).json("Comments Not Found");
+        }
+    }
+    catch(error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export default {getAllComments, getByID, createComment, getCommentsByUser, getCommentsBySportCenter, updateComment, deleteComment, getRating};

@@ -20,7 +20,6 @@ const commentsSchema = new Schema({
         type: mongoose.Types.ObjectId,
         required: true,
         immutable: true,
-        default: () => new mongoose.Types.ObjectId() //When SportCenter is created we will delete the default value
     },
     userId: {
         type: mongoose.Types.ObjectId,
