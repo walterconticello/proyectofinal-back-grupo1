@@ -12,15 +12,47 @@ const complexSchema = new Schema(
       minlength: 3,
     },
 
-    capacity: {
+    services: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      minlength: 3,
+    },
+
+    latitude: {
       type: Number,
       required: true,
       trim: true,
       lowercase: true,
-      min: 1,
-      max: 100000,
+      min: -90,
+      max: 90,
     },
 
+    phone: {
+      facebook: {
+        type: String,
+        required: true,
+        trim: true,
+        lowercase: true,
+      },
+      instagram: {
+        type: String,
+        required: true,
+        trim: true,
+        lowercase: true,
+      },
+    },
+
+    location: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      minlength: 3,
+      maxlength: 30,
+    },
+    
     address: {
       type: String,
       required: true,
@@ -32,6 +64,7 @@ const complexSchema = new Schema(
   },
   { versionKey: false }
 );
+
 
 const complexModel = mongoose.model("complex", complexSchema);
 
