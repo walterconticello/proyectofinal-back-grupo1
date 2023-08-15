@@ -7,6 +7,11 @@ const saleSchema = new Schema(
       ref: "Product",
       required: true,
     },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     quantity: {
       type: Number,
       min: 0,
