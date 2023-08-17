@@ -29,21 +29,30 @@ const complexSchema = new Schema(
       max: 90,
     },
 
-    phone: {
+    phone : {
+      type: Number,
+      required: true,
+      trim: true,
+      lowercase: true, 
+    },
+
+    social: {
       facebook: {
         type: String,
         required: true,
         trim: true,
         lowercase: true,
+        minlength: 3,
       },
       instagram: {
         type: String,
         required: true,
         trim: true,
         lowercase: true,
+        minlength: 3,
       },
     },
-
+    
     location: {
       type: String,
       required: true,
