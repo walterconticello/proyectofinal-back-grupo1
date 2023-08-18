@@ -29,6 +29,14 @@ const complexSchema = new Schema(
       max: 90,
     },
 
+    fields: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      minlength: 3,
+    },
+
     phone : {
       type: Number,
       required: true,
