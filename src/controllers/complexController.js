@@ -30,6 +30,17 @@ const postComplex = async (req, res) => {
       name: req.body.name,
       capacity: req.body.capacity,
       address: req.body.address,
+      phone: req.body.phone,
+      services: req.body.services,
+      fields: req.body.fields,
+      openHour: req.body.openHour,
+      closeHour: req.body.closeHour,
+      social: {
+        facebook: req.body.facebook,
+        instagram: req.body.instagram,
+      },
+      latitude: req.body.latitude,
+      location: req.body.location,
     };
 
     if (!validation.postComplexDataValidation(bodycomplex)) {
@@ -37,7 +48,15 @@ const postComplex = async (req, res) => {
     } else if (
       validation.nameValidation(bodycomplex.name) &&
       validation.capacityValidation(bodycomplex.capacity) &&
-      validation.addressValidation(bodycomplex.address)
+      validation.addressValidation(bodycomplex.address) &&
+      validation.phoneValidation(bodycomplex.phone) &&
+      validation.servicesValidation(bodycomplex.services) &&
+      validation.fieldsValidation(bodycomplex.fields) &&
+      validation.openHourValidation(bodycomplex.openHour) &&
+      validation.closeHourValidation(bodycomplex.closeHour) &&
+      validation.socialValidation(bodycomplex.social) &&
+      validation.latitudeValidation(bodycomplex.latitude) &&
+      validation.locationValidation(bodycomplex.location)
     ) {
       const complex = new complexModel(bodycomplex);
       await complex.save();
