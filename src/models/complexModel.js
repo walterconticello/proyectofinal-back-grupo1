@@ -11,13 +11,55 @@ const complexSchema = new Schema(
       lowercase: true,
       minlength: 3,
     },
+    
+    address: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      minlenght: 3,
+      maxlenght: 30,
+    },
 
+    phone : {
+      type: Number,
+      required: true,
+      trim: true,
+      lowercase: true, 
+    },
+    
     services: {
       type: String,
       required: true,
       trim: true,
       lowercase: true,
       minlength: 3,
+    },
+
+    fields: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      minlength: 3,
+    },
+    
+    social: {
+      facebook: {
+        type: String,
+        required: true,
+        trim: true,
+        lowercase: true,
+        minlength: 3,
+      },
+
+      instagram: {
+        type: String,
+        required: true,
+        trim: true,
+        lowercase: true,
+        minlength: 3,
+      },
     },
 
     latitude: {
@@ -29,38 +71,6 @@ const complexSchema = new Schema(
       max: 90,
     },
 
-    fields: {
-      type: String,
-      required: true,
-      trim: true,
-      lowercase: true,
-      minlength: 3,
-    },
-
-    phone : {
-      type: Number,
-      required: true,
-      trim: true,
-      lowercase: true, 
-    },
-
-    social: {
-      facebook: {
-        type: String,
-        required: true,
-        trim: true,
-        lowercase: true,
-        minlength: 3,
-      },
-      instagram: {
-        type: String,
-        required: true,
-        trim: true,
-        lowercase: true,
-        minlength: 3,
-      },
-    },
-    
     location: {
       type: String,
       required: true,
@@ -70,14 +80,6 @@ const complexSchema = new Schema(
       maxlength: 30,
     },
     
-    address: {
-      type: String,
-      required: true,
-      trim: true,
-      lowercase: true,
-      minlenght: 3,
-      maxlenght: 30,
-    },
   },
   { versionKey: false }
 );
