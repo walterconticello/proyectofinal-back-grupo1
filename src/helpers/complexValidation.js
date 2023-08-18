@@ -17,6 +17,14 @@ const phoneValidation = (phone) => {
   const regex = /^[0-9]+$/;
   return regex.test(phone) && phone.length >= 7 && phone.length <= 20;
 };
+const photoValidation = (photo) => { URL = require('url').URL;
+  try {
+    new URL(photo);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
 
 const servicesValidation = (services) => {
   const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
@@ -59,6 +67,8 @@ const locationValidation = (location) => {
   const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
   return regex.test(location) && location.length >= 3 && location.length <= 100;
 };
+
+
 
 const postComplexDataValidation = (bodycomplex) => {
   return bodycomplex.name && bodycomplex.address && bodycomplex.phone;
@@ -118,4 +128,5 @@ export default {
   putComplexDataValidation,
   postComplexValidation,
   putComplexValidation,
+  photoValidation,
 };
