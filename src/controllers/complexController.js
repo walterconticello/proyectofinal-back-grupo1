@@ -41,6 +41,7 @@ const postComplex = async (req, res) => {
       },
       latitude: req.body.latitude,
       location: req.body.location,
+      photo: req.body.photo
     };
 
     if (!validation.postComplexDataValidation(bodycomplex)) {
@@ -56,7 +57,8 @@ const postComplex = async (req, res) => {
       validation.closeHourValidation(bodycomplex.closeHour) &&
       validation.socialValidation(bodycomplex.social) &&
       validation.latitudeValidation(bodycomplex.latitude) &&
-      validation.locationValidation(bodycomplex.location)
+      validation.locationValidation(bodycomplex.location) &&
+      validation.photoValidation(bodycomplex.photo)
     ) {
       const complex = new complexModel(bodycomplex);
       await complex.save();
@@ -111,6 +113,9 @@ const putComplex = async (req, res) => {
       if (req.body.location) {
         complex.location = req.body.location;
       }
+      if (req.body.photo) {
+        complex.photo = req.body.photo;
+      }
 
       if (
         validation.nameValidation(complex.name) &&
@@ -123,7 +128,8 @@ const putComplex = async (req, res) => {
         validation.closeHourValidation(complex.closeHour) &&
         validation.socialValidation(complex.social) &&
         validation.latitudeValidation(complex.latitude) &&
-        validation.locationValidation(complex.location)
+        validation.locationValidation(complex.location) &&
+        validation.photoValidation(complex.photo) 
       ) {
         await complex.save();
         res.json({ mensaje: "Complejo actualizado con éxito" });
