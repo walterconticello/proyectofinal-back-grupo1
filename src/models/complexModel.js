@@ -62,6 +62,14 @@ const complexSchema = new Schema(
       max: 24,
     },
 
+    photo: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      minlength: 3,
+    },
+
     social: {
       facebook: {
         type: String,
