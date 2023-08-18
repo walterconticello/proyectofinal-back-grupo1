@@ -84,11 +84,46 @@ const putComplex = async (req, res) => {
       if (req.body.address) {
         complex.address = req.body.address;
       }
+      if (req.body.phone) {
+        complex.phone = req.body.phone;
+      }
+      if (req.body.services) {
+        complex.services = req.body.services;
+      }
+      if (req.body.fields) {
+        complex.fields = req.body.fields;
+      }
+      if (req.body.openHour) {
+        complex.openHour = req.body.openHour;
+      }
+      if (req.body.closeHour) {
+        complex.closeHour = req.body.closeHour;
+      }
+      if (req.body.social) {
+        complex.social = {
+          facebook: req.body.social.facebook,
+          instagram: req.body.social.instagram,
+        };
+      }
+      if (req.body.latitude) {
+        complex.latitude = req.body.latitude;
+      }
+      if (req.body.location) {
+        complex.location = req.body.location;
+      }
 
       if (
         validation.nameValidation(complex.name) &&
         validation.capacityValidation(complex.capacity) &&
-        validation.addressValidation(complex.address)
+        validation.addressValidation(complex.address) &&
+        validation.phoneValidation(complex.phone) &&
+        validation.servicesValidation(complex.services) &&
+        validation.fieldsValidation(complex.fields) &&
+        validation.openHourValidation(complex.openHour) &&
+        validation.closeHourValidation(complex.closeHour) &&
+        validation.socialValidation(complex.social) &&
+        validation.latitudeValidation(complex.latitude) &&
+        validation.locationValidation(complex.location)
       ) {
         await complex.save();
         res.json({ mensaje: "Complejo actualizado con éxito" });
