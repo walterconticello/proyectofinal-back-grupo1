@@ -5,24 +5,14 @@ import fs from "fs-extra";
 //GET
 
 const getAllProducts = async (req, res) => {
-  const ITEMS_PER_PAGE = 6;
   try {
-    const page = parseInt(req.query.page) || 1;
-    const skip = (page - 1) * ITEMS_PER_PAGE;
-
-    const totalProducts = await productSchema.countDocuments();
-    const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
-
-    const products = await productSchema
-      .find()
-      .skip(skip)
-      .limit(ITEMS_PER_PAGE);
-
-    res.status(200).json({ products, totalPages });
+    const products = await productSchema.find();
+    res.status(200).json({ products });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
+
 //GET BY ID
 
 const getProductById = async (req, res) => {
