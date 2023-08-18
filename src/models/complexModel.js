@@ -43,7 +43,25 @@ const complexSchema = new Schema(
       lowercase: true,
       minlength: 3,
     },
-    
+
+    openHour: {
+      type: Number,
+      required: true,
+      trim: true,
+      lowercase: true,
+      min: 0,
+      max: 24,
+    },
+
+    closeHour: {
+      type: Number,
+      required: true,
+      trim: true,
+      lowercase: true,
+      min: 0,
+      max: 24,
+    },
+
     social: {
       facebook: {
         type: String,
