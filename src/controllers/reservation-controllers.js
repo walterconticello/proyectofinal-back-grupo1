@@ -18,6 +18,7 @@ const postReservation = async (req, res) => {
             IdSportCenter: req.body.IdSportCenter,
             IdField: req.body.IdField,
             ReservationTime: req.body.ReservationTime,
+            Status : "confirmada"
           });
           await reservation.save();
           res.status(201).json(reservation);
@@ -54,7 +55,23 @@ const getReservationIdReservation = async (req, res) => {
   if (reservation) {
     res.json(reservation);
   } else {
-    res.status(404).json({ message: "Reservation not found" });
+    res.status(404).json({ message: error.message });
+  }
+};
+
+const cancelledReservation = async (req, res) => {
+  try {
+    const reservationId = req.params.id;
+    const reservation = await ReservationModel.findById(reservationId);
+    if (reservation) {
+      reservation.status = "cancelada"
+      await reservation.save();
+      res.status(200).json({ message: "Reservation cancelada" });
+    } else {
+      res.status(404).json({ message: "Reservation not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -101,4 +118,5 @@ export default {
   getReservationIdReservation,
   deleteIdReservation,
   putReservation,
+  cancelledReservation
 };
