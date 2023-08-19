@@ -12,30 +12,6 @@ const timeZone = 'America/Argentina/Buenos_Aires';
   const formattedDate = format(zonedDate, pattern, { timeZone });
   console.log(formattedDate);
 
-function isValidObjectId(id) {
-    return mongoose.Types.ObjectId.isValid(id);
-  };
-
-  async function isReservationExists(IdField, ReservationTime) {
-    const existingReservation = await ReservationModel.findOne({
-      IdField,
-      ReservationTime,
-    });
-    return existingReservation !== null;
-  }
-
-  async function isWithinOpeningHours(IdSportCenter, reservationDate) {
-    const sportCenter = await SportCenterModel.findById(IdSportCenter);
-    if (!sportCenter) {
-      return false;
-    }
-
-    const openingHour = sportCenter.openHour;
-    const closingHour = sportCenter.closeHour;
-    const reservationHour = reservationDate.getHours();
-
-    return reservationHour >= openingHour && reservationHour < closingHour;
-  }
 
   async function isReservationExists(IdField, ReservationTime) {
     const existingReservation = await ReservationModel.findOne({
@@ -78,11 +54,7 @@ function isValidObjectId(id) {
       return;
     }
 
-    console.log("Reserva válida, puedes hacer la reserva.");
+    return true;
   };
 
-export default {isValidObjectId , ValidationDate};
-
- 
-
-    
+export default  ValidationDate;

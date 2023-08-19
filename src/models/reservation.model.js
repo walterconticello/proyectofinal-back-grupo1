@@ -6,7 +6,8 @@ const reservationSchema = new Schema(
     IdUser: { type: String, require: true },
     IdSportCenter: { type: String, require: true },
     IdField: { type: String, require: true },
-    ReservationTime: { type: Date, require: true },
+    ReservationTime: { type: String, require: true },
+    Status: { type: String, enum: ['confirmada', 'cancelada'], default: 'pendiente' }
   },
   { versionKey: false }
 );
