@@ -29,11 +29,30 @@ const complexSchema = new Schema(
     },
     
     services: {
-      type: String,
+      bar: {
+        type: Boolean,
+        required: true,
+        trim: true,
+        lowercase: true,
+    },
+    showers: {
+      type: Boolean,
       required: true,
       trim: true,
       lowercase: true,
-      minlength: 3,
+    },
+    Grill: {
+      type: Boolean,
+      required: true,
+      trim: true,
+      lowercase: true,
+    },
+    parking: {
+      type: Boolean,
+      required: true,
+      trim: true,
+      lowercase: true,
+    },
     },
 
     fields: {
