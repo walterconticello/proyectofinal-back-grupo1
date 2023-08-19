@@ -31,7 +31,12 @@ const postComplex = async (req, res) => {
       capacity: req.body.capacity,
       address: req.body.address,
       phone: req.body.phone,
-      services: req.body.services,
+      services: {
+        bar: req.body.services.bar,
+        showers: req.body.services.showers,
+        grill: req.body.services.grill,
+        parking: req.body.services.parking,
+      },
       fields: req.body.fields,
       openHour: req.body.openHour,
       closeHour: req.body.closeHour,
@@ -48,7 +53,6 @@ const postComplex = async (req, res) => {
       return res.status(400).json({ mensaje: "Error en los datos ingresados" });
     } else if (
       validation.nameValidation(bodycomplex.name) &&
-      validation.capacityValidation(bodycomplex.capacity) &&
       validation.addressValidation(bodycomplex.address) &&
       validation.phoneValidation(bodycomplex.phone) &&
       validation.servicesValidation(bodycomplex.services) &&
@@ -80,9 +84,6 @@ const putComplex = async (req, res) => {
       if (req.body.name) {
         complex.name = req.body.name;
       }
-      if (req.body.capacity) {
-        complex.capacity = req.body.capacity;
-      }
       if (req.body.address) {
         complex.address = req.body.address;
       }
@@ -90,7 +91,12 @@ const putComplex = async (req, res) => {
         complex.phone = req.body.phone;
       }
       if (req.body.services) {
-        complex.services = req.body.services;
+        complex.services = {
+          bar: req.body.services.bar,
+          showers: req.body.services.showers,
+          grill: req.body.services.grill,
+          parking: req.body.services.parking,
+        };
       }
       if (req.body.fields) {
         complex.fields = req.body.fields;
@@ -119,7 +125,6 @@ const putComplex = async (req, res) => {
 
       if (
         validation.nameValidation(complex.name) &&
-        validation.capacityValidation(complex.capacity) &&
         validation.addressValidation(complex.address) &&
         validation.phoneValidation(complex.phone) &&
         validation.servicesValidation(complex.services) &&
