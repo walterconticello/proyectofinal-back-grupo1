@@ -26,11 +26,6 @@ const photoValidation = (photo) => { URL = require('url').URL;
   }
 };
 
-const servicesValidation = (services) => {
-  const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
-  return regex.test(services) && services.length >= 3 && services.length <= 100;
-};
-
 const fieldsValidation = (fields) => {
   const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
   return regex.test(fields) && fields.length >= 3 && fields.length <= 100;
@@ -117,7 +112,6 @@ export default {
   addressValidation,
   idComplexValidation,
   phoneValidation,
-  servicesValidation,
   fieldsValidation,
   openHourValidation,
   closeHourValidation,
@@ -130,3 +124,4 @@ export default {
   putComplexValidation,
   photoValidation,
 };
+
