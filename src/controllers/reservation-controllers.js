@@ -1,7 +1,5 @@
 import ReservationModel from "../models/reservation.model.js";
 import fieldModel from "../models/fields.model.js";
-// const UserModel = require("../models/user.model"); aqui iria el modelo de usuarios
-import isValidObjectId from "../helpers/reservation.validation.cjs";
 import ValidationDate from "../helpers/reservation.validation.cjs"
 //CREATE O POST
 
