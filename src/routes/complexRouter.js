@@ -1,12 +1,12 @@
 import express from "express";
-import complexController from "../controllers/complexController";
+import sportCenterController from "../controllers/sportCenter.controller";
 
 const router= express.Router(); 
 
-router.post("/complex", complexController.postComplex,);
-router.get("/complex", complexController.getAllComplex);
-router.get("/complex/:id", complexController.getComplexById);
-router.put("/complex/:id", complexController.putComplex);
-router.delete("/complex/:id", complexController.deleteComplex);
+router.post("/sportCenter", sportCenterController.postSportCenter,);
+router.get("/sportCenter", sportCenterController.getAllSportCenters);
+router.get("/sportCenter/:id", sportCenterController.getSportCenterById);
+router.put("/sportCenter/:id", sportCenterController.putSportCenter);
+router.delete("/sportCenter/:id", sportCenterController.deleteSportCenter);
 
 module.exports = router;
