@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const complexSchema = new Schema(
+const sportCenterSchema = new Schema(
   {
     ownerId: {
       type: ObjectId,
@@ -135,6 +135,6 @@ const complexSchema = new Schema(
 );
 
 
-const complexModel = mongoose.model("complex", complexSchema);
+const sportCenterModel = mongoose.model("sportCenter", sportCenterSchema);
 
-export default complexModel;
+export default sportCenterModel;
