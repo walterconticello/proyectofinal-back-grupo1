@@ -27,6 +27,7 @@ const getComplexById = async (req, res) => {
 const postComplex = async (req, res) => {
   try {
     const bodycomplex = {
+      ownerId: req.body.ownerId,
       name: req.body.name,
       capacity: req.body.capacity,
       address: req.body.address,
@@ -61,6 +62,7 @@ const postComplex = async (req, res) => {
       validation.closeHourValidation(bodycomplex.closeHour) &&
       validation.socialValidation(bodycomplex.social) &&
       validation.latitudeValidation(bodycomplex.latitude) &&
+      validation.ownerIdValidation(bodycomplex.ownerId) &&
       validation.locationValidation(bodycomplex.location) &&
       validation.photoValidation(bodycomplex.photo)
     ) {
@@ -81,6 +83,10 @@ const putComplex = async (req, res) => {
   try {
     const complex = await complexModel.findById(req.params.id);
     if (complex) {
+
+      if (req.body.ownerId) {
+        complex.ownerId = req.body.ownerId;
+      }
       if (req.body.name) {
         complex.name = req.body.name;
       }
@@ -133,6 +139,7 @@ const putComplex = async (req, res) => {
         validation.closeHourValidation(complex.closeHour) &&
         validation.socialValidation(complex.social) &&
         validation.latitudeValidation(complex.latitude) &&
+        validation.ownerIdValidation(complex.ownerId) &&
         validation.locationValidation(complex.location) &&
         validation.photoValidation(complex.photo) 
       ) {
