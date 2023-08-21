@@ -4,6 +4,11 @@ const { Schema } = mongoose;
 
 const complexSchema = new Schema(
   {
+    ownerId: {
+      type: ObjectId,
+      required: true,
+    },
+
     name: {
       type: String,
       required: true,
