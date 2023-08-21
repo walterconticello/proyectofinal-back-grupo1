@@ -8,9 +8,9 @@ const addressValidation = (address) => {
   return regex.test(address) && address.length >= 3 && address.length <= 50;
 };
 
-const idComplexValidation = (idComplex) => {
+const idSportCenterValidation = (idSportCenter) => {
   const regex = /^[0-9]+$/;
-  return regex.test(idComplex) && idComplex >= 1 && idComplex <= 100000;
+  return regex.test(idSportCenter) && idSportCenter >= 1 && idSportCenter <= 100000;
 };
 
 const phoneValidation = (phone) => {
@@ -65,52 +65,52 @@ const locationValidation = (location) => {
 
 
 
-const postComplexDataValidation = (bodycomplex) => {
-  return bodycomplex.name && bodycomplex.address && bodycomplex.phone;
+const postSportCenterDataValidation = (bodySportCenter) => {
+  return bodySportCenter.name && bodySportCenter.address && bodySportCenter.phone;
 };
 
-const putComplexDataValidation = (bodycomplex) => {
+const putSportCenterDataValidation = (bodySportCenter) => {
   return (
-    bodycomplex.name ||
-    bodycomplex.address ||
-    bodycomplex.phone ||
-    bodycomplex.services ||
-    bodycomplex.fields ||
-    bodycomplex.openHour ||
-    bodycomplex.closeHour ||
-    bodycomplex.social ||
-    bodycomplex.latitude ||
-    bodycomplex.location
+    bodySportCenter.name ||
+    bodySportCenter.address ||
+    bodySportCenter.phone ||
+    bodySportCenter.services ||
+    bodySportCenter.fields ||
+    bodySportCenter.openHour ||
+    bodySportCenter.closeHour ||
+    bodySportCenter.social ||
+    bodySportCenter.latitude ||
+    bodySportCenter.location
   );
 };
 
-const postComplexValidation = (bodycomplex) => {
+const postSportCenterValidation = (bodySportCenter) => {
   return (
-    nameValidation(bodycomplex.name) &&
-    addressValidation(bodycomplex.address) &&
-    phoneValidation(bodycomplex.phone)
+    nameValidation(bodySportCenter.name) &&
+    addressValidation(bodySportCenter.address) &&
+    phoneValidation(bodySportCenter.phone)
   );
 };
 
-const putComplexValidation = (bodycomplex) => {
+const putSportCenterValidation = (bodySportCenter) => {
   return (
-    nameValidation(bodycomplex.name) ||
-    addressValidation(bodycomplex.address) ||
-    phoneValidation(bodycomplex.phone) ||
-    servicesValidation(bodycomplex.services) ||
-    fieldsValidation(bodycomplex.fields) ||
-    openHourValidation(bodycomplex.openHour) ||
-    closeHourValidation(bodycomplex.closeHour) ||
-    socialValidation(bodycomplex.social) ||
-    latitudeValidation(bodycomplex.latitude) ||
-    locationValidation(bodycomplex.location)
+    nameValidation(bodySportCenter.name) ||
+    addressValidation(bodySportCenter.address) ||
+    phoneValidation(bodySportCenter.phone) ||
+    servicesValidation(bodySportCenter.services) ||
+    fieldsValidation(bodySportCenter.fields) ||
+    openHourValidation(bodySportCenter.openHour) ||
+    closeHourValidation(bodySportCenter.closeHour) ||
+    socialValidation(bodySportCenter.social) ||
+    latitudeValidation(bodySportCenter.latitude) ||
+    locationValidation(bodySportCenter.location)
   );
 };
 
 export default {
   nameValidation,
   addressValidation,
-  idComplexValidation,
+  idSportCenterValidation,
   phoneValidation,
   fieldsValidation,
   openHourValidation,
@@ -118,10 +118,9 @@ export default {
   socialValidation,
   latitudeValidation,
   locationValidation,
-  postComplexDataValidation,
-  putComplexDataValidation,
-  postComplexValidation,
-  putComplexValidation,
+  postSportCenterDataValidation,
+  putSportCenterDataValidation,
+  postSportCenterValidation,
+  putSportCenterValidation,
   photoValidation,
 };
-
