@@ -94,8 +94,6 @@ const putReservation = async (req, res) => {
     const id = req.params.id;
     const reservation = await ReservationModel.findById(id);
     if (reservation) {
-      // if(req.body.IdField &&  req.body.ReservationTime){
-      reservation.IdField = req.body.IdField;
       reservation.ReservationTime = req.body.ReservationTime;
       await reservation.save();
       res.status(200).json(reservation);
