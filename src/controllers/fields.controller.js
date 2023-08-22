@@ -56,8 +56,7 @@ const createField = async (req, res) => { //Only for the owner of the sportCente
       res.status(400).json("Some data is missing");
     } else if (
       validation.nameValidation(bodyfield.name) &&
-      validation.hourValidation(bodyfield.openHour) &&
-      validation.hourValidation(bodyfield.closeHour) &&
+      validation.hourValidation(bodyfield.openHour, bodyfield.closeHour) &&
       validation.priceValidation(bodyfield.pricePerHour) &&
       validation.sizeValidation(bodyfield.size) &&
       await validation.validateSportCenter(bodyfield.idSportCenter)
