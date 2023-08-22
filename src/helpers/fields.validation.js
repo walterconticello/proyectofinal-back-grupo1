@@ -5,8 +5,16 @@ const nameValidation = (name) => {
     return regex.test(name) && name.length >= 3 && name.length <= 50;
 }
 
-const hourValidation = (hour) => {
+const openHourValidation = (hour) => {
     return (typeof hour === 'number') && (hour >= 0) && (hour <= 23);
+}
+
+const closeHourValidation = (hour) => {
+    return (typeof hour === 'number') && (hour >= 1) && (hour <= 24);
+}
+
+const hourValidation = (openHour, closeHour) => {
+    return openHourValidation(openHour) && closeHourValidation(closeHour) && (openHour < closeHour);
 }
 
 const priceValidation = (price) => {

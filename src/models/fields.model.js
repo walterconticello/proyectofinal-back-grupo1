@@ -20,8 +20,8 @@ const fieldsSchema = new Schema({
     closeHour: {
         type: Number,
         required: true,
-        min: 0,
-        max: 23
+        min: 1,
+        max: 24
     },
     pricePerHour: {
         type: Number,

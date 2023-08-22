@@ -89,8 +89,7 @@ const updateField = async (req, res) => { //For activate or deactivate a field, 
 
       if (
         validation.nameValidation(field.name) &&
-        validation.hourValidation(field.openHour) &&
-        validation.hourValidation(field.closeHour) &&
+        validation.hourValidation(field.openHour, field.closeHour) &&
         validation.priceValidation(field.pricePerHour) &&
         validation.sizeValidation(field.size)
       ) {
