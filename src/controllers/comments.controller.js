@@ -6,7 +6,7 @@ const getAllComments = async (req, res) => {
     try {
         const allComments = await commentModel.find().populate({
             path: "userId",
-            select: ["username", "email"],
+            select: ["username", "email"], //Add profile photo field
         });
         res.status(200).json(allComments);
     }
