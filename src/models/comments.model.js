@@ -20,11 +20,13 @@ const commentsSchema = new Schema({
         type: mongoose.Types.ObjectId,
         required: true,
         immutable: true,
+        ref: "complex" //This will be replaced by "sportCenter"
     },
     userId: {
         type: mongoose.Types.ObjectId,
         required: true,
         immutable: true,
+        ref: "User"
     }
 }, {versionKey: false, timestamps: true});
 

@@ -4,7 +4,10 @@ import validation from "../helpers/comments.validation.js";
 //GET
 const getAllComments = async (req, res) => {
     try {
-        const allComments = await commentModel.find();
+        const allComments = await commentModel.find().populate({
+            path: "userId",
+            select: ["username", "email"],
+        });
         res.status(200).json(allComments);
     }
     catch(error) {
@@ -72,7 +75,7 @@ const createComment = async (req, res) => {
             text: req.body.text,
             rating: req.body.rating,
             sportCenterId: req.body.sportCenterId,
-            userId: req.body.userId, 
+            userId: req.body.userId,  //Se debe traer desde el JWT
         };
         if(!validation.createCommentDataValidation(bodyComment)){
             res.status(400).json("Some data is missing");
