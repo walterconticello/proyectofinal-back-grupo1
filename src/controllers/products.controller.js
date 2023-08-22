@@ -1,6 +1,6 @@
 import productSchema from "../models/product.model.js";
 import validation from "../helpers/products.validation.js";
-import { uploadImage } from "../utils/cloudinary.js";
+import { uploadImage, deleteImage } from "../utils/cloudinary.js";
 import fs from "fs-extra";
 //GET
 
@@ -146,6 +146,10 @@ const deleteProduct = async (req, res) => {
   try {
     const id = req.params.id;
     const deletedProduct = await productSchema.findOneAndDelete({ _id: id });
+
+    if (deletedProduct.image.public_id) {
+      await deleteImage(deletedProduct.image.public_id);
+    }
 
     if (!deletedProduct) {
       return res.status(404).json({ message: "product not found" });
