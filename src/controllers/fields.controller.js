@@ -1,5 +1,5 @@
-import fieldModel from "../models/fields.model";
-import validation from "../helpers/fields.validation";
+import fieldModel from "../models/fields.model.js";
+import validation from "../helpers/fields.validation.js";
 
 //GET
 const getAllFields = async (req, res) => {

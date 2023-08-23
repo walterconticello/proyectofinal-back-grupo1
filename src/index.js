@@ -1,16 +1,17 @@
 import express from "express";
-import dotenv from "dotenv";
+import dotenv from "dotenv"
 import cors from "cors";
 import morgan from "morgan";
 import authRoute from "./routes/auth.route.js"
 import usersRoute from "./routes/users.route.js"
 import privadoRoute from "./routes/private.route.js"
+import fieldsRoute from "./routes/fields.routes.js"
 import mongoose from "mongoose";
-import connect from "./database/db.js"
+import connectDB from "./database/db.js"
 import { verifyToken, verifyUser } from "./utils/verifyToken.js";
 
 const app = express();
-dotenv.config()
+dotenv.config();
 
 
 
@@ -34,7 +35,6 @@ const initApp = async () => {
 };
 
 initApp();
-
 
 //MIDDLEWARE
 
@@ -60,8 +60,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Descomentar cuando tengamos las rutas
-app.use("/api", require("./routes/fields.routes"));
-
-// app.use("/api", require("./routes/Rutes"));
 
