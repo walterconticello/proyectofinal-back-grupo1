@@ -19,7 +19,10 @@ const getAllComments = async (req, res) => {
 //GET by ID
 const getByID = async (req, res) => {
     try {
-        const comment = await commentModel.findById(req.params.id);
+        const comment = await commentModel.findById(req.params.id).populate({
+            path: "userId",
+            select: ["username", "email"], //Add profile photo field
+        });;
         if(comment){
             res.status(200).json(comment);
         }
@@ -36,7 +39,10 @@ const getByID = async (req, res) => {
 //GET by User
 const getCommentsByUser = async (req, res) => {
     try {
-        const comments = await commentModel.find({userId: req.params.user});
+        const comments = await commentModel.find({userId: req.params.user}).populate({
+            path: "userId",
+            select: ["username", "email"], //Add profile photo field
+        });;
         if(comments.length > 0){
             res.status(200).json(comments);
         }
@@ -54,7 +60,10 @@ const getCommentsByUser = async (req, res) => {
 const getCommentsBySportCenter = async (req, res) => {
     try {
         const page = parseInt(req.params.page);
-        const comments = await commentModel.find({sportCenterId: req.params.sportcenter}).limit(10).skip(10 * (page - 1));
+        const comments = await commentModel.find({sportCenterId: req.params.sportcenter}).limit(10).skip(10 * (page - 1)).populate({
+            path: "userId",
+            select: ["username", "email"], //Add profile photo field
+        });;
         if(comments.length > 0){
             res.status(200).json(comments);
         }
