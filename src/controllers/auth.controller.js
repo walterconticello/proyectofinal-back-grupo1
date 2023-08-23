@@ -6,19 +6,19 @@ import { verifyToken } from "../utils/verifyToken.js";
 
 export const register = async (req, res, next) => {
 	try {
-		const salt = bcrypt.genSaltSync(10);
-		const hash = bcrypt.hashSync(req.body.password, salt);
+		const { username, email, password } = req.body;
+		const hash = await bcrypt.hash(password, 10);
 
 		const newUser = new User({
-			username: req.body.username,
-			email: req.body.email,
+			username,
+			email,
 			password: hash,
-		})
-
-		await newUser.save()
-		res.status(200).send("El usuario fue creado!");
+		});
+		console.log(newUser, "usuario");
+		await newUser.save();
+		res.status(200).json({ message: "Usuario creado con exito" });
 	} catch (err) {
-		next(err);
+		res.status(400).json({ message: err.message });
 	}
 };
 
@@ -34,21 +34,38 @@ export const login = async (req, res, next) => {
 		if (!isPasswordCorrect)
 			return next(createError(400, "Usuario o contraseña incorrectos!"));
 
-		const token = jwt.sign(
-			{ id: user._id, isAdmin: user.isAdmin },
-			process.env.JWT
-		);
+		const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin, isOwner: user.isOwner }, process.env.JWT, {
+			expiresIn: "8h",
+		});
 
-		const { password, isAdmin, ...otherDetails } = user._doc;
-		res
-			.cookie("access_token", token, {
-				httpOnly: true,
-			})
-			.status(200)
-			.json({ ...otherDetails })
+		const { password, isAdmin, isOwner, email, ...otherDetails } = user._doc;
+
+		const response = {
+			message: "Ingreso correcto",
+			ok: true,
+			user: otherDetails,
+			token: token
+		};
+
+		res.status(200).json(response);
 
 	} catch (err) {
 		next(err);
+	}
+};
+
+export const getAuthStatus = async (req, res) => {
+	try {
+		const id = req.id;
+
+		const user = await User.findById(id);
+		if (!user) return next(createError("Autenticación fallida", 401));
+		res.status(200).json({ user });
+	} catch (error) {
+		res.status(error.code || 500).json({
+			message:
+				error.message || "Ups! Hubo un problema, por favor intenta más tarde",
+		});
 	}
 };
 

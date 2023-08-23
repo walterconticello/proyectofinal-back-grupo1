@@ -23,7 +23,11 @@ const UserSchema = new mongoose.Schema(
 		isAdmin: {
 			type: Boolean,
 			default: false
-		}
+		},
+		isOwner: {
+			type: Boolean,
+			default: false
+		},
 	},
 	{ 
 		timestamps: true ,
