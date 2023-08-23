@@ -34,23 +34,17 @@ export const login = async (req, res, next) => {
 		if (!isPasswordCorrect)
 			return next(createError(400, "Usuario o contraseña incorrectos!"));
 
-		const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin, isOwner: user.isOwner }, process.env.JWT, {
+		const token = jwt.sign({ id: user._id }, process.env.JWT, {
 			expiresIn: "8h",
 		});
 
-		const { password, isAdmin, isOwner, email, ...otherDetails } = user._doc;
-
-		const response = {
-			message: "Ingreso correcto",
-			ok: true,
-			user: otherDetails,
-			token: token
-		};
-
-		res.status(200).json(response);
-
-	} catch (err) {
-		next(err);
+		res
+			.status(200)
+			.json({ message: "Ingreso correcto", ok: true, user, token });
+	} catch (error) {
+		res
+			.status(error.code || 500)
+			.json({ message: error.message || "algo explotó :|" });
 	}
 };
 
