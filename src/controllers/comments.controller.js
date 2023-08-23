@@ -8,7 +8,8 @@ const getAllComments = async (req, res) => {
             path: "userId",
             select: ["username", "email"], //Add profile photo field
         });
-        res.status(200).json(allComments);
+        const docs = await commentModel.count();
+        res.status(200).json({comments: allComments, length: docs});
     }
     catch(error) {
         console.log(error);
@@ -43,8 +44,9 @@ const getCommentsByUser = async (req, res) => {
             path: "userId",
             select: ["username", "email"], //Add profile photo field
         });;
+        const docs = await commentModel.find({userId: req.params.user}).count();
         if(comments.length > 0){
-            res.status(200).json(comments);
+            res.status(200).json({comments, length: docs});
         }
         else {
             res.status(404).json("There are no comments");
@@ -64,8 +66,10 @@ const getCommentsBySportCenter = async (req, res) => {
             path: "userId",
             select: ["username", "email"], //Add profile photo field
         });;
+        let docs = await commentModel.find({sportCenterId: req.params.sportcenter}).count();
+        docs = Math.ceil(docs / 10);
         if(comments.length > 0){
-            res.status(200).json(comments);
+            res.status(200).json({comments, pages: docs});
         }
         else {
             res.status(404).json("There are no comments");
