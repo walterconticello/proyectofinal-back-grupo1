@@ -141,8 +141,8 @@ const deleteComment = async (req, res) => {
 const getRating = async (req, res) => {
     try {
         const comments = await commentModel.find({sportCenterId: req.params.sportcenter});
+        let rating = 0;
         if(comments.length>0){
-            let rating = 0;
             for (let i = 0; i < comments.length; i++) {
                 rating += comments[i].rating;
             }
@@ -150,7 +150,7 @@ const getRating = async (req, res) => {
             res.status(200).json(rating);
         }
         else {
-            res.status(404).json("Comments Not Found");
+            res.status(404).json(rating);
         }
     }
     catch(error) {
