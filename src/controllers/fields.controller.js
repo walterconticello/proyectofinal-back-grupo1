@@ -1,5 +1,7 @@
 import fieldModel from "../models/fields.model.js";
 import validation from "../helpers/fields.validation.js";
+import { uploadImage, deleteImage } from "../libs/cloudinary.js";
+import fs from "fs-extra";
 
 //GET
 const getAllFields = async (req, res) => { 
@@ -61,8 +63,18 @@ const createField = async (req, res) => { //Only for the owner of the sportCente
       validation.sizeValidation(bodyfield.size) &&
       await validation.validateSportCenter(bodyfield.idSportCenter)
     ) {
-      const newField = new fieldModel(bodyfield);
+      const photo = {
+        url: "",
+        public_id: "",
+      }
+      if(req.files.image){
+        const result = await uploadImage(req.files.image.tempFilePath);
+        photo.url = result.secure_url;
+        photo.public_id = result.public_id;
+      }
+      const newField = new fieldModel({...bodyfield, photo});
       await newField.save();
+      fs.remove(req.files.image.tempFilePath);
       res.status(201).json(newField);
     } else {
       res.status(400).json("The written data is invalid");
@@ -113,6 +125,9 @@ const deleteField = async (req, res) => { //Only for the owner of the sportCente
       _id: { $eq: req.params.id },
     }); //$eq: req.params.id means that the id from params must be equa to the field's id
     if (deletedField) {
+      if(deletedField.photo.public_id){
+        await deleteImage(deletedField.photo.public_id);
+      }
       res
         .status(200)
         .json({ message: "The Field has been Deleted", field: deletedField });

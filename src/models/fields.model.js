@@ -2,6 +2,15 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
+const photoSchema = new Schema({
+    url: {
+        type: String,
+    },
+    public_id: {
+        type: String,
+    }
+});
+
 const fieldsSchema = new Schema({
     name: {
         type: String,
@@ -44,7 +53,8 @@ const fieldsSchema = new Schema({
         type: mongoose.Types.ObjectId,
         required: true,
         immutable: true,
-    }
+    },
+    photo: photoSchema
 }, {versionKey: false});
 
 const fieldModel = mongoose.model("fields", fieldsSchema);

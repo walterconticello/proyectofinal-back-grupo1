@@ -11,6 +11,7 @@ import commentsRoute from "./routes/comments.routes.js";
 import reservationroutes from "./routes/reservation.routes.js"
 import complexRouter from "./routes/complexRouter.js"
 import connectDB from "./database/db.js";
+import fileUpload from "express-fileupload";
 
 // dotenv.config();
 
@@ -47,7 +48,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cors());
 
-
+app.use(fileUpload({
+  useTempFiles: true,
+  tempFileDir: "./upload"
+}));
 
 
 
