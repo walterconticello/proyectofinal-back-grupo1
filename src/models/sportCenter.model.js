@@ -64,11 +64,11 @@ const sportCenterSchema = new Schema(
 
     location: {
       latitude: {
-        type: Number
+        type: String
       },
 
       longitude: {
-        type: Number
+        type: String
       }
     }
 
