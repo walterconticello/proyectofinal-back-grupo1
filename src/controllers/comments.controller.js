@@ -114,17 +114,24 @@ const createComment = async (req, res) => {
 //PUT
 const updateComment = async (req, res) => {
     try {
+        const token = req.header("access_token");
+        const { id } = jwt.verify(token, process.env.JWT);
         const comment = await commentModel.findById(req.params.id);
         if(comment){
-            if(req.body.text) comment.text = req.body.text;
-            if(req.body.rating) comment.rating = req.body.rating;
-
-            if(validation.ratingValidation(comment.rating) && validation.textValidation(comment.text)){
-                await comment.save();
-                res.status(200).json(comment);
+            if(id === comment.userId){
+                if(req.body.text) comment.text = req.body.text;
+                if(req.body.rating) comment.rating = req.body.rating;
+    
+                if(validation.ratingValidation(comment.rating) && validation.textValidation(comment.text)){
+                    await comment.save();
+                    res.status(200).json(comment);
+                }
+                else {
+                    res.status(400).json("The written data is invalid");
+                }
             }
-            else {
-                res.status(400).json("The written data is invalid");
+            else{
+                res.status(400).json("You can only update your own comment");
             }
         }
         else {
@@ -140,11 +147,24 @@ const updateComment = async (req, res) => {
 //DELETE
 const deleteComment = async (req, res) => {
     try {
-        const deletedComment = await commentModel.findOneAndDelete({ _id: { $eq: req.params.id }});
-        if(deletedComment) {
-            res.status(200).json({ message: "The Comment has been deleted", comment: deletedComment});
+        const token = req.header("access_token");
+        const { id } = jwt.verify(token, process.env.JWT);
+        const comment = await commentModel.findById(req.params.id);
+        if(comment){
+            if(id === comment.userId){
+                const deletedComment = await commentModel.findOneAndDelete({ _id: { $eq: req.params.id }});
+                if(deletedComment) {
+                    res.status(200).json({ message: "The Comment has been deleted", comment: deletedComment});
+                }
+                else {
+                    res.status(404).json("Comment Not Found");
+                }
+            }
+            else{
+                res.status(400).json("You can only delete your own comment");
+            }     
         }
-        else {
+        else{
             res.status(404).json("Comment Not Found");
         }
     }
