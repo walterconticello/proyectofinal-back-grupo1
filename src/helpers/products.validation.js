@@ -12,8 +12,8 @@ const descriptionValidation = (description) => {
   );
 };
 
-const categoriesValidation = (categories) => {
-  const Allcategories = [
+const categoriesValidation = (category) => {
+  const allCategories = [
     "Balones",
     "Calzado",
     "Ropa",
@@ -21,11 +21,11 @@ const categoriesValidation = (categories) => {
     "Accesorios",
   ];
 
-  if (!Allcategories.includes(categories)) {
-    return false; // Categoría inválida
+  if (!allCategories.includes(category)) {
+    return false;
   }
 
-  return true; // Categoría válida
+  return true;
 };
 
 const priceValidation = (price) => {
@@ -57,7 +57,34 @@ const createProductDataValidation = (product) => {
 
   return true;
 };
+const validateProduct = (product) => {
+  const invalidFields = [];
 
+  if (!nameValidation(product.name)) {
+    invalidFields.push("name");
+  }
+
+  if (!descriptionValidation(product.description)) {
+    invalidFields.push("description");
+  }
+
+  if (!priceValidation(product.price)) {
+    invalidFields.push("price");
+  }
+
+  if (!stockValidation(product.stock)) {
+    invalidFields.push("stock");
+  }
+
+  if (!categoriesValidation(product.categories)) {
+    invalidFields.push("categories");
+  }
+
+  return {
+    isValid: invalidFields.length === 0,
+    invalidFields,
+  };
+};
 export default {
   nameValidation,
   descriptionValidation,
@@ -65,4 +92,5 @@ export default {
   stockValidation,
   categoriesValidation,
   createProductDataValidation,
+  validateProduct,
 };

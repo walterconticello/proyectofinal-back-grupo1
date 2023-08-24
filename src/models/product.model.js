@@ -28,7 +28,7 @@ const productSchema = new Schema(
       max: 10000,
     },
     categories: {
-      type: [String],
+      type: "string",
       required: true,
     },
     image: {

@@ -14,19 +14,19 @@ const commentsSchema = new Schema({
         type: Number,
         required: true,
         min: 0,
-        max: 5
+        max: 10
     },
     sportCenterId: {
         type: mongoose.Types.ObjectId,
         required: true,
         immutable: true,
-        default: () => new mongoose.Types.ObjectId() //When SportCenter is created we will delete the default value
+        ref: "complex" //This will be replaced by "sportCenter"
     },
     userId: {
         type: mongoose.Types.ObjectId,
         required: true,
         immutable: true,
-        default: () => new mongoose.Types.ObjectId() //When Users is created we will delete the default value
+        ref: "User"
     }
 }, {versionKey: false, timestamps: true});
 
