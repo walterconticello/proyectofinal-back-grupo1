@@ -4,8 +4,12 @@ import validation from "../helpers/comments.validation.js";
 //GET
 const getAllComments = async (req, res) => {
     try {
-        const allComments = await commentModel.find();
-        res.status(200).json(allComments);
+        const allComments = await commentModel.find().populate({
+            path: "userId",
+            select: ["username", "email"], //Add profile photo field
+        });
+        const docs = await commentModel.count();
+        res.status(200).json({comments: allComments, length: docs});
     }
     catch(error) {
         console.log(error);
@@ -16,7 +20,10 @@ const getAllComments = async (req, res) => {
 //GET by ID
 const getByID = async (req, res) => {
     try {
-        const comment = await commentModel.findById(req.params.id);
+        const comment = await commentModel.findById(req.params.id).populate({
+            path: "userId",
+            select: ["username", "email"], //Add profile photo field
+        });;
         if(comment){
             res.status(200).json(comment);
         }
@@ -33,9 +40,13 @@ const getByID = async (req, res) => {
 //GET by User
 const getCommentsByUser = async (req, res) => {
     try {
-        const comments = await commentModel.find({userId: req.params.user});
-        if(comments){
-            res.status(200).json(comments);
+        const comments = await commentModel.find({userId: req.params.user}).populate({
+            path: "userId",
+            select: ["username", "email"], //Add profile photo field
+        });;
+        const docs = await commentModel.find({userId: req.params.user}).count();
+        if(comments.length > 0){
+            res.status(200).json({comments, length: docs});
         }
         else {
             res.status(404).json("There are no comments");
@@ -50,9 +61,15 @@ const getCommentsByUser = async (req, res) => {
 //GET by SportCenter
 const getCommentsBySportCenter = async (req, res) => {
     try {
-        const comments = await commentModel.find({sportCenterId: req.params.sportcenter});
-        if(comments){
-            res.status(200).json(comments);
+        const page = parseInt(req.params.page);
+        const comments = await commentModel.find({sportCenterId: req.params.sportcenter}).limit(10).skip(10 * (page - 1)).populate({
+            path: "userId",
+            select: ["username", "email"], //Add profile photo field
+        });;
+        let docs = await commentModel.find({sportCenterId: req.params.sportcenter}).count();
+        docs = Math.ceil(docs / 10);
+        if(comments.length > 0){
+            res.status(200).json({comments, pages: docs});
         }
         else {
             res.status(404).json("There are no comments");
@@ -70,13 +87,13 @@ const createComment = async (req, res) => {
         const bodyComment = {
             text: req.body.text,
             rating: req.body.rating,
-            // sportCenterId: ,
-            // userId: 
+            sportCenterId: req.body.sportCenterId,
+            userId: req.body.userId,  //Se debe traer desde el JWT
         };
         if(!validation.createCommentDataValidation(bodyComment)){
             res.status(400).json("Some data is missing");
         }
-        else if(validation.ratingValidation(bodyComment.rating) && validation.textValidation(bodyComment.text)){
+        else if(validation.ratingValidation(bodyComment.rating) && validation.textValidation(bodyComment.text) && await validation.userValidation(bodyComment.userId) && await validation.sportCenterValidation(bodyComment.sportCenterId)){
             const newComment = new commentModel(bodyComment);
             await newComment.save();
             res.status(201).json(newComment);
@@ -134,4 +151,25 @@ const deleteComment = async (req, res) => {
     }
 }
 
-export default {getAllComments, getByID, createComment, getCommentsByUser, getCommentsBySportCenter, updateComment, deleteComment};
+const getRating = async (req, res) => {
+    try {
+        const comments = await commentModel.find({sportCenterId: req.params.sportcenter});
+        let rating = 0;
+        if(comments.length>0){
+            for (let i = 0; i < comments.length; i++) {
+                rating += comments[i].rating;
+            }
+            rating = Math.floor(rating/comments.length);
+            res.status(200).json(rating);
+        }
+        else {
+            res.status(404).json(rating);
+        }
+    }
+    catch(error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export default {getAllComments, getByID, createComment, getCommentsByUser, getCommentsBySportCenter, updateComment, deleteComment, getRating};

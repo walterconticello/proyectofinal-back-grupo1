@@ -1,9 +1,12 @@
+import userModel from "../models/User.model.js";
+import sportCenterModel from "../models/complexModel.js";
+
 const textValidation = (text) => {
     return (typeof text === 'string') && text.trim().length >= 5 && text.trim().length <= 500;
 } //We could use a test() method of a regex instead of the typeof
 
 const ratingValidation = (rating) => {
-    return (typeof rating === 'number') && (rating >= 0) && (rating <= 5);
+    return (typeof rating === 'number') && (rating >= 0) && (rating <= 10);
 }
 
 const createCommentDataValidation = (comment) => {
@@ -17,4 +20,15 @@ const createCommentDataValidation = (comment) => {
     return true;
 }
 
-export default {textValidation, ratingValidation, createCommentDataValidation};
+const userValidation = async (userId) => {
+    const user = await userModel.findById(userId);
+    //validate user is the same user of jwt
+    return user;
+}
+
+const sportCenterValidation = async (sportId) => {
+    const center = await sportCenterModel.findById(sportId);
+    return center;
+}
+
+export default {textValidation, ratingValidation, createCommentDataValidation, userValidation, sportCenterValidation};
