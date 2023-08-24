@@ -29,7 +29,7 @@ const sportCenterSchema = new Schema(
     },
 
     phone : {
-      type: Number,
+      type: String,
       required: true,
     },
     
