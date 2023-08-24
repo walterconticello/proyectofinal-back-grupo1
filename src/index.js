@@ -6,15 +6,15 @@ import cookieParser from "cookie-parser";
 import authRoute from "./routes/auth.route.js";
 import fieldsRoute from "./routes/fields.routes.js";
 import productsRoute from "./routes/products.route.js";
+import salesRoute from "./routes/sales.route.js";
 import usersRoute from "./routes/users.route.js";
 import commentsRoute from "./routes/comments.routes.js";
-import reservationroutes from "./routes/reservation.routes.js"
-import complexRouter from "./routes/complexRouter.js"
+import reservationroutes from "./routes/reservation.routes.js";
+import complexRouter from "./routes/complexRouter.js";
 import connectDB from "./database/db.js";
 import fileUpload from "express-fileupload";
 
 // dotenv.config();
-
 
 const app = express();
 
@@ -48,19 +48,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cors());
 
-app.use(fileUpload({
-  useTempFiles: true,
-  tempFileDir: "./upload"
-}));
-
-
-
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "./upload",
+  })
+);
 
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 app.use("/api", fieldsRoute);
 app.use("/api", productsRoute);
+app.use("/api", salesRoute);
 app.use("/api", commentsRoute);
 app.use("/api", reservationroutes);
 app.use("/api", complexRouter);
@@ -75,4 +75,3 @@ app.use((err, req, res, next) => {
     stack: err.stack,
   });
 });
-

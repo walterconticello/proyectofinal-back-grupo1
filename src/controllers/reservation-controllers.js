@@ -1,6 +1,7 @@
 import ReservationModel from "../models/reservation.model.js";
 // const UserModel = require("../models/user.model"); aqui iria el modelo de usuarios
-import isValidObjectId from "../helpers/reservation.validation.js";
+import isValidObjectId from "../helpers/reservation.validation.cjs";
+import ValidationDate from "../helpers/reservation.validation.cjs"
 //CREATE O POST
 
 const postReservation = async (req, res) => {
@@ -32,6 +33,7 @@ const postReservation = async (req, res) => {
         IdField: req.body.IdField,
         ReservationTime: req.body.ReservationTime,
       });
+      ValidationDate(ReservationTime);
       await reservation.save();
       res.status(201).json(reservation);
     } else {

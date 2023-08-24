@@ -1,12 +1,13 @@
 import productSchema from "../models/product.model.js";
 import validation from "../helpers/products.validation.js";
-
+import { uploadImage, deleteImage } from "../utils/cloudinary.js";
+import fs from "fs-extra";
 //GET
 
 const getAllProducts = async (req, res) => {
   try {
-    const allProducts = await productSchema.find();
-    res.status(200).json(allProducts);
+    const products = await productSchema.find();
+    res.status(200).json({ products });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -32,25 +33,59 @@ const getProductById = async (req, res) => {
 //POST
 const createProduct = async (req, res) => {
   try {
-    const productBody = {
-      name: req.body.name,
-      description: req.body.description,
-      price: req.body.price,
-      stock: req.body.stock,
-      categories: req.body.categories,
+    const { name, description, price, stock, categories } = req.body;
+    let image;
+
+    if (req.files && req.files.image) {
+      const result = await uploadImage(req.files.image.tempFilePath);
+      await fs.remove(req.files.image.tempFilePath);
+      image = {
+        url: result.secure_url,
+        public_id: result.public_id,
+      };
+    }
+
+    const productData = {
+      name,
+      description,
+      price,
+      stock,
+      categories,
+      image,
     };
-    if (!validation.createProductDataValidation(productBody)) {
-      res.status(400).json({ message: "missing data" });
-    } else if (
-      validation.nameValidation(productBody.name) &&
-      validation.descriptionValidation(productBody.description) &&
-      validation.priceValidation(productBody.price) &&
-      validation.stockValidation(productBody.stock) &&
-      validation.categoriesValidation(productBody.categories)
+
+    if (!validation.createProductDataValidation(productData)) {
+      return res.status(400).json({ message: "missing data" });
+    }
+
+    if (
+      validation.nameValidation(name) &&
+      validation.descriptionValidation(description) &&
+      validation.priceValidation(price) &&
+      validation.stockValidation(stock) &&
+      validation.categoriesValidation(categories)
     ) {
-      const product = new productSchema(productBody);
+      const product = new productSchema(productData);
       await product.save();
-      res.status(201).json(product);
+      return res.status(201).json(product);
+    } else {
+      let invalidFields = [];
+      if (!validation.nameValidation(name)) {
+        invalidFields.push("name");
+      }
+      if (!validation.descriptionValidation(description)) {
+        invalidFields.push("description");
+      }
+      if (!validation.priceValidation(price)) {
+        invalidFields.push("price");
+      }
+      if (!validation.stockValidation(stock)) {
+        invalidFields.push("stock");
+      }
+      if (!validation.categoriesValidation(categories)) {
+        invalidFields.push("categories");
+      }
+      return res.status(400).json({ message: "invalid data", invalidFields });
     }
   } catch (err) {
     console.log(err);
@@ -110,7 +145,16 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const id = req.params.id;
-    await productSchema.findOneAndDelete({ _id: id });
+    const deletedProduct = await productSchema.findOneAndDelete({ _id: id });
+
+    if (deletedProduct.image.public_id) {
+      await deleteImage(deletedProduct.image.public_id);
+    }
+
+    if (!deletedProduct) {
+      return res.status(404).json({ message: "product not found" });
+    }
+
     res.status(200).json({ message: "product deleted" });
   } catch (err) {
     console.log(err);
