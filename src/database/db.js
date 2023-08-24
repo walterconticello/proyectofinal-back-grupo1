@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-const URI = "mongodb://127.0.0.1:27017"
-const DB =  "canchasapp"
+const URI = process.env.URI
+const DB =  process.env.DB
 
 
 const connectDB = async () => {
