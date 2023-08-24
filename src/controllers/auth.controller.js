@@ -1,5 +1,5 @@
 import User from "../models/User.model.js";
-import bcrypt from "bcryptjs"
+import bcrypt from "bcryptjs";
 import { createError } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 import { verifyToken } from "../utils/verifyToken.js";
@@ -24,8 +24,8 @@ export const register = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   try {
-    const user = await User.findOne({ username: req.body.username })
-    if (!user) return next(createError(404, "Usuario no encontrado!"))
+    const user = await User.findOne({ username: req.body.username });
+    if (!user) return next(createError(404, "Usuario no encontrado!"));
 
     const isPasswordCorrect = await bcrypt.compare(
       req.body.password,
@@ -62,4 +62,3 @@ export const getAuthStatus = async (req, res) => {
     });
   }
 };
-
