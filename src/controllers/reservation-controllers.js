@@ -1,35 +1,33 @@
 import ReservationModel from "../models/reservation.model.js";
 import fieldModel from "../models/fields.model.js";
-import ValidationDate from "../helpers/reservation.validation.cjs"
+import ValidationDate from "../helpers/reservation.validation.js";
 //CREATE O POST
 
 const postReservation = async (req, res) => {
   try {
-
     const IdUser = await UserModel.findById(req.body.IdUser);
     const IdField = await fieldModel.findById(req.body.IdField);
     if (IdUser) {
-      if(IdField){
-        if(ValidationDate(req.body.ReservationTime)){
+      if (IdField) {
+        if (ValidationDate(req.body.ReservationTime)) {
           const reservation = new ReservationModel({
             IdUser: req.body.IdUser,
             IdSportCenter: req.body.IdSportCenter,
             IdField: req.body.IdField,
             ReservationTime: req.body.ReservationTime,
-            Status : "confirmada"
+            Status: "confirmada",
           });
           await reservation.save();
           res.status(201).json(reservation);
-        }else{
+        } else {
           res.status(400).json({ message: "Fecha no valida" });
         }
-      }else{
+      } else {
         res.status(400).json({ message: "Cancha no existente" });
       }
-    }else {
+    } else {
       res.status(400).json({ message: "Usuario no encontrado" });
     }
-
   } catch (error) {
     res.status(400).json({ message: error.message });
     res.status(500).json({ message: "Error interno del servidor" });
@@ -62,7 +60,7 @@ const cancelledReservation = async (req, res) => {
     const reservationId = req.params.id;
     const reservation = await ReservationModel.findById(reservationId);
     if (reservation) {
-      reservation.status = "cancelada"
+      reservation.status = "cancelada";
       await reservation.save();
       res.status(200).json({ message: "Reservation cancelada" });
     } else {
@@ -114,5 +112,5 @@ export default {
   getReservationIdReservation,
   deleteIdReservation,
   putReservation,
-  cancelledReservation
+  cancelledReservation,
 };
