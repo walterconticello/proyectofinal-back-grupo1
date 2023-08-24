@@ -26,6 +26,7 @@ const getSportCenterById = async (req, res) => {
 
 const postSportCenter = async (req, res) => {
   try {
+    console.log("1")
     const bodySportCenter = {
       ownerId: req.body.ownerId,
       name: req.body.name,
@@ -48,25 +49,20 @@ const postSportCenter = async (req, res) => {
       location: req.body.location,
       photo: req.body.photo
     };
-
+    console.log("2")
     if (!validation.postSportCenterDataValidation(bodySportCenter)) {
       return res.status(400).json({ mensaje: "Error en los datos ingresados" });
     } else if (
       validation.nameValidation(bodySportCenter.name) &&
       validation.addressValidation(bodySportCenter.address) &&
-      validation.phoneValidation(bodySportCenter.phone) &&
-      validation.servicesValidation(bodySportCenter.services) &&
-      validation.fieldsValidation(bodySportCenter.fields) &&
-      validation.openHourValidation(bodySportCenter.openHour) &&
-      validation.closeHourValidation(bodySportCenter.closeHour) &&
-      validation.socialValidation(bodySportCenter.social) &&
-      validation.latitudeValidation(bodySportCenter.latitude) &&
-      validation.locationValidation(bodySportCenter.location) &&
-      validation.photoValidation(bodySportCenter.photo)
+      validation.phoneValidation(bodySportCenter.phone)
     ) {
+      console.log("3")
       const sportCenter = new sportCenterModel(bodySportCenter);
+      console.log("4")
       await sportCenter.save();
-      res.json({ mensaje: "Centro deportivo agregado con éxito" });
+      console.log("5")
+      res.json({ sportCenter: "Centro deportivo agregado con éxito" });
     } else {
       res.status(400).json({ mensaje: "Error en los datos ingresados" });
     }
