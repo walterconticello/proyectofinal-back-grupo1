@@ -104,6 +104,17 @@ const updateField = async (req, res) => { //For activate or deactivate a field, 
         validation.priceValidation(field.pricePerHour) &&
         validation.sizeValidation(field.size)
       ) {
+        if(req.files.image){
+          const result = await uploadImage(req.files.image.tempFilePath);
+
+          if(field.photo.public_id){
+            await deleteImage(field.photo.public_id);
+          }
+
+          field.photo.url = result.secure_url;
+          field.photo.public_id = result.public_id;
+
+        }
         await field.save();
         res.status(200).json(field);
       } else {
