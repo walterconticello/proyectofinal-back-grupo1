@@ -1,37 +1,45 @@
 import ReservationModel from "../models/reservation.model.js";
-import fieldModel from "../models/fields.model.js";
+// const UserModel = require("../models/user.model"); aqui iria el modelo de usuarios
+import isValidObjectId from "../helpers/reservation.validation.cjs";
 import ValidationDate from "../helpers/reservation.validation.cjs"
 //CREATE O POST
 
 const postReservation = async (req, res) => {
   try {
-
-    const IdUser = await UserModel.findById(req.body.IdUser);
-    const IdField = await fieldModel.findById(req.body.IdField);
-    if (IdUser) {
-      if(IdField){
-        if(ValidationDate(req.body.ReservationTime)){
-          const reservation = new ReservationModel({
-            IdUser: req.body.IdUser,
-            IdSportCenter: req.body.IdSportCenter,
-            IdField: req.body.IdField,
-            ReservationTime: req.body.ReservationTime,
-            Status : "confirmada"
-          });
-          await reservation.save();
-          res.status(201).json(reservation);
-        }else{
-          res.status(400).json({ message: "Fecha no valida" });
-        }
-      }else{
-        res.status(400).json({ message: "Cancha no existente" });
-      }
-    }else {
-      res.status(400).json({ message: "Usuario no encontrado" });
+    if (
+      !isValidObjectId(req.body.IdUser) ||
+      !isValidObjectId(req.body.IdSportCenter) ||
+      !isValidObjectId(req.body.IdField)
+    ) {
+      return res
+        .status(400)
+        .json({ message: "El id proporcionado no es válido" });
     }
 
+    const IdUser = await UserModel.findById(req.body.IdUser);
+    // const IdSportCenter = await X.findById(req.body.IdSportCenter); Hay que remplazar X por el modelo de complejo
+    // const IdField = await X.findById(req.body.IdField); // Remplazar por el de Canchas
+    // const ReservationTime = awat x.findOnet(req.body.ReservationTime) este buscara que no existan horarios coincidentes
+
+    if (!IdUser) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    if (req.body.IdUser === IdUser._id.toString()) {
+      //va otro IF y luego otro
+      const reservation = new ReservationModel({
+        IdUser: req.body.IdUser,
+        IdSportCenter: req.body.IdSportCenter,
+        IdField: req.body.IdField,
+        ReservationTime: req.body.ReservationTime,
+      });
+      ValidationDate(ReservationTime);
+      await reservation.save();
+      res.status(201).json(reservation);
+    } else {
+      res.status(400).json({ message: "Usuario no encontrado" });
+    }
   } catch (error) {
-    res.status(400).json({ message: error.message });
     res.status(500).json({ message: "Error interno del servidor" });
   }
 };
@@ -53,23 +61,7 @@ const getReservationIdReservation = async (req, res) => {
   if (reservation) {
     res.json(reservation);
   } else {
-    res.status(404).json({ message: error.message });
-  }
-};
-
-const cancelledReservation = async (req, res) => {
-  try {
-    const reservationId = req.params.id;
-    const reservation = await ReservationModel.findById(reservationId);
-    if (reservation) {
-      reservation.status = "cancelada"
-      await reservation.save();
-      res.status(200).json({ message: "Reservation cancelada" });
-    } else {
-      res.status(404).json({ message: "Reservation not found" });
-    }
-  } catch (err) {
-    res.status(500).json({ message: error.message });
+    res.status(404).json({ message: "Reservation not found" });
   }
 };
 
@@ -94,6 +86,8 @@ const putReservation = async (req, res) => {
     const id = req.params.id;
     const reservation = await ReservationModel.findById(id);
     if (reservation) {
+      // if(req.body.IdField &&  req.body.ReservationTime){
+      reservation.IdField = req.body.IdField;
       reservation.ReservationTime = req.body.ReservationTime;
       await reservation.save();
       res.status(200).json(reservation);
@@ -114,5 +108,4 @@ export default {
   getReservationIdReservation,
   deleteIdReservation,
   putReservation,
-  cancelledReservation
 };

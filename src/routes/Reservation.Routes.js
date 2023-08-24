@@ -7,7 +7,6 @@ router.post("/reservation" , reservationControllers.postReservation);
 router.get("/reservation", reservationControllers.getReservation);
 router.get("/reservation/:id", reservationControllers.getReservationIdReservation);
 router.delete("/reservation/:id", reservationControllers.deleteIdReservation);
-router.delete("/reservation/:id", reservationControllers.cancelledReservation);
 router.put("/reservation/:id",reservationControllers.putReservation);
 
 export default router;
