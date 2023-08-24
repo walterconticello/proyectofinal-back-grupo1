@@ -4,15 +4,13 @@ import cors from "cors";
 import morgan from "morgan";
 import authRoute from "./routes/auth.route.js"
 import usersRoute from "./routes/users.route.js"
-import privadoRoute from "./routes/private.route.js"
 import fieldsRoute from "./routes/fields.routes.js"
 import mongoose from "mongoose";
 import connectDB from "./database/db.js"
-import { verifyToken, verifyUser } from "./utils/verifyToken.js";
+// import { verifyToken, verifyUser } from "./utils/verifyToken.js";
 
 const app = express();
 dotenv.config();
-
 
 
 app.set("port", process.env.PORT || 5500);
@@ -47,7 +45,6 @@ app.use(cors());
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
-app.use('/privado', verifyToken, privadoRoute)
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;

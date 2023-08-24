@@ -11,7 +11,7 @@ import { getAuthStatus } from "../controllers/auth.controller.js";
 
 const router = express.Router();
 
-router.get("/authStatus", auth, getAuthStatus)
+router.get("/authStatus", auth, getAuthStatus);
 
 //UPDATE
 router.put("/:id", auth, verifyUser, updateUser);
