@@ -1,5 +1,6 @@
 import commentModel from "../models/comments.model.js";
 import validation from "../helpers/comments.validation.js";
+import jwt from "jsonwebtoken";
 
 //GET
 const getAllComments = async (req, res) => {
@@ -84,11 +85,13 @@ const getCommentsBySportCenter = async (req, res) => {
 //POST
 const createComment = async (req, res) => {
     try {
+        const token = req.header("access_token");
+        const { id } = jwt.verify(token, process.env.JWT);
         const bodyComment = {
             text: req.body.text,
             rating: req.body.rating,
             sportCenterId: req.body.sportCenterId,
-            userId: req.body.userId,  //Se debe traer desde el JWT
+            userId: id,
         };
         if(!validation.createCommentDataValidation(bodyComment)){
             res.status(400).json("Some data is missing");
