@@ -29,7 +29,7 @@ const sportCenterSchema = new Schema(
     },
 
     phone : {
-      type: Number,
+      type: String,
       required: true,
     },
     
@@ -64,11 +64,11 @@ const sportCenterSchema = new Schema(
 
     location: {
       latitude: {
-        type: Number
+        type: String
       },
 
       longitude: {
-        type: Number
+        type: String
       }
     }
 

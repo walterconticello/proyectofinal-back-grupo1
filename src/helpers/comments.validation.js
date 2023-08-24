@@ -22,7 +22,6 @@ const createCommentDataValidation = (comment) => {
 
 const userValidation = async (userId) => {
     const user = await userModel.findById(userId);
-    //validate user is the same user of jwt
     return user;
 }
 

@@ -20,7 +20,7 @@ const commentsSchema = new Schema({
         type: mongoose.Types.ObjectId,
         required: true,
         immutable: true,
-        ref: "complex" //This will be replaced by "sportCenter"
+        ref: "sportCenter"
     },
     userId: {
         type: mongoose.Types.ObjectId,
