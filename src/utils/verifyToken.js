@@ -25,6 +25,23 @@ export const verifyUser = (req, res, next) => {
 	});
 };
 
+export const verifyOwner = async (req, res, next) => {
+	try {
+		const user = await User.findById(req.params.id);
+		if (!user) {
+			return res.status(404).json({ message: "Usuario no encontrado" });
+		}
+
+		if (req.user.isAdmin || user.isOwner) {
+			next();
+		} else {
+			return res.status(403).json({ message: "No estás autorizado para realizar esta acción" });
+		}
+	} catch (error) {
+		return res.status(500).json({ message: "Error interno del servidor" });
+	}
+};
+
 export const verifyAdmin = (req, res, next) => {
 	verifyToken(req, res, (err) => {
 		if (err) return next(createError(403, "No estas autorizado!"));
