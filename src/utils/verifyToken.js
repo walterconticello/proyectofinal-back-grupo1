@@ -45,10 +45,11 @@ export const verifyOwner = async (req, res, next) => {
 export const verifyAdmin = (req, res, next) => {
 	verifyToken(req, res, (err) => {
 		if (err) return next(createError(403, "No estas autorizado!"));
+
 		if (req.user.isAdmin) {
 			next();
 		} else {
-			next(createError(403, "No estas autorizado!"));
+			next(createError(403, "No estas autorizado como administrador!"));
 		}
 	});
 };
