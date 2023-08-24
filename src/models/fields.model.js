@@ -2,17 +2,16 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
+const photoSchema = new Schema({
+    url: {
+        type: String,
+    },
+    public_id: {
+        type: String,
+    }
+});
+
 const fieldsSchema = new Schema({
-    //We'll use the auto-generated mongo's identifiers
-    
-    // idField: {
-    //     type: mongoose.Types.ObjectId,
-    //     required: true,
-    //     index: true,
-    //     unique: true,
-    //     immutable: true,
-    //     default: () => new mongoose.Types.ObjectId()
-    // },
     name: {
         type: String,
         required: true,
@@ -30,8 +29,8 @@ const fieldsSchema = new Schema({
     closeHour: {
         type: Number,
         required: true,
-        min: 0,
-        max: 23
+        min: 1,
+        max: 24
     },
     pricePerHour: {
         type: Number,
@@ -39,12 +38,23 @@ const fieldsSchema = new Schema({
         min: 0,
         max: 100000 //Max price $100.000
     },
+    size: {
+        type: Number,
+        required: true,
+        min: 5,
+        max: 11
+    },
+    isActive: {
+        type: Boolean,
+        required: true,
+        default: true,
+    },
     idSportCenter: {
         type: mongoose.Types.ObjectId,
         required: true,
         immutable: true,
-        default: () => new mongoose.Types.ObjectId() //When SportCenter is created we will replace the default value
-    }
+    },
+    photo: photoSchema
 }, {versionKey: false});
 
 const fieldModel = mongoose.model("fields", fieldsSchema);
