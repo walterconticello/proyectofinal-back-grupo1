@@ -1,17 +1,16 @@
-import mongoose from "mongoose";
-const { Schema } = mongoose;
+import mongoose from 'mongoose';
 
-const UserSchema = new Schema(
+const UserSchema = new mongoose.Schema(
   {
     username: {
       type: String,
       required: true,
-      unique: true,
+      unique: true
     },
     email: {
       type: String,
       required: true,
-      unique: true,
+      unique: true
     },
     password: {
       type: String,
@@ -23,7 +22,11 @@ const UserSchema = new Schema(
     },
     isAdmin: {
       type: Boolean,
-      default: false,
+      default: false
+    },
+    isOwner: {
+      type: Boolean,
+      default: false
     },
   },
   {
@@ -32,4 +35,4 @@ const UserSchema = new Schema(
   }
 );
 
-export default mongoose.model("User", UserSchema);
+export default mongoose.model("User", UserSchema)

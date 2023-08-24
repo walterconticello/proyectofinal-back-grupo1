@@ -6,14 +6,18 @@ import {
   updateUser,
 } from "../controllers/user.controller.js";
 import { verifyAdmin, verifyToken, verifyUser } from "../utils/verifyToken.js";
+import { auth } from "../middlewares/auth.js";
+import { getAuthStatus } from "../controllers/auth.controller.js";
 
 const router = express.Router();
 
+router.get("/authStatus", auth, getAuthStatus);
+
 //UPDATE
-router.put("/:id", verifyUser, updateUser);
+router.put("/:id", auth, verifyUser, updateUser);
 
 //DELETE
-router.delete("/:id", verifyUser, deleteUser);
+router.delete("/:id", auth, verifyUser, deleteUser);
 
 //GET
 router.get("/:id", verifyUser, getUser);
