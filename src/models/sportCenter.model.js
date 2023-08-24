@@ -5,7 +5,8 @@ const { Schema } = mongoose;
 const sportCenterSchema = new Schema(
   {
     ownerId: {
-      type: ObjectId,
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
 

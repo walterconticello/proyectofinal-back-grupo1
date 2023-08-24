@@ -1,4 +1,4 @@
-import sportCenterModel from "../models/complexModel.js";
+import sportCenterModel from "../models/sportCenter.model.js";
 
 const nameValidation = (name) => {
     const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;

@@ -10,7 +10,7 @@ import salesRoute from "./routes/sales.route.js";
 import usersRoute from "./routes/users.route.js";
 import commentsRoute from "./routes/comments.routes.js";
 import reservationroutes from "./routes/reservation.routes.js";
-import complexRouter from "./routes/complexRouter.js";
+import complexRouter from "./routes/sportCenter.routes.js";
 import connectDB from "./database/db.js";
 import fileUpload from "express-fileupload";
 

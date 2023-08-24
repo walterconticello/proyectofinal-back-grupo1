@@ -1,5 +1,5 @@
 import userModel from "../models/User.model.js";
-import sportCenterModel from "../models/complexModel.js";
+import sportCenterModel from "../models/sportCenter.model.js";
 
 const textValidation = (text) => {
     return (typeof text === 'string') && text.trim().length >= 5 && text.trim().length <= 500;

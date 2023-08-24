@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import ReservationModel from "../models/reservation.model.js";
-import SportCenterModel from "../models/complexModel.js";
+import SportCenterModel from "../models/sportCenter.model.js";
 import { zonedTimeToUtc, format } from "date-fns-tz";
 
 const timeZone = "America/Argentina/Buenos_Aires";

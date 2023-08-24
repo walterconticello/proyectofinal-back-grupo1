@@ -1,5 +1,5 @@
-import sportCenterModel from "../models/sportCenter.model";
-import validation from "../helpers/sportCenterValidation";
+import sportCenterModel from "../models/sportCenter.model.js";
+import validation from "../helpers/sportCenter.validation.js";
 //Get
 
 const getAllSportCenters = async (req, res) => {
