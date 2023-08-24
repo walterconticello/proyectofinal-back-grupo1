@@ -1,5 +1,5 @@
 const nameValidation = (name) => {
-  const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
+  const regex = /^([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\']+[\s])+([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])+[\s]?([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])?$/g
   return regex.test(name) && name.length >= 3 && name.length <= 50;
 };
 
@@ -41,71 +41,51 @@ const closeHourValidation = (closeHour) => {
   return regex.test(closeHour) && closeHour >= 0 && closeHour <= 23;
 };
 
-const socialValidation = (social) => {
-  const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
-  return (
-    regex.test(social.facebook) &&
-    social.facebook.length >= 3 &&
-    social.facebook.length <= 100 &&
-    regex.test(social.instagram) &&
-    social.instagram.length >= 3 &&
-    social.instagram.length <= 100
-  );
+const socialValidation = (social) => { 
+  URL = require('url').URL;
+  try {
+    new URL(social);
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
 
-const latitudeValidation = (latitude) => {
-  const regex = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/;
-  return regex.test(latitude);
+const latitudeValidation = (latitude) => { 
+  const regex = /^[0-9]+$/;
+  return regex.test(latitude) && latitude >= 0 && latitude <= 90;
 };
 
 const locationValidation = (location) => {
   const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
-  return regex.test(location) && location.length >= 3 && location.length <= 100;
+  return regex.test(location) && location.length >= 3 && location.length <= 50;
 };
 
 
 
-const postSportCenterDataValidation = (bodySportCenter) => {
-  return bodySportCenter.name && bodySportCenter.address && bodySportCenter.phone;
+const postSportCenterDataValidation = (bodySportCenter) => { 
+  return (
+    bodySportCenter.name &&
+    bodySportCenter.address &&
+    bodySportCenter.phone &&
+    bodySportCenter.fields &&
+    bodySportCenter.closeHour &&
+    bodySportCenter.openHour 
+  );
 };
-
+    
 const putSportCenterDataValidation = (bodySportCenter) => {
   return (
     bodySportCenter.name ||
     bodySportCenter.address ||
     bodySportCenter.phone ||
-    bodySportCenter.services ||
     bodySportCenter.fields ||
-    bodySportCenter.openHour ||
     bodySportCenter.closeHour ||
-    bodySportCenter.social ||
-    bodySportCenter.latitude ||
-    bodySportCenter.location
+    bodySportCenter.openHour 
   );
 };
 
-const postSportCenterValidation = (bodySportCenter) => {
-  return (
-    nameValidation(bodySportCenter.name) &&
-    addressValidation(bodySportCenter.address) &&
-    phoneValidation(bodySportCenter.phone)
-  );
-};
 
-const putSportCenterValidation = (bodySportCenter) => {
-  return (
-    nameValidation(bodySportCenter.name) ||
-    addressValidation(bodySportCenter.address) ||
-    phoneValidation(bodySportCenter.phone) ||
-    servicesValidation(bodySportCenter.services) ||
-    fieldsValidation(bodySportCenter.fields) ||
-    openHourValidation(bodySportCenter.openHour) ||
-    closeHourValidation(bodySportCenter.closeHour) ||
-    socialValidation(bodySportCenter.social) ||
-    latitudeValidation(bodySportCenter.latitude) ||
-    locationValidation(bodySportCenter.location)
-  );
-};
 
 export default {
   nameValidation,
@@ -120,7 +100,5 @@ export default {
   locationValidation,
   postSportCenterDataValidation,
   putSportCenterDataValidation,
-  postSportCenterValidation,
-  putSportCenterValidation,
   photoValidation,
 };

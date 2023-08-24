@@ -7,6 +7,7 @@ const sportCenterSchema = new Schema(
     ownerId: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      unique: true,
       // required: true,
     },
 
