@@ -14,15 +14,15 @@ const router = express.Router();
 router.get("/authStatus", auth, getAuthStatus);
 
 //UPDATE
-router.put("/:id", auth, verifyUser, updateUser);
+router.put("/user/:id", auth, verifyUser, updateUser);
 
 //DELETE
-router.delete("/:id", auth, verifyUser, deleteUser);
+router.delete("/user/:id", auth, verifyUser, deleteUser);
 
 //GET
-router.get("/:id", verifyUser, getUser);
+router.get("/user/:id", verifyUser, getUser);
 
 //GET ALL (solo para administradores)
-router.get("/", verifyAdmin, getUsers);
+router.get("/user", verifyAdmin, getUsers);
 
 export default router;
