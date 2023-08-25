@@ -29,42 +29,23 @@ const sportCenterSchema = new Schema(
     },
 
     phone : {
-      type: Number,
+      type: String,
       required: true,
     },
     
     services: {
       bar: {
         type: Boolean,
-    },
-    showers: {
-      type: Boolean,
-    },
-    Grill: {
-      type: Boolean,
-    },
-    parking: {
-      type: Boolean,
-    },
-    },
-
-    fields: {
-      type: String,
-    },
-
-    openHour: {
-      type: String,
-      lowercase: true,
-      // min: 0,
-      // max: 24,
-    },
-
-    closeHour: {
-      type: String,
-      trim: true,
-      lowercase: true,
-      // min: 0,
-      // max: 24,
+      },
+      showers: {
+        type: Boolean,
+      },
+      Grill: {
+        type: Boolean,
+      },
+      parking: {
+        type: Boolean,
+      },
     },
 
     photo: {
@@ -81,18 +62,16 @@ const sportCenterSchema = new Schema(
       },
     },
 
-    latitude: {
-      type: String,
-    },
-
     location: {
-      type: String,
-      trim: true,
-      lowercase: true,
-      minlength: 3,
-      maxlength: 30,
-    },
-    
+      latitude: {
+        type: String
+      },
+
+      longitude: {
+        type: String
+      }
+    }
+
   },
   { versionKey: false }
 );

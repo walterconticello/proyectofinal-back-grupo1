@@ -34,6 +34,7 @@ const getProductById = async (req, res) => {
 const createProduct = async (req, res) => {
   try {
     const { name, description, price, stock, categories } = req.body;
+    console.log(req.files);
     let image;
 
     if (req.files && req.files.image) {

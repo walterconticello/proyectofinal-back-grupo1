@@ -1,5 +1,6 @@
 import commentModel from "../models/comments.model.js";
 import validation from "../helpers/comments.validation.js";
+import jwt from "jsonwebtoken";
 
 //GET
 const getAllComments = async (req, res) => {
@@ -84,22 +85,29 @@ const getCommentsBySportCenter = async (req, res) => {
 //POST
 const createComment = async (req, res) => {
     try {
-        const bodyComment = {
-            text: req.body.text,
-            rating: req.body.rating,
-            sportCenterId: req.body.sportCenterId,
-            userId: req.body.userId,  //Se debe traer desde el JWT
-        };
-        if(!validation.createCommentDataValidation(bodyComment)){
-            res.status(400).json("Some data is missing");
+        const token = req.header("access_token");
+        const { id } = jwt.verify(token, process.env.JWT);
+        if(id){
+            const bodyComment = {
+                text: req.body.text,
+                rating: req.body.rating,
+                sportCenterId: req.body.sportCenterId,
+                userId: id,
+            };
+            if(!validation.createCommentDataValidation(bodyComment)){
+                res.status(400).json("Some data is missing");
+            }
+            else if(validation.ratingValidation(bodyComment.rating) && validation.textValidation(bodyComment.text) && await validation.userValidation(bodyComment.userId) && await validation.sportCenterValidation(bodyComment.sportCenterId)){
+                const newComment = new commentModel(bodyComment);
+                await newComment.save();
+                res.status(201).json(newComment);
+            }
+            else {
+                res.status(400).json("The written data is invalid");
+            }
         }
-        else if(validation.ratingValidation(bodyComment.rating) && validation.textValidation(bodyComment.text) && await validation.userValidation(bodyComment.userId) && await validation.sportCenterValidation(bodyComment.sportCenterId)){
-            const newComment = new commentModel(bodyComment);
-            await newComment.save();
-            res.status(201).json(newComment);
-        }
-        else {
-            res.status(400).json("The written data is invalid");
+        else{
+            res.status(404).json("You are not logged");
         }
     }
     catch(error) {
@@ -111,21 +119,33 @@ const createComment = async (req, res) => {
 //PUT
 const updateComment = async (req, res) => {
     try {
-        const comment = await commentModel.findById(req.params.id);
-        if(comment){
-            if(req.body.text) comment.text = req.body.text;
-            if(req.body.rating) comment.rating = req.body.rating;
-
-            if(validation.ratingValidation(comment.rating) && validation.textValidation(comment.text)){
-                await comment.save();
-                res.status(200).json(comment);
+        const token = req.header("access_token");
+        const { id } = jwt.verify(token, process.env.JWT);
+        if(id){
+            const comment = await commentModel.findById(req.params.id);
+            if(comment){
+                if(id === comment.userId){
+                    if(req.body.text) comment.text = req.body.text;
+                    if(req.body.rating) comment.rating = req.body.rating;
+        
+                    if(validation.ratingValidation(comment.rating) && validation.textValidation(comment.text)){
+                        await comment.save();
+                        res.status(200).json(comment);
+                    }
+                    else {
+                        res.status(400).json("The written data is invalid");
+                    }
+                }
+                else{
+                    res.status(400).json("You can only update your own comment");
+                }
             }
             else {
-                res.status(400).json("The written data is invalid");
+                res.status(404).json("Comment Not Found");
             }
         }
-        else {
-            res.status(404).json("Comment Not Found");
+        else{
+            res.status(404).json("You are not logged");
         }
     }
     catch(error) {
@@ -137,12 +157,30 @@ const updateComment = async (req, res) => {
 //DELETE
 const deleteComment = async (req, res) => {
     try {
-        const deletedComment = await commentModel.findOneAndDelete({ _id: { $eq: req.params.id }});
-        if(deletedComment) {
-            res.status(200).json({ message: "The Comment has been deleted", comment: deletedComment});
+        const token = req.header("access_token");
+        const { id } = jwt.verify(token, process.env.JWT);
+        if(id){
+            const comment = await commentModel.findById(req.params.id);
+            if(comment){
+                if(id === comment.userId){
+                    const deletedComment = await commentModel.findOneAndDelete({ _id: { $eq: req.params.id }});
+                    if(deletedComment) {
+                        res.status(200).json({ message: "The Comment has been deleted", comment: deletedComment});
+                    }
+                    else {
+                        res.status(404).json("Comment Not Found");
+                    }
+                }
+                else{
+                    res.status(400).json("You can only delete your own comment");
+                }     
+            }
+            else{
+                res.status(404).json("Comment Not Found");
+            }
         }
-        else {
-            res.status(404).json("Comment Not Found");
+        else{
+            res.status(404).json("You are not logged");
         }
     }
     catch(error) {

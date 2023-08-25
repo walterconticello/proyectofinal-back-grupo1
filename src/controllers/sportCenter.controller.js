@@ -1,11 +1,23 @@
 import sportCenterModel from "../models/sportCenter.model.js";
 import validation from "../helpers/sportCenter.validation.js";
+import fieldsModel from "../models/fields.model.js";
+
 //Get
 
 const getAllSportCenters = async (req, res) => {
   try {
     const sportCenters = await sportCenterModel.find();
-    res.json(sportCenters);
+    const responseSportCenter = [];
+    for (let i = 0; i < sportCenters.length; i++) {
+      const fields = await fieldsModel.find({idSportCenter: sportCenters[i]._id});
+      const response= {
+      ...sportCenters[i] ,
+      fields
+    }
+    responseSportCenter.push(response);
+
+    }
+    res.json(responseSportCenter);
   } catch (error) {
     res.status(500).json({ mensaje: "Error al obtener los centros deportivos" });
   }
@@ -16,7 +28,11 @@ const getAllSportCenters = async (req, res) => {
 const getSportCenterById = async (req, res) => {
   try {
     const sportCenter = await sportCenterModel.findById(req.params.id);
-    res.json(sportCenter);
+    const fields = await fieldsModel.find ({idSportCenter: sportCenter._id});
+    res.json({
+      ...sportCenter,
+      fields
+    });
   } catch (error) {
     res.status(500).json({ mensaje: "Error al obtener el centro deportivo" });
   }
@@ -26,21 +42,32 @@ const getSportCenterById = async (req, res) => {
 
 const postSportCenter = async (req, res) => {
   try {
-    const { ownerId, name, address, phone, fields, closeHour , openHour} = req.body;
+    const { name, address, phone, services, location, social, photo} = req.body;
 
     const sportCenterData = {
-      ownerId,
       name,
       address,
       phone,
-      fields,
-      closeHour,
-      openHour,
+      services,
+      location,
+      social,
+      photo
     };
 
-    const sportCenter = new sportCenterModel(sportCenterData);
-    await sportCenter.save();
-    return res.status(201).json({ mensaje: "Centro deportivo creado con éxito" });
+    if (
+      validation.nameValidation(sportCenterData.name) &&
+      validation.addressValidation(sportCenterData.address) &&
+      validation.phoneValidation(sportCenterData.phone) &&
+      validation.locationValidation(sportCenterData.location) &&
+      validation.socialValidation(sportCenterData.social) &&
+      validation.photoValidation(sportCenterData.photo)
+    ) {
+      const sportCenter = new sportCenterModel(sportCenterData);
+      await sportCenter.save();
+      return res.status(201).json({ mensaje: "Centro deportivo creado con éxito" });
+    } else {
+      res.status(400).json({ mensaje: "Error en los datos ingresados" });
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Error al crear centro deportivo" });
@@ -51,16 +78,16 @@ const postSportCenter = async (req, res) => {
 
 const putSportCenter = async (req, res) => {
   try {
-    const { ownerId, name, address, phone, fields, closeHour , openHour} = req.body;
+    const { name, address, phone, services, location, social, photo} = req.body;
 
     const sportCenterData = {
-      ownerId,
       name,
       address,
       phone,
-      fields,
-      closeHour,
-      openHour,
+      services,
+      location,
+      social,
+      photo
     };
 
     const sportCenter = await sportCenterModel.findById(req.params.id);
@@ -69,36 +96,18 @@ const putSportCenter = async (req, res) => {
       return res.status(404).json({ message: "Centro deportivo no encontrado" });
     }
 
-    if (ownerId) {
-      sportCenter.ownerId = ownerId;
-    }
-    if (name) {
-      sportCenter.name = name;
-    }
-    if (address) {
-      sportCenter.address = address;
-    }
-    if (phone) {
-      sportCenter.phone = phone;
-    }
-    if (fields) {
-      sportCenter.fields = fields;
-    }
-    if (closeHour) {
-      sportCenter.closeHour = closeHour;
-    }
-    if (openHour) {
-      sportCenter.openHour = openHour;
-    }
+    sportCenter.set(sportCenterData);
+
+    const validationResult = await sportCenter.validate();
 
     if (
-      validation.ownerIdValidation(sportCenter.ownerId) &&
-      validation.nameValidation(sportCenter.name) &&
-      validation.addressValidation(sportCenter.address) &&
-      validation.phoneValidation(sportCenter.phone) &&
-      validation.fieldsValidation(sportCenter.fields) &&
-      validation.closeHourValidation(sportCenter.closeHour) &&
-      validation.openHourValidation(sportCenter.openHour)
+      validation.nameValidation(sportCenterData.name) &&
+      validation.addressValidation(sportCenterData.address) &&
+      validation.phoneValidation(sportCenterData.phone) &&
+      validation.locationValidation(sportCenterData.location) &&
+      validation.socialValidation(sportCenterData.social) &&
+      validation.photoValidation(sportCenterData.photo) &&
+      validationResult
     ) {
       await sportCenter.save();
       res.json({ mensaje: "Centro deportivo actualizado con éxito" });
@@ -125,6 +134,7 @@ const deleteSportCenter = async (req, res) => {
     res.status(500).json({ mensaje: "Error al eliminar centro deportivo" });
   }
 };
+
 
 export default {
   getAllSportCenters,

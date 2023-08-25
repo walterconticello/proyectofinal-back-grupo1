@@ -1,6 +1,7 @@
 import ReservationModel from "../models/reservation.model.js";
 import fieldModel from "../models/fields.model.js";
 import ValidationDate from "../helpers/reservation.validation.js";
+import reservationModel from "../models/reservation.model.js";
 //CREATE O POST
 
 const postReservation = async (req, res) => {
@@ -54,6 +55,17 @@ const getReservationIdReservation = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+const getReservationByFieldId = async (req, res) => {
+  try {
+    const fieldId = req.params.fieldid;
+    const reservations = await reservationModel.find({ IdField: { $eq: fieldId }});
+    res.status(200).json(reservations);
+  }
+  catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
 
 const cancelledReservation = async (req, res) => {
   try {
@@ -113,4 +125,5 @@ export default {
   deleteIdReservation,
   putReservation,
   cancelledReservation,
+  getReservationByFieldId
 };
