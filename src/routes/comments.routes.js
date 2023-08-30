@@ -6,12 +6,10 @@ import {
   verifyToken,
   verifyUser,
 } from "../utils/verifyToken.js";
-import auth from "../middlewares/auth.js";
+import { auth } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-router.get("/comments", commentsController.getAllComments);
-router.get("/comments/:id", commentsController.getByID);
 router.get("/comments/user/:user", commentsController.getCommentsByUser);
 router.get(
   "/comments/sportcenter/:sportcenter/:page",
