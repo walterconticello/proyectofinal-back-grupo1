@@ -78,7 +78,7 @@ const cancelledReservation = async (req, res) => {
     } else {
       res.status(404).json({ message: "Reservation not found" });
     }
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
@@ -93,7 +93,7 @@ const deleteIdReservation = async (req, res) => {
       res.status(404).json({ message: "Reservation not found" });
     }
   } catch (err) {
-    console.log(err);
+    res.status(500).json({ message: error.message });
   }
 };
 
