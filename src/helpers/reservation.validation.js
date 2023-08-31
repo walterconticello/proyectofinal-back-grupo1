@@ -17,6 +17,7 @@ async function isReservationExists(IdField, ReservationTime) {
     IdField,
     ReservationTime,
   });
+  console.log(existingReservation);
   return existingReservation !== null;
 }
 
