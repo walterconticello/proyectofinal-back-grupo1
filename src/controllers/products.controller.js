@@ -34,12 +34,11 @@ const getProductById = async (req, res) => {
 const createProduct = async (req, res) => {
   try {
     const { name, description, price, stock, categories } = req.body;
-    console.log(req.files);
     let image;
 
     if (req.files && req.files.image) {
       const result = await uploadImage(req.files.image.tempFilePath);
-      await fs.remove(req.files.image.tempFilePath);
+      fs.remove(req.files.image.tempFilePath);
       image = {
         url: result.secure_url,
         public_id: result.public_id,
@@ -101,12 +100,16 @@ const updateProduct = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    console.log(req.body);
     const { name, description, price, stock, categories } = req.body;
     let image;
 
     if (req.files && req.files.image) {
       const result = await uploadImage(req.files.image.tempFilePath);
+
+      if (product.image.public_id) {
+        await deleteImage(product.image.public_id);
+      }
+
       await fs.remove(req.files.image.tempFilePath);
       image = {
         url: result.secure_url,
