@@ -2,21 +2,22 @@ import ReservationModel from "../models/reservation.model.js";
 import fieldModel from "../models/fields.model.js";
 import ValidationDate from "../helpers/reservation.validation.js";
 import reservationModel from "../models/reservation.model.js";
+import UserModel from "../models/User.model.js";
+
 //CREATE O POST
 
 const postReservation = async (req, res) => {
   try {
-    const IdUser = await UserModel.findById(req.body.IdUser);
+    const IdUser = await UserModel.findById(req.user.id);
     const IdField = await fieldModel.findById(req.body.IdField);
     if (IdUser) {
       if (IdField) {
-        if (ValidationDate(req.body.ReservationTime)) {
+        if (ValidationDate(req.body.ReservationTime, IdField)) {
           const reservation = new ReservationModel({
-            IdUser: req.body.IdUser,
+            IdUser: req.user.id,
             IdSportCenter: req.body.IdSportCenter,
             IdField: req.body.IdField,
             ReservationTime: req.body.ReservationTime,
-            Status: "confirmada",
           });
           await reservation.save();
           res.status(201).json(reservation);
@@ -59,13 +60,14 @@ const getReservationIdReservation = async (req, res) => {
 const getReservationByFieldId = async (req, res) => {
   try {
     const fieldId = req.params.fieldid;
-    const reservations = await reservationModel.find({ IdField: { $eq: fieldId }});
+    const reservations = await reservationModel.find({
+      IdField: { $eq: fieldId },
+    });
     res.status(200).json(reservations);
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};
 
 const cancelledReservation = async (req, res) => {
   try {
@@ -125,5 +127,5 @@ export default {
   deleteIdReservation,
   putReservation,
   cancelledReservation,
-  getReservationByFieldId
+  getReservationByFieldId,
 };

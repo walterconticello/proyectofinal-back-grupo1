@@ -9,7 +9,7 @@ const reservationSchema = new Schema(
     ReservationTime: { type: Date, require: true },
     Status: {
       type: String,
-      enum: ["confirmada", "cancelada"],
+      enum: ["confirmada", "cancelada", "pendiente"],
       default: "pendiente",
     },
   },
