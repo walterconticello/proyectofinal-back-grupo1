@@ -47,20 +47,17 @@ const postSportCenter = async (req, res) => {
     const sportCenterData = {
       name,
       address,
-      phone,
-      services,
-      location,
-      social,
-      photo
+      phone
     };
 
     if (
       validation.nameValidation(sportCenterData.name) &&
       validation.addressValidation(sportCenterData.address) &&
-      validation.phoneValidation(sportCenterData.phone) &&
-      validation.locationValidation(sportCenterData.location) &&
-      validation.socialValidation(sportCenterData.social) &&
-      validation.photoValidation(sportCenterData.photo)
+      validation.phoneValidation(sportCenterData.phone) 
+      // &&
+      // validation.locationValidation(sportCenterData.location) &&
+      // validation.socialValidation(sportCenterData.social) &&
+      // validation.photoValidation(sportCenterData.photo)
     ) {
       const sportCenter = new sportCenterModel(sportCenterData);
       await sportCenter.save();
