@@ -2,6 +2,7 @@ import fieldModel from "../models/fields.model.js";
 import validation from "../helpers/fields.validation.js";
 import { uploadImage, deleteImage } from "../libs/cloudinary.js";
 import fs from "fs-extra";
+import sportCenterModel from "../models/sportCenter.model.js";
 
 //GET
 const getAllFields = async (req, res) => {
@@ -57,36 +58,46 @@ const createField = async (req, res) => {
       isActive: req.body.isActive,
       idSportCenter: req.body.idSportCenter,
     };
-    console.log(
-      validation.hourValidation(bodyfield.openHour, bodyfield.closeHour)
-    );
 
-    if (!validation.createFieldDataValidation(bodyfield)) {
-      res.status(400).json("Some data is missing");
-    } else if (
-      validation.nameValidation(bodyfield.name) &&
-      validation.hourValidation(bodyfield.openHour, bodyfield.closeHour) &&
-      validation.priceValidation(bodyfield.pricePerHour) &&
-      validation.sizeValidation(bodyfield.size) &&
-      (await validation.validateSportCenter(bodyfield.idSportCenter))
-    ) {
-      const photo = {
-        url: "",
-        public_id: "",
-      };
-      if (req.files.image) {
-        console.log(req.files.image);
-        const result = await uploadImage(req.files.image.tempFilePath);
-        photo.url = result.secure_url;
-        photo.public_id = result.public_id;
+    if(await validation.validateSportCenter(bodyfield.idSportCenter)){
+      const sportCenter = await sportCenterModel.findById(bodyfield.idSportCenter);
+      if((req.user._id === sportCenter.ownerId) || req.user.isAdmin){
+        if (!validation.createFieldDataValidation(bodyfield)) {
+          res.status(400).json("Some data is missing");
+        } else if (
+          validation.nameValidation(bodyfield.name) &&
+          validation.hourValidation(bodyfield.openHour, bodyfield.closeHour) &&
+          validation.priceValidation(bodyfield.pricePerHour) &&
+          validation.sizeValidation(bodyfield.size) &&
+          (await validation.validateSportCenter(bodyfield.idSportCenter))
+        ) {
+          const photo = {
+            url: "",
+            public_id: "",
+          };
+          if (req.files.image) {
+            console.log(req.files.image);
+            const result = await uploadImage(req.files.image.tempFilePath);
+            photo.url = result.secure_url;
+            photo.public_id = result.public_id;
+          }
+          const newField = new fieldModel({ ...bodyfield, photo });
+          await newField.save();
+          fs.remove(req.files.image.tempFilePath);
+          res.status(201).json(newField);
+        } else {
+          res.status(400).json("The written data is invalid");
+        }
       }
-      const newField = new fieldModel({ ...bodyfield, photo });
-      await newField.save();
-      fs.remove(req.files.image.tempFilePath);
-      res.status(201).json(newField);
-    } else {
-      res.status(400).json("The written data is invalid");
+      else {
+        res.status(400).json("You are not allowed to create a field in this sport center");
+      }
     }
+    else {
+      res.status(400).json("Invalid sport center");
+    }
+
+
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
