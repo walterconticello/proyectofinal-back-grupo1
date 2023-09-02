@@ -111,34 +111,40 @@ const updateField = async (req, res) => {
   try {
     const field = await fieldModel.findById(req.params.id);
     if (field) {
-      if (req.body.name) field.name = req.body.name;
-      if (req.body.openHour) field.openHour = req.body.openHour;
-      if (req.body.closeHour) field.closeHour = req.body.closeHour;
-      if (req.body.pricePerHour) field.pricePerHour = req.body.pricePerHour;
-      if (req.body.size) field.size = req.body.size;
-      if (req.body.isActive) field.isActive = req.body.isActive;
-
-      if (
-        validation.nameValidation(field.name) &&
-        validation.hourValidation(field.openHour, field.closeHour) &&
-        validation.priceValidation(field.pricePerHour) &&
-        validation.sizeValidation(field.size)
-      ) {
-        if (req.files && req.files.image) {
-          const result = await uploadImage(req.files.image.tempFilePath);
-
-          if (field.photo.public_id) {
-            await deleteImage(field.photo.public_id);
+      const sportCenter = sportCenterModel.findById(field.idSportCenter);
+      if((sportCenter.ownerId === req.user._id) || req.user.isAdmin) {
+        if (req.body.name) field.name = req.body.name;
+        if (req.body.openHour) field.openHour = req.body.openHour;
+        if (req.body.closeHour) field.closeHour = req.body.closeHour;
+        if (req.body.pricePerHour) field.pricePerHour = req.body.pricePerHour;
+        if (req.body.size) field.size = req.body.size;
+        if (req.body.isActive) field.isActive = req.body.isActive;
+  
+        if (
+          validation.nameValidation(field.name) &&
+          validation.hourValidation(field.openHour, field.closeHour) &&
+          validation.priceValidation(field.pricePerHour) &&
+          validation.sizeValidation(field.size)
+        ) {
+          if (req.files && req.files.image) {
+            const result = await uploadImage(req.files.image.tempFilePath);
+  
+            if (field.photo.public_id) {
+              await deleteImage(field.photo.public_id);
+            }
+  
+            field.photo.url = result.secure_url;
+            field.photo.public_id = result.public_id;
+            fs.remove(req.files.image.tempFilePath);
           }
-
-          field.photo.url = result.secure_url;
-          field.photo.public_id = result.public_id;
-          fs.remove(req.files.image.tempFilePath);
+          await field.save();
+          res.status(200).json(field);
+        } else {
+          res.status(400).json("The written data is invalid");
         }
-        await field.save();
-        res.status(200).json(field);
-      } else {
-        res.status(400).json("The written data is invalid");
+      }
+      else {
+        res.status(400).json("You are not allowed to update a field in this sport center")
       }
     } else {
       res.status(404).json("Field Not Found");
