@@ -1,12 +1,12 @@
 import ReservationModel from "../models/reservation.model.js";
 import fieldModel from "../models/fields.model.js";
 import ValidationDate from "../helpers/reservation.validation.js";
-import reservationModel from "../models/reservation.model.js";
+import sportCenterModel from "../models/sportCenter.model.js";
 //CREATE O POST
 
 const postReservation = async (req, res) => {
   try {
-    const IdUser = await UserModel.findById(req.body.IdUser);
+    const IdUser = await UserModel.findById(req.user.id);
     const IdField = await fieldModel.findById(req.body.IdField);
     if (IdUser) {
       if (IdField) {
@@ -39,8 +39,31 @@ const postReservation = async (req, res) => {
 
 const getReservation = async (req, res) => {
   try {
+    if(req.user.isAdmin === false && req.user.isOwner === false){
+      const reservationUser = await ReservationModel.findById(req.user.id);
+      if(reservationUser === null){
+        console.log("este usuario no tiene reservaciones");
+      }
+    };
+
+    if(req.user.isOwner === true){
+      const reservationOwner = await fieldModel.find({ownerId : req.user.id});
+      console.log(reservationOwner);
+      if(reservationOwner === null){
+        console.log("no tiene reserva");
+        // res.status(204).json({ message : "no tiene ninguna reserva" });
+      };
+    }else{
+      res.status(403).json({ message : "usted no es owner" });
+    };
+
+    if(req.user.isAdmin === true){
+      console.log("todas las reservaciones")
     const allReservation = await ReservationModel.find();
     res.status(200).json(allReservation);
+  }else{
+      res.status(403).json({ message : "usted no es administrador" });
+    };
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

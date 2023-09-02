@@ -16,4 +16,5 @@ const reservationSchema = new Schema(
   { versionKey: false }
 );
 
-export default mongoose.model("Reservations", reservationSchema);
+const ReservationModel = mongoose.model("reservations", reservationSchema);
+export default ReservationModel;
