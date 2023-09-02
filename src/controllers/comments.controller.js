@@ -169,7 +169,7 @@ const getRating = async (req, res) => {
       rating = Math.floor(rating / comments.length);
       res.status(200).json(rating);
     } else {
-      res.status(404).json(rating);
+      res.status(200).json(rating);
     }
   } catch (error) {
     console.log(error);
