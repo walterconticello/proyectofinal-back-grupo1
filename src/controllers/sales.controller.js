@@ -28,7 +28,8 @@ const createSale = async (req, res) => {
 
 const getSales = async (req, res) => {
   try {
-    const sales = await Sale.find();
+    const sales = await Sale.find().populate("productId").populate("userId");
+
     res.status(200).json(sales);
   } catch (error) {
     console.error("Error fetching sales:", error);
@@ -39,7 +40,9 @@ const getSales = async (req, res) => {
 const getSaleById = async (req, res) => {
   try {
     const saleId = req.params.id;
-    const sale = await Sale.findById(saleId);
+    const sale = await Sale.findById(saleId)
+      .populate("productId")
+      .populate("userId");
     if (sale) {
       res.status(200).json(sale);
     } else {
@@ -57,7 +60,9 @@ const getSalesByUserId = async (req, res) => {
     const id = jwt.verify(token, process.env.JWT);
 
     if (id && id.id) {
-      const sales = await Sale.find({ userId: id.id });
+      const sales = await Sale.find({ userId: id.id })
+        .populate("productId")
+        .populate("userId");
       res.status(200).json(sales);
     } else {
       res.status(401).json({ message: "Unauthorized" });
