@@ -59,9 +59,9 @@ const createField = async (req, res) => {
       idSportCenter: req.body.idSportCenter,
     };
 
-    if(await validation.validateSportCenter(bodyfield.idSportCenter)){
+    if(await validation.validateSportCenter(req.body.idSportCenter)){
       const sportCenter = await sportCenterModel.findById(bodyfield.idSportCenter);
-      if((req.user._id === sportCenter.ownerId) || req.user.isAdmin){
+      if((req.user.id == sportCenter.ownerId) || req.user.isAdmin){
         if (!validation.createFieldDataValidation(bodyfield)) {
           res.status(400).json("Some data is missing");
         } else if (
@@ -111,8 +111,8 @@ const updateField = async (req, res) => {
   try {
     const field = await fieldModel.findById(req.params.id);
     if (field) {
-      const sportCenter = sportCenterModel.findById(field.idSportCenter);
-      if((sportCenter.ownerId === req.user._id) || req.user.isAdmin) {
+      const sportCenter = await sportCenterModel.findById(field.idSportCenter);
+      if((sportCenter.ownerId == req.user.id) || req.user.isAdmin) {
         if (req.body.name) field.name = req.body.name;
         if (req.body.openHour) field.openHour = req.body.openHour;
         if (req.body.closeHour) field.closeHour = req.body.closeHour;
@@ -162,12 +162,12 @@ const deleteField = async (req, res) => {
     const field = await fieldModel.findById(req.params.id);
     if(field){
       const sportCenter = await sportCenterModel.findById(field.idSportCenter);
-      if((sportCenter.ownerId === req.user._id) || req.user.isAdmin){
+      if((sportCenter.ownerId == req.user.id) || req.user.isAdmin){
         const deletedField = await fieldModel.findOneAndDelete({
           _id: { $eq: req.params.id },
         }); //$eq: req.params.id means that the id from params must be equa to the field's id
         if (deletedField) {
-          if (deletedField.photo.public_id) {
+          if (deletedField.photo && deletedField.photo.public_id) {
             await deleteImage(deletedField.photo.public_id);
           }
           res
