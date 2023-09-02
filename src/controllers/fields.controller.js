@@ -159,18 +159,30 @@ const updateField = async (req, res) => {
 const deleteField = async (req, res) => {
   //Only for the owner of the sportCenter, validate that
   try {
-    const deletedField = await fieldModel.findOneAndDelete({
-      _id: { $eq: req.params.id },
-    }); //$eq: req.params.id means that the id from params must be equa to the field's id
-    if (deletedField) {
-      if (deletedField.photo.public_id) {
-        await deleteImage(deletedField.photo.public_id);
+    const field = await fieldModel.findById(req.params.id);
+    if(field){
+      const sportCenter = await sportCenterModel.findById(field.idSportCenter);
+      if((sportCenter.ownerId === req.user._id) || req.user.isAdmin){
+        const deletedField = await fieldModel.findOneAndDelete({
+          _id: { $eq: req.params.id },
+        }); //$eq: req.params.id means that the id from params must be equa to the field's id
+        if (deletedField) {
+          if (deletedField.photo.public_id) {
+            await deleteImage(deletedField.photo.public_id);
+          }
+          res
+            .status(200)
+            .json({ message: "The Field has been Deleted", field: deletedField });
+        } else {
+          res.status(404).send("Field Not Found");
+        }
       }
-      res
-        .status(200)
-        .json({ message: "The Field has been Deleted", field: deletedField });
-    } else {
-      res.status(404).send("Field Not Found");
+      else{
+        res.status(400).json("You are not allowed to delete a field in this sport center");
+      }
+    }
+    else{
+      res.status(400).json("Field Not Found");
     }
   } catch (error) {
     console.log(error);
