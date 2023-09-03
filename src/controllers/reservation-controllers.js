@@ -58,11 +58,13 @@ const getUserReservation = async (req, res) => {
   try{
     if (req.user.isAdmin === false && req.user.isOwner === false) {
       const reservationUser = await ReservationModel.findById(req.user.id);
-      if (reservationUser === null) {
-        console.log("este usuario no tiene reservaciones");
+      if (reservationUser) {
+        res.json(reservationUser);
+      }else{
+        res.status(200).json({ message: "usted no tiene reserva" });
       }
     }else {
-      res.status(204).json({ message: "usted no tiene reserva" });
+      res.status(304).json({ message: "usted no es usuario" });
     }
 
   }catch(error){
@@ -79,10 +81,21 @@ const getOwnerReservation = async (req, res) => {
         const fields = await fieldModel.find({idSportCenter : sportCenters._id})
         const fieldIds = fields.map(field => field.id);
         console.log(fieldIds);
-        if(fieldIds.lenght > 0){
-          const reservations1 = await reservationModel.find({IdField : {$in: fieldIds}});// traer todas las reservaciones que coincidan con el id de la cancha.
+        if(fieldIds.length > 0){
+          const reservations = [];
+          for (const id of fieldIds) {
+            const reservation = await ReservationModel.findOne({IdField : id});
+            if (reservations) {
+              reservations.push(reservation);
+            }
+          }
+          if(reservations.length > 0){
+            res.status(200).json(reservations)
+          }
+          res.status(200).json({ message : "no tiene reservas"});
+        }else{
+          res.status(200).json({ message : "no tiene reservas"});
         }
-        res.status(203).json({ message: "usted no es owner" });
       }else {
         res.status(400).json({ message: "no existe el complejo" });
       }
@@ -102,18 +115,6 @@ const getReservationIdReservation = async (req, res) => {
     res.json(reservation);
   } else {
     res.status(404).json({ message: error.message });
-  }
-};
-
-const getReservationByFieldId = async (req, res) => {
-  try {
-    const fieldId = req.params.fieldid;
-    const reservations = await reservationModel.find({
-      IdField: { $eq: fieldId },
-    });
-    res.status(200).json(reservations);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
   }
 };
 
