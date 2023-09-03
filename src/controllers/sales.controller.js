@@ -1,47 +1,79 @@
 import Sale from "../models/sales.model.js";
+import jwt from "jsonwebtoken";
+import { createError } from "../utils/error.js";
 
 const createSale = async (req, res) => {
   try {
-    const { productId, userId, quantity, totalPrice } = req.body;
+    const token = req.header("access_token");
+    const id = jwt.verify(token, process.env.JWT);
+    if (id && id.id) {
+      const newSale = new Sale({
+        productId: req.body.productId,
+        userId: id.id,
+        quantity: req.body.quantity,
+        totalPrice: req.body.totalPrice,
+      });
 
-    const newSale = new Sale({
-      productId,
-      userId,
-      quantity,
-      totalPrice,
-    });
+      console.log(newSale);
+      await newSale.save();
 
-    await newSale.save();
-
-    res.status(201).json(newSale);
-  } catch (error) {
-    console.error("Error creating sale:", error);
-    res.status(500).json({ message: "Error creating sale" });
+      res.status(201).json(newSale);
+    } else {
+      const error = createError(401, "Unauthorized");
+      res.status(error.status).json({ message: error.message });
+    }
+  } catch (err) {
+    const error = createError(500, "Error creating Sale");
+    res.status(error.status).json({ message: error.message });
   }
 };
 
 const getSales = async (req, res) => {
   try {
-    const sales = await Sale.find();
+    const sales = await Sale.find().populate("productId").populate("userId");
+
     res.status(200).json(sales);
-  } catch (error) {
-    console.error("Error fetching sales:", error);
-    res.status(500).json({ message: "Error fetching sales" });
+  } catch (err) {
+    const error = createError(500, "Error fetching sales");
+    res.status(error.status).json({ message: error.message });
   }
 };
 
 const getSaleById = async (req, res) => {
   try {
     const saleId = req.params.id;
-    const sale = await Sale.findById(saleId);
+    const sale = await Sale.findById(saleId)
+      .populate("productId")
+      .populate("userId");
     if (sale) {
       res.status(200).json(sale);
     } else {
-      res.status(404).json({ message: "Sale not found" });
+      const error = createError(404, "Sale not found");
+      res.status(error.status).json({ message: error.message });
     }
-  } catch (error) {
-    console.error("Error fetching sale:", error);
-    res.status(500).json({ message: "Error fetching sale" });
+  } catch (err) {
+    const error = createError(500, "Error fetching sale");
+    res.status(error.status).json({ message: error.message });
+  }
+};
+
+const getSalesByUserId = async (req, res) => {
+  try {
+    const token = req.header("access_token");
+    const id = jwt.verify(token, process.env.JWT);
+
+    if (id && id.id) {
+      const sales = await Sale.find({ userId: id.id })
+        .populate("productId")
+        .populate("userId");
+      res.status(200).json(sales);
+    } else {
+      const error = createError(401, "Unauthorized access token");
+      res.status(error.status).json({ message: error.message });
+    }
+  } catch (err) {
+    const error = createError(500, "Error fetching sales by user id");
+    res.status(error.status).json({ message: error.message });
   }
 };
 
@@ -49,4 +81,5 @@ export default {
   createSale,
   getSales,
   getSaleById,
+  getSalesByUserId,
 };
