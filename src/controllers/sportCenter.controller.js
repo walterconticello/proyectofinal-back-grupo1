@@ -9,17 +9,20 @@ const getAllSportCenters = async (req, res) => {
     const sportCenters = await sportCenterModel.find();
     const responseSportCenter = [];
     for (let i = 0; i < sportCenters.length; i++) {
-      const fields = await fieldsModel.find({idSportCenter: sportCenters[i]._id});
-      const response= {
-      ...sportCenters[i] ,
-      fields
-    }
-    responseSportCenter.push(response);
-
+      const fields = await fieldsModel.find({
+        idSportCenter: sportCenters[i]._id,
+      });
+      const response = {
+        ...sportCenters[i]._doc,
+        fields,
+      };
+      responseSportCenter.push(response);
     }
     res.json(responseSportCenter);
   } catch (error) {
-    res.status(500).json({ mensaje: "Error al obtener los centros deportivos" });
+    res
+      .status(500)
+      .json({ mensaje: "Error al obtener los centros deportivos" });
   }
 };
 

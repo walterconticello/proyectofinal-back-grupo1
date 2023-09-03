@@ -2,6 +2,7 @@ import ReservationModel from "../models/reservation.model.js";
 import fieldModel from "../models/fields.model.js";
 import ValidationDate from "../helpers/reservation.validation.js";
 import sportCenterModel from "../models/sportCenter.model.js";
+import mongoose from "mongoose";
 //CREATE O POST
 
 const postReservation = async (req, res) => {
@@ -37,37 +38,62 @@ const postReservation = async (req, res) => {
 
 //GET's
 
-const getReservation = async (req, res) => {
+const getAllReservation = async (req, res) => {
   try {
-    if(req.user.isAdmin === false && req.user.isOwner === false){
-      const reservationUser = await ReservationModel.findById(req.user.id);
-      if(reservationUser === null){
-        console.log("este usuario no tiene reservaciones");
-      }
-    };
-
-    if(req.user.isOwner === true){
-      const reservationOwner = await fieldModel.find({ownerId : req.user.id});
-      console.log(reservationOwner);
-      if(reservationOwner === null){
-        console.log("no tiene reserva");
-        // res.status(204).json({ message : "no tiene ninguna reserva" });
-      };
-    }else{
-      res.status(403).json({ message : "usted no es owner" });
-    };
-
-    if(req.user.isAdmin === true){
-      console.log("todas las reservaciones")
-    const allReservation = await ReservationModel.find();
-    res.status(200).json(allReservation);
-  }else{
-      res.status(403).json({ message : "usted no es administrador" });
-    };
+    if (req.user.isAdmin === true) {
+      console.log("todas las reservaciones");
+      const allReservation = await ReservationModel.find();
+      res.status(200).json(allReservation);
+    } else {
+      res.status(403).json({ message: "usted no es administrador" });
+    }
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(404).json({ message: error.message });
   }
 };
+
+// get User
+
+const getUserReservation = async (req, res) => {
+  try{
+    if (req.user.isAdmin === false && req.user.isOwner === false) {
+      const reservationUser = await ReservationModel.findById(req.user.id);
+      if (reservationUser === null) {
+        console.log("este usuario no tiene reservaciones");
+      }
+    }else {
+      res.status(204).json({ message: "usted no tiene reserva" });
+    }
+
+  }catch(error){
+    res.status(404).json({ message: error.message });
+  }
+};
+// get Owner
+const getOwnerReservation = async (req, res) => {
+  const user = new mongoose.Types.ObjectId(req.user.id)
+  try{
+    if (req.user.isOwner === true) {
+      const sportCenters= await sportCenterModel.findOne({ownerId : user});
+      if(sportCenters){
+        const fields = await fieldModel.find({idSportCenter : sportCenters._id})
+        const fieldIds = fields.map(field => field.id);
+        console.log(fieldIds);
+        if(fieldIds.lenght > 0){
+          const reservations1 = await reservationModel.find({IdField : {$in: fieldIds}});// traer todas las reservaciones que coincidan con el id de la cancha.
+        }
+        res.status(203).json({ message: "usted no es owner" });
+      }else {
+        res.status(400).json({ message: "no existe el complejo" });
+      }
+    } else {
+      res.status(203).json({ message: "usted no es owner" });
+    };
+  }catch(error){
+    res.status(404).json({ message: error.message });
+  }
+};
+
 
 const getReservationIdReservation = async (req, res) => {
   const id = req.params.id;
@@ -82,13 +108,14 @@ const getReservationIdReservation = async (req, res) => {
 const getReservationByFieldId = async (req, res) => {
   try {
     const fieldId = req.params.fieldid;
-    const reservations = await reservationModel.find({ IdField: { $eq: fieldId }});
+    const reservations = await reservationModel.find({
+      IdField: { $eq: fieldId },
+    });
     res.status(200).json(reservations);
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};
 
 const cancelledReservation = async (req, res) => {
   try {
@@ -124,7 +151,7 @@ const deleteIdReservation = async (req, res) => {
 
 const putReservation = async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = req.user.id;
     const reservation = await ReservationModel.findById(id);
     if (reservation) {
       reservation.ReservationTime = req.body.ReservationTime;
@@ -143,10 +170,12 @@ const putReservation = async (req, res) => {
 
 export default {
   postReservation,
-  getReservation,
+  getAllReservation,
+  getUserReservation,
+  getOwnerReservation,
   getReservationIdReservation,
   deleteIdReservation,
   putReservation,
   cancelledReservation,
-  getReservationByFieldId
+  getReservationByFieldId,
 };
