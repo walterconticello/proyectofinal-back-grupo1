@@ -2,6 +2,8 @@ import productSchema from "../models/product.model.js";
 import validation from "../helpers/products.validation.js";
 import { uploadImage, deleteImage } from "../utils/cloudinary.js";
 import fs from "fs-extra";
+
+import { createError } from "../utils/error.js";
 //GET
 
 const getAllProducts = async (req, res) => {
@@ -9,7 +11,8 @@ const getAllProducts = async (req, res) => {
     const products = await productSchema.find();
     res.status(200).json({ products });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    const error = createError(400, err.message);
+    res.status(error.status).json({ message: error.message });
   }
 };
 
@@ -22,11 +25,12 @@ const getProductById = async (req, res) => {
     if (product) {
       res.json(product);
     } else {
-      res.status(404).json({ message: "Product not found" });
+      const error = createError(404, "Product not found");
+      res.status(error.status).json({ message: error.message });
     }
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: err.message });
+    const error = createError(500, err.message);
+    res.status(error.status).json({ message: error.message });
   }
 };
 
@@ -55,7 +59,8 @@ const createProduct = async (req, res) => {
     };
 
     if (!validation.createProductDataValidation(productData)) {
-      return res.status(400).json({ message: "missing data" });
+      const error = createError(400, "Missing data");
+      return res.status(error.status).json({ message: error.message });
     }
 
     if (
@@ -85,11 +90,14 @@ const createProduct = async (req, res) => {
       if (!validation.categoriesValidation(categories)) {
         invalidFields.push("categories");
       }
-      return res.status(400).json({ message: "invalid data", invalidFields });
+      const error = createError(400, "Invalid data", { invalidFields });
+      return res
+        .status(error.status)
+        .json({ message: error.message, invalidFields });
     }
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: err.message });
+    const error = createError(500, err.message);
+    res.status(error.status).json({ message: error.message });
   }
 };
 
@@ -147,14 +155,17 @@ const updateProduct = async (req, res) => {
       await product.save();
       return res.status(200).json(product);
     } else {
-      return res.status(400).json({
-        message: "Invalid data",
+      const error = createError(400, "Invalid data", {
         invalidFields: validationResult.invalidFields,
       });
+      return res.status(error.status).json({
+        message: error.message,
+        invalidFields: error.invalidFields,
+      });
     }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: error.message });
+  } catch (err) {
+    const error = createError(500, err.message);
+    return res.status(error.message).json({ message: error.message });
   }
 };
 
@@ -169,13 +180,14 @@ const deleteProduct = async (req, res) => {
     }
 
     if (!deletedProduct) {
-      return res.status(404).json({ message: "product not found" });
+      const error = createError(404, "Product not found");
+      return res.status(error.status).json({ message: error.message });
     }
 
     res.status(200).json({ message: "product deleted" });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: err.message });
+    const error = createError(500, err.message);
+    res.status(error.status).json({ message: error.message });
   }
 };
 
