@@ -1,5 +1,6 @@
 import Sale from "../models/sales.model.js";
 import jwt from "jsonwebtoken";
+import { createError } from "../utils/error.js";
 
 const createSale = async (req, res) => {
   try {
@@ -18,11 +19,12 @@ const createSale = async (req, res) => {
 
       res.status(201).json(newSale);
     } else {
-      res.status(401).json({ message: "Unauthorized" });
+      const error = createError(401, "Unauthorized");
+      res.status(error.status).json({ message: error.message });
     }
-  } catch (error) {
-    console.error("Error creating sale:", error);
-    res.status(500).json({ message: "Error creating sale" });
+  } catch (err) {
+    const error = createError(500, "Error creating Sale");
+    res.status(error.status).json({ message: error.message });
   }
 };
 
@@ -31,9 +33,9 @@ const getSales = async (req, res) => {
     const sales = await Sale.find().populate("productId").populate("userId");
 
     res.status(200).json(sales);
-  } catch (error) {
-    console.error("Error fetching sales:", error);
-    res.status(500).json({ message: "Error fetching sales" });
+  } catch (err) {
+    const error = createError(500, "Error fetching sales");
+    res.status(error.status).json({ message: error.message });
   }
 };
 
@@ -46,11 +48,12 @@ const getSaleById = async (req, res) => {
     if (sale) {
       res.status(200).json(sale);
     } else {
-      res.status(404).json({ message: "Sale not found" });
+      const error = createError(404, "Sale not found");
+      res.status(error.status).json({ message: error.message });
     }
-  } catch (error) {
-    console.error("Error fetching sale:", error);
-    res.status(500).json({ message: "Error fetching sale" });
+  } catch (err) {
+    const error = createError(500, "Error fetching sale");
+    res.status(error.status).json({ message: error.message });
   }
 };
 
@@ -65,10 +68,12 @@ const getSalesByUserId = async (req, res) => {
         .populate("userId");
       res.status(200).json(sales);
     } else {
-      res.status(401).json({ message: "Unauthorized" });
+      const error = createError(401, "Unauthorized access token");
+      res.status(error.status).json({ message: error.message });
     }
   } catch (err) {
-    res.status(500).json({ message: "Error fetching sales by user id" });
+    const error = createError(500, "Error fetching sales by user id");
+    res.status(error.status).json({ message: error.message });
   }
 };
 
