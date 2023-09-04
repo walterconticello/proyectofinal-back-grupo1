@@ -3,6 +3,7 @@ import validation from "../helpers/fields.validation.js";
 import { uploadImage, deleteImage } from "../libs/cloudinary.js";
 import fs from "fs-extra";
 import sportCenterModel from "../models/sportCenter.model.js";
+import { createError } from "../utils/error.js";
 
 //GET
 const getAllFields = async (req, res) => {
@@ -16,13 +17,13 @@ const getAllFields = async (req, res) => {
 };
 
 //GET by ID
-const getFieldByID = async (req, res) => {
+const getFieldByID = async (req, res, next) => {
   try {
     const field = await fieldModel.findById(req.params.id);
     if (field) {
       res.status(200).json(field);
     } else {
-      res.status(404).json("Field Not Found");
+      return next(createError(404, "Cancha no encontrada"));
     }
   } catch (error) {
     console.log(error);
@@ -46,7 +47,7 @@ const getPage = async (req, res) => {
 };
 
 //POST
-const createField = async (req, res) => {
+const createField = async (req, res, next) => {
   //Only for the owner of the sportCenter, validate that
   try {
     const bodyfield = {
@@ -63,7 +64,7 @@ const createField = async (req, res) => {
       const sportCenter = await sportCenterModel.findById(bodyfield.idSportCenter);
       if((req.user.id == sportCenter.ownerId) || req.user.isAdmin){
         if (!validation.createFieldDataValidation(bodyfield)) {
-          res.status(400).json("Some data is missing");
+          return next(createError(400, "Falta ingresar información"));
         } else if (
           validation.nameValidation(bodyfield.name) &&
           validation.hourValidation(bodyfield.openHour, bodyfield.closeHour) &&
@@ -86,15 +87,15 @@ const createField = async (req, res) => {
           fs.remove(req.files.image.tempFilePath);
           res.status(201).json(newField);
         } else {
-          res.status(400).json("The written data is invalid");
+          return next(createError(404, "Informacion no válida"));
         }
       }
       else {
-        res.status(400).json("You are not allowed to create a field in this sport center");
+        return next(createError(400, "No esta autorizado a crear canchas en este complejo"));
       }
     }
     else {
-      res.status(400).json("Invalid sport center");
+      return next(createError(400, "Complejo no válido"));
     }
 
 
@@ -105,7 +106,7 @@ const createField = async (req, res) => {
 };
 
 //PUT
-const updateField = async (req, res) => {
+const updateField = async (req, res, next) => {
   //For activate or deactivate a field, update that
   //Only for the owner of the sportCenter, validate that
   try {
@@ -140,14 +141,14 @@ const updateField = async (req, res) => {
           await field.save();
           res.status(200).json(field);
         } else {
-          res.status(400).json("The written data is invalid");
+          return next(createError(400, "Información inválida"));
         }
       }
       else {
-        res.status(400).json("You are not allowed to update a field in this sport center")
+        return next(createError(400, "No está autorizado a modificar canchas en este complejo"));
       }
     } else {
-      res.status(404).json("Field Not Found");
+      return next(createError(404, "Cancha no encontrada"));
     }
   } catch (error) {
     console.log(error);
@@ -156,7 +157,7 @@ const updateField = async (req, res) => {
 };
 
 //DELETE
-const deleteField = async (req, res) => {
+const deleteField = async (req, res, next) => {
   //Only for the owner of the sportCenter, validate that
   try {
     const field = await fieldModel.findById(req.params.id);
@@ -174,15 +175,15 @@ const deleteField = async (req, res) => {
             .status(200)
             .json({ message: "The Field has been Deleted", field: deletedField });
         } else {
-          res.status(404).send("Field Not Found");
+          return next(createError(404, "Cancha no encontrada"));
         }
       }
       else{
-        res.status(400).json("You are not allowed to delete a field in this sport center");
+        return next(createError(400, "No está autorizado a eliminar canchas en este complejo"));
       }
     }
     else{
-      res.status(400).json("Field Not Found");
+      return next(createError(404, "Cancha no encontrada"));
     }
   } catch (error) {
     console.log(error);
