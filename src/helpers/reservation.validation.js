@@ -10,7 +10,7 @@ const zonedDate = zonedTimeToUtc(currentDate, timeZone);
  const dates = format(zonedDate, 'yyyy-MM-dd HH:mm:ssxxx', { timeZone}) 
 const pattern = 'yyyy-MM-dd HH:mm:ss zzz';
 const formattedDate = format(zonedDate, pattern, { timeZone });
-const date = new Date(dates);
+const date = new Date(dates); // exportar
 
 console.log(date);
 console.log(formattedDate);
@@ -69,6 +69,14 @@ export const ExpirationFunction = (Date) =>{
   dosSemanasDespues.setDate(dosSemanasDespues.getDate() + 14);
   console.log(dosSemanasDespues);
   return dosSemanasDespues
+}
+
+export const cancelled = (Date) =>{
+
+  const cincoDias = date;
+  cincoDias.setDate(cincoDias.getDate() + 5);
+  console.log(dosSemanasDespues);
+  return cincoDias;
 }
 
 export default ValidationDate;

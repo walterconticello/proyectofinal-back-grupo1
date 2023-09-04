@@ -141,7 +141,7 @@ const cancelledReservation = async (req, res) => {
 const deleteIdReservation = async (req, res) => {
   try {
     const id = req.params.id;
-    const reservation = await ReservationModel.findByIdAndDelete(id);
+    const reservation = await ReservationModel.findByIdAndDelete(id); //iria un findByDelete // aqui tengo que hacer que se eliminen si el owner o admin quieren y que se eliminen una vez pasada la fecha de expiracion. Esto sera un arreglo de Reservas Vencidas y se iran eliminando a medida que pase recorre el arreglo.
     if (reservation) {
       res.status(200).json({ message: "Reservation deleted" });
     } else {
