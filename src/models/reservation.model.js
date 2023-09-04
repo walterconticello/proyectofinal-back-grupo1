@@ -11,7 +11,8 @@ const reservationSchema = new Schema(
       type: String,
       enum: ["confirmada", "cancelada", "pendiente"],
       default: "pendiente",
-    }
+    },
+    expirationDate: { type: Date, required: true }
   },
   { versionKey: false }
 );

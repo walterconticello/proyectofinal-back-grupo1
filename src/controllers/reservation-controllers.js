@@ -1,6 +1,7 @@
 import ReservationModel from "../models/reservation.model.js";
 import fieldModel from "../models/fields.model.js";
 import ValidationDate from "../helpers/reservation.validation.js";
+import {ExpirationFunction} from "../helpers/reservation.validation.js"
 import sportCenterModel from "../models/sportCenter.model.js";
 import mongoose from "mongoose";
 //CREATE O POST
@@ -13,18 +14,19 @@ const postReservation = async (req, res) => {
     if (IdUser) {
       if (IdField) {
         const isValid = await ValidationDate(Date , IdField);
-        console.log(isValid)
         if (isValid) {
+          const expiration = await ExpirationFunction(Date);
           const reservation = new ReservationModel({
             IdUser: req.body.IdUser,
             IdSportCenter: req.body.IdSportCenter,
             IdField: req.body.IdField,
-            ReservationTime: req.body.ReservationTime
+            ReservationTime: req.body.ReservationTime,
+            expirationDate: expiration
           });
           await reservation.save();
           res.status(201).json(reservation);
         } else {
-          res.status(400).json({ message: "Reserva Existente" });
+          res.status(400).json({ message: "Reserva Existente o Fecha incorrecta" });
         }
       } else {
         res.status(400).json({ message: "Cancha no existente" });

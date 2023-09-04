@@ -7,9 +7,10 @@ const timeZone = "America/Argentina/Buenos_Aires";
 const currentDate = new Date();
 const zonedDate = zonedTimeToUtc(currentDate, timeZone);
 
-const pattern = "d/M/yyyy HH:mm:ss (z)";
+ const dates = format(zonedDate, 'yyyy-MM-dd HH:mm:ssxxx', { timeZone}) 
+const pattern = 'yyyy-MM-dd HH:mm:ss zzz';
 const formattedDate = format(zonedDate, pattern, { timeZone });
-const date = new Date(formattedDate + " UTC");
+const date = new Date(dates);
 
 console.log(date);
 console.log(formattedDate);
@@ -38,6 +39,7 @@ async function isWithinOpeningHours(IdField, reservationDate) {
 
 const ValidationDate = async (ReservationTime, IdField) => {
   const reservationDate = new Date(ReservationTime);
+  
 
   if (reservationDate <= date) {
     console.log("La fecha de reserva debe ser en el futuro.");
@@ -60,5 +62,13 @@ const ValidationDate = async (ReservationTime, IdField) => {
 
   return true; // Solo si todas las validaciones pasan, se retorna true.
 };
+
+export const ExpirationFunction = (Date) =>{
+
+  const dosSemanasDespues = date;
+  dosSemanasDespues.setDate(dosSemanasDespues.getDate() + 14);
+  console.log(dosSemanasDespues);
+  return dosSemanasDespues
+}
 
 export default ValidationDate;
