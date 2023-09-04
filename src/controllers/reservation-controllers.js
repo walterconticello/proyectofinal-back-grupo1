@@ -7,22 +7,24 @@ import mongoose from "mongoose";
 
 const postReservation = async (req, res) => {
   try {
-    const IdUser = await UserModel.findById(req.user.id);
+    const IdUser = req.user.id
     const IdField = await fieldModel.findById(req.body.IdField);
+    const Date = req.body.ReservationTime
     if (IdUser) {
       if (IdField) {
-        if (ValidationDate(req.body.ReservationTime)) {
+        const isValid = await ValidationDate(Date , IdField);
+        console.log(isValid)
+        if (isValid) {
           const reservation = new ReservationModel({
             IdUser: req.body.IdUser,
             IdSportCenter: req.body.IdSportCenter,
             IdField: req.body.IdField,
-            ReservationTime: req.body.ReservationTime,
-            Status: "confirmada",
+            ReservationTime: req.body.ReservationTime
           });
           await reservation.save();
           res.status(201).json(reservation);
         } else {
-          res.status(400).json({ message: "Fecha no valida" });
+          res.status(400).json({ message: "Reserva Existente" });
         }
       } else {
         res.status(400).json({ message: "Cancha no existente" });
@@ -41,7 +43,6 @@ const postReservation = async (req, res) => {
 const getAllReservation = async (req, res) => {
   try {
     if (req.user.isAdmin === true) {
-      console.log("todas las reservaciones");
       const allReservation = await ReservationModel.find();
       res.status(200).json(allReservation);
     } else {
@@ -56,8 +57,9 @@ const getAllReservation = async (req, res) => {
 
 const getUserReservation = async (req, res) => {
   try{
-    if (req.user.isAdmin === false && req.user.isOwner === false) {
-      const reservationUser = await ReservationModel.findById(req.user.id);
+    if (!req.user.isAdmin  && !req.user.isOwner) {
+      const idUser = req.user.id;
+      const reservationUser = await ReservationModel.find({IdUser : idUser});
       if (reservationUser) {
         res.json(reservationUser);
       }else{
@@ -178,5 +180,4 @@ export default {
   deleteIdReservation,
   putReservation,
   cancelledReservation,
-  getReservationByFieldId,
 };
