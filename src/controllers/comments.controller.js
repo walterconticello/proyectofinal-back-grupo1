@@ -1,9 +1,11 @@
 import commentModel from "../models/comments.model.js";
 import validation from "../helpers/comments.validation.js";
 import jwt from "jsonwebtoken";
+import { createError } from "../utils/error.js";
+
 
 //GET by User
-const getCommentsByUser = async (req, res) => {
+const getCommentsByUser = async (req, res, next) => {
   try {
     const comments = await commentModel
       .find({ userId: req.params.user })
@@ -15,7 +17,7 @@ const getCommentsByUser = async (req, res) => {
     if (comments.length > 0) {
       res.status(200).json({ comments, length: docs });
     } else {
-      res.status(404).json("There are no comments");
+      return next(createError(404, "No hay comentarios"));
     }
   } catch (error) {
     console.log(error);
@@ -24,7 +26,7 @@ const getCommentsByUser = async (req, res) => {
 };
 
 //GET by SportCenter
-const getCommentsBySportCenter = async (req, res) => {
+const getCommentsBySportCenter = async (req, res, next) => {
   try {
     const page = parseInt(req.params.page);
     const comments = await commentModel
@@ -42,7 +44,7 @@ const getCommentsBySportCenter = async (req, res) => {
     if (comments.length > 0) {
       res.status(200).json({ comments, pages: docs });
     } else {
-      res.status(404).json("There are no comments");
+      return next(createError(404, "No hay comentarios"));
     }
   } catch (error) {
     console.log(error);
@@ -51,7 +53,7 @@ const getCommentsBySportCenter = async (req, res) => {
 };
 
 //POST
-const createComment = async (req, res) => {
+const createComment = async (req, res, next) => {
   try {
     const token = req.header("access_token");
     const { id } = jwt.verify(token, process.env.JWT);
@@ -63,7 +65,7 @@ const createComment = async (req, res) => {
         userId: id,
       };
       if (!validation.createCommentDataValidation(bodyComment)) {
-        res.status(400).json("Some data is missing");
+        return next(createError(400, "Falta información por ingresar"));
       } else if (
         validation.ratingValidation(bodyComment.rating) &&
         validation.textValidation(bodyComment.text) &&
@@ -74,10 +76,10 @@ const createComment = async (req, res) => {
         await newComment.save();
         res.status(201).json(newComment);
       } else {
-        res.status(400).json("The written data is invalid");
+        return next(createError(400, "Informacion inválida"));
       }
     } else {
-      res.status(404).json("You are not logged");
+      return next(createError(400, "Inicia sesión para comentar"));
     }
   } catch (error) {
     console.log(error);
@@ -86,7 +88,7 @@ const createComment = async (req, res) => {
 };
 
 //PUT
-const updateComment = async (req, res) => {
+const updateComment = async (req, res, next) => {
   try {
     const token = req.header("access_token");
     const { id } = jwt.verify(token, process.env.JWT);
@@ -104,16 +106,16 @@ const updateComment = async (req, res) => {
             await comment.save();
             res.status(200).json(comment);
           } else {
-            res.status(400).json("The written data is invalid");
+            return next(createError(400, "Informacion inválida"));
           }
         } else {
-          res.status(400).json("You can only update your own comment");
+          return next(createError(400, "Solo puedes modificar tu propio comentario"));
         }
       } else {
-        res.status(404).json("Comment Not Found");
+        return next(createError(404, "Comentario no encontrado"));
       }
     } else {
-      res.status(404).json("You are not logged");
+      return next(createError(400, "Inicia sesión para modificar un comentario"));
     }
   } catch (error) {
     console.log(error);
@@ -122,7 +124,7 @@ const updateComment = async (req, res) => {
 };
 
 //DELETE
-const deleteComment = async (req, res) => {
+const deleteComment = async (req, res, next) => {
   try {
     const token = req.header("access_token");
     const { id } = jwt.verify(token, process.env.JWT);
@@ -139,16 +141,16 @@ const deleteComment = async (req, res) => {
               comment: deletedComment,
             });
           } else {
-            res.status(404).json("Comment Not Found");
+            return next(createError(404, "Comentario no encontrado"));
           }
         } else {
-          res.status(400).json("You can only delete your own comment");
+          return next(createError(400, "Solo puedes eliminar tu propio comentario"));
         }
       } else {
-        res.status(404).json("Comment Not Found");
+        return next(createError(404, "Comentario no encontrado"));
       }
     } else {
-      res.status(404).json("You are not logged");
+      return next(createError(400, "Inicia sesión para eliminar un comentario"));
     }
   } catch (error) {
     console.log(error);
