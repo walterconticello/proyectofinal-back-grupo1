@@ -135,14 +135,23 @@ const putSportCenter = async (req, res) => {
 
 const deleteSportCenter = async (req, res) => {
   try {
+    const sportCenter = await sportCenterModel.findById(req.params.id);
+    if (!sportCenter) {
+      return res.status(404).json({ mensaje: "Centro deportivo no encontrado" });
+    }
+
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const ownerId = decodedToken.ownerId;
+
+    if (sportCenter.ownerId !== ownerId) {
+      return res.status(403).json({ mensaje: "No tienes permiso para eliminar este centro deportivo" });
+    }
+
     const deleteSportCenter = await sportCenterModel.findByIdAndDelete(
       req.params.id
     );
-    if (deleteSportCenter) {
-      res.json({ mensaje: "Centro deportivo eliminado con éxito" });
-    } else {
-      res.status(404).json({ mensaje: "Centro deportivo no encontrado" });
-    }
+    res.json({ mensaje: "Centro deportivo eliminado con éxito" });
   } catch (error) {
     res.status(500).json({ mensaje: "Error al eliminar centro deportivo" });
   }
