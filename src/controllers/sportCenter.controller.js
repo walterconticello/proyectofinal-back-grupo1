@@ -45,16 +45,13 @@ const getSportCenterById = async (req, res) => {
 //asegurarse que el token tenga la informacion necesaria para crear el centro deportivo
 //asegurarse que el token sea de un owner
 
-const jwt = require("jsonwebtoken");
-
 const postSportCenter = async (req, res) => {
   try {
     const { name, address, phone, services, location, social, photo } =
       req.body;
 
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    const ownerId = decodedToken.ownerId;
+    const ownerId = req.user.ownerId;
+    const isAdmin = req.user.isAdmin;
 
     const sportCenterData = {
       ownerId,
@@ -71,11 +68,32 @@ const postSportCenter = async (req, res) => {
       // validation.socialValidation(sportCenterData.social) &&
       // validation.photoValidation(sportCenterData.photo)
     ) {
-      const sportCenter = new sportCenterModel(sportCenterData);
-      await sportCenter.save();
-      return res
-        .status(201)
-        .json({ mensaje: "Centro deportivo creado con éxito" });
+      if (isAdmin) {
+        const sportCenter = new sportCenterModel(sportCenterData);
+        await sportCenter.save();
+        return res
+          .status(201)
+          .json({ mensaje: "Centro deportivo creado con éxito" });
+      } else {
+        const sportCenter = await sportCenterModel.findOne({
+          _id: sportCenterData.ownerId,
+        });
+        if (!sportCenter) {
+          return res
+            .status(404)
+            .json({ mensaje: "No se encontró el centro deportivo" });
+        }
+        if (sportCenter.ownerId !== ownerId) {
+          return res
+            .status(403)
+            .json({ mensaje: "No tienes permiso para crear este centro deportivo" });
+        }
+        const newSportCenter = new sportCenterModel(sportCenterData);
+        await newSportCenter.save();
+        return res
+          .status(201)
+          .json({ mensaje: "Centro deportivo creado con éxito" });
+      }
     } else {
       res.status(400).json({ mensaje: "Error en los datos ingresados" });
     }
