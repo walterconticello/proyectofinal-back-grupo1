@@ -42,11 +42,19 @@ const getSportCenterById = async (req, res) => {
 };
 
 //Post
+//asegurarse que el token tenga la informacion necesaria para crear el centro deportivo
+//asegurarse que el token sea de un owner
+
+const jwt = require("jsonwebtoken");
 
 const postSportCenter = async (req, res) => {
   try {
-    const { ownerId, name, address, phone, services, location, social, photo } =
+    const { name, address, phone, services, location, social, photo } =
       req.body;
+
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const ownerId = decodedToken.ownerId;
 
     const sportCenterData = {
       ownerId,
