@@ -103,8 +103,6 @@ const postSportCenter = async (req, res) => {
   }
 };
 
-//Put
-
 const putSportCenter = async (req, res) => {
   try {
     const { name, address, phone, services, location, social, photo } =
@@ -121,6 +119,15 @@ const putSportCenter = async (req, res) => {
       return res
         .status(404)
         .json({ message: "Centro deportivo no encontrado" });
+    }
+
+    const ownerId = req.user.ownerId;
+    const isAdmin = req.user.isAdmin;
+
+    if (!isAdmin && sportCenter.ownerId !== ownerId) {
+      return res
+        .status(403)
+        .json({ message: "No tienes permiso para actualizar este centro deportivo" });
     }
 
     sportCenter.set(sportCenterData);
