@@ -42,8 +42,6 @@ const getSportCenterById = async (req, res) => {
 };
 
 //Post
-//asegurarse que el token tenga la informacion necesaria para crear el centro deportivo
-//asegurarse que el token sea de un owner
 
 const postSportCenter = async (req, res) => {
   try {
@@ -103,6 +101,8 @@ const postSportCenter = async (req, res) => {
   }
 };
 
+//Put SportCenter
+
 const putSportCenter = async (req, res) => {
   try {
     const { name, address, phone, services, location, social, photo } =
@@ -131,10 +131,6 @@ const putSportCenter = async (req, res) => {
     }
 
     sportCenter.set(sportCenterData);
-    console.log(sportCenterData);
-
-    // const validationResult = await sportCenterModel.validate();
-    // console.log(validationResult);
 
     if (
       validation.nameValidation(sportCenterData.name) &&
