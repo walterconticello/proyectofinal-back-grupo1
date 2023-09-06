@@ -1,6 +1,6 @@
 import fieldModel from "../models/fields.model.js";
 import validation from "../helpers/fields.validation.js";
-import { uploadImage, deleteImage } from "../libs/cloudinary.js";
+import { uploadFieldImage, deleteImage } from "../utils/cloudinary.js";
 import fs from "fs-extra";
 import sportCenterModel from "../models/sportCenter.model.js";
 import { createError } from "../utils/error.js";
@@ -60,9 +60,11 @@ const createField = async (req, res, next) => {
       idSportCenter: req.body.idSportCenter,
     };
 
-    if(await validation.validateSportCenter(req.body.idSportCenter)){
-      const sportCenter = await sportCenterModel.findById(bodyfield.idSportCenter);
-      if((req.user.id == sportCenter.ownerId) || req.user.isAdmin){
+    if (await validation.validateSportCenter(req.body.idSportCenter)) {
+      const sportCenter = await sportCenterModel.findById(
+        bodyfield.idSportCenter
+      );
+      if (req.user.id == sportCenter.ownerId || req.user.isAdmin) {
         if (!validation.createFieldDataValidation(bodyfield)) {
           return next(createError(400, "Falta ingresar información"));
         } else if (
@@ -76,9 +78,9 @@ const createField = async (req, res, next) => {
             url: "",
             public_id: "",
           };
-          if (req.files.image) {
+          if (req.files && req.files.image) {
             console.log(req.files.image);
-            const result = await uploadImage(req.files.image.tempFilePath);
+            const result = await uploadFieldImage(req.files.image.tempFilePath);
             photo.url = result.secure_url;
             photo.public_id = result.public_id;
           }
@@ -89,16 +91,17 @@ const createField = async (req, res, next) => {
         } else {
           return next(createError(404, "Informacion no válida"));
         }
+      } else {
+        return next(
+          createError(
+            400,
+            "No esta autorizado a crear canchas en este complejo"
+          )
+        );
       }
-      else {
-        return next(createError(400, "No esta autorizado a crear canchas en este complejo"));
-      }
-    }
-    else {
+    } else {
       return next(createError(400, "Complejo no válido"));
     }
-
-
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
@@ -113,14 +116,14 @@ const updateField = async (req, res, next) => {
     const field = await fieldModel.findById(req.params.id);
     if (field) {
       const sportCenter = await sportCenterModel.findById(field.idSportCenter);
-      if((sportCenter.ownerId == req.user.id) || req.user.isAdmin) {
+      if (sportCenter.ownerId == req.user.id || req.user.isAdmin) {
         if (req.body.name) field.name = req.body.name;
         if (req.body.openHour) field.openHour = req.body.openHour;
         if (req.body.closeHour) field.closeHour = req.body.closeHour;
         if (req.body.pricePerHour) field.pricePerHour = req.body.pricePerHour;
         if (req.body.size) field.size = req.body.size;
         if (req.body.isActive) field.isActive = req.body.isActive;
-  
+
         if (
           validation.nameValidation(field.name) &&
           validation.hourValidation(field.openHour, field.closeHour) &&
@@ -128,12 +131,12 @@ const updateField = async (req, res, next) => {
           validation.sizeValidation(field.size)
         ) {
           if (req.files && req.files.image) {
-            const result = await uploadImage(req.files.image.tempFilePath);
-  
+            const result = await uploadFieldImage(req.files.image.tempFilePath);
+
             if (field.photo.public_id) {
               await deleteImage(field.photo.public_id);
             }
-  
+
             field.photo.url = result.secure_url;
             field.photo.public_id = result.public_id;
             fs.remove(req.files.image.tempFilePath);
@@ -143,9 +146,13 @@ const updateField = async (req, res, next) => {
         } else {
           return next(createError(400, "Información inválida"));
         }
-      }
-      else {
-        return next(createError(400, "No está autorizado a modificar canchas en este complejo"));
+      } else {
+        return next(
+          createError(
+            400,
+            "No está autorizado a modificar canchas en este complejo"
+          )
+        );
       }
     } else {
       return next(createError(404, "Cancha no encontrada"));
@@ -161,9 +168,9 @@ const deleteField = async (req, res, next) => {
   //Only for the owner of the sportCenter, validate that
   try {
     const field = await fieldModel.findById(req.params.id);
-    if(field){
+    if (field) {
       const sportCenter = await sportCenterModel.findById(field.idSportCenter);
-      if((sportCenter.ownerId == req.user.id) || req.user.isAdmin){
+      if (sportCenter.ownerId == req.user.id || req.user.isAdmin) {
         const deletedField = await fieldModel.findOneAndDelete({
           _id: { $eq: req.params.id },
         }); //$eq: req.params.id means that the id from params must be equa to the field's id
@@ -171,18 +178,22 @@ const deleteField = async (req, res, next) => {
           if (deletedField.photo && deletedField.photo.public_id) {
             await deleteImage(deletedField.photo.public_id);
           }
-          res
-            .status(200)
-            .json({ message: "The Field has been Deleted", field: deletedField });
+          res.status(200).json({
+            message: "The Field has been Deleted",
+            field: deletedField,
+          });
         } else {
           return next(createError(404, "Cancha no encontrada"));
         }
+      } else {
+        return next(
+          createError(
+            400,
+            "No está autorizado a eliminar canchas en este complejo"
+          )
+        );
       }
-      else{
-        return next(createError(400, "No está autorizado a eliminar canchas en este complejo"));
-      }
-    }
-    else{
+    } else {
       return next(createError(404, "Cancha no encontrada"));
     }
   } catch (error) {
