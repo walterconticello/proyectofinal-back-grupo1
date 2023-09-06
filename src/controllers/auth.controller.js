@@ -44,6 +44,7 @@ export const login = async (req, res, next) => {
 
     res
       .status(200)
+      .header("Authorization", `Bearer ${token}`)
       .json({ message: "Ingreso correcto", ok: true, user, token });
   } catch (error) {
     res
