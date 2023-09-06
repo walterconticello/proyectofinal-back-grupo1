@@ -10,17 +10,18 @@ const postReservation = async (req, res) => {
   try {
     const IdUser = req.user.id
     const IdField = await fieldModel.findById(req.body.IdField);
-    const Date = req.body.ReservationTime
+    const date = new Date (req.body.ReservationTime);
+    date.setHours(date.getHours() - 3);
     if (IdUser) {
       if (IdField) {
-        const isValid = await ValidationDate(Date , IdField);
+        const isValid = await ValidationDate(date , IdField);
         if (isValid) {
-          const expiration = await ExpirationFunction(Date);
+          const expiration = await ExpirationFunction(date);
           const reservation = new ReservationModel({
             IdUser: req.body.IdUser,
             IdSportCenter: req.body.IdSportCenter,
             IdField: req.body.IdField,
-            ReservationTime: req.body.ReservationTime,
+            ReservationTime: date,
             expirationDate: expiration
           });
           await reservation.save();
@@ -35,8 +36,8 @@ const postReservation = async (req, res) => {
       res.status(400).json({ message: "Usuario no encontrado" });
     }
   } catch (error) {
-    res.status(400).json({ message: error.message });
-    res.status(500).json({ message: "Error interno del servidor" });
+    res.status(500).json({ message: error.message });
+    console.log(error);
   }
 };
 
@@ -148,13 +149,13 @@ const deleteIdReservation = async (req, res) => {
       res.status(404).json({ message: "Reservation not found" });
     }
   } catch (err) {
-    res.status(500).json({ message: error.message });
+    res.status(404).json({ message: error.message });
   }
 };
 
 // PUT
 
-const putReservation = async (req, res) => {
+const putReservation = async (req, res) => { //Cambiar el estado.
   try {
     const id = req.user.id;
     const reservation = await ReservationModel.findById(id);

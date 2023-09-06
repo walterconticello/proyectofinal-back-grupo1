@@ -7,19 +7,13 @@ const timeZone = "America/Argentina/Buenos_Aires";
 const currentDate = new Date();
 const zonedDate = zonedTimeToUtc(currentDate, timeZone);
 
- const dates = format(zonedDate, 'yyyy-MM-dd HH:mm:ssxxx', { timeZone}) 
-const pattern = 'yyyy-MM-dd HH:mm:ss zzz';
-const formattedDate = format(zonedDate, pattern, { timeZone });
-const date = new Date(dates); // exportar
-
-console.log(date);
-console.log(formattedDate);
+ const date = format(zonedDate, 'yyyy-MM-dd HH:mm', { timeZone}) 
 
 
-async function isReservationExists(IdField, ReservationTime) {
-  const existingReservation = await ReservationModel.findOne({
+async function isReservationExists(IdField, reservationDate) {
+  const existingReservation = await ReservationModel.findOne({ //Esta andando mal es
     IdField,
-    ReservationTime,
+    reservationDate,
   });
   return existingReservation !== null;
 }
@@ -33,13 +27,13 @@ async function isWithinOpeningHours(IdField, reservationDate) {
   const openingHour = field.openHour;
   const closingHour = field.closeHour;
   const reservationHour = reservationDate.getHours();
+  
 
   return reservationHour >= openingHour && reservationHour < closingHour;
 }
 
 const ValidationDate = async (ReservationTime, IdField) => {
-  const reservationDate = new Date(ReservationTime);
-  
+  const reservationDate = ReservationTime; 
 
   if (reservationDate <= date) {
     console.log("La fecha de reserva debe ser en el futuro.");
@@ -54,7 +48,7 @@ const ValidationDate = async (ReservationTime, IdField) => {
     return false;
   }
 
-  const reservationExists = await isReservationExists(IdField, ReservationTime);
+  const reservationExists = await isReservationExists(IdField, reservationDate);
   if (reservationExists) {
     console.log("Esta reserva ya existe.");
     return false;
@@ -63,19 +57,20 @@ const ValidationDate = async (ReservationTime, IdField) => {
   return true; // Solo si todas las validaciones pasan, se retorna true.
 };
 
-export const ExpirationFunction = (Date) =>{
+export const ExpirationFunction = (date) =>{
 
-  const dosSemanasDespues = date;
+  const dosSemanasDespues = new Date(date); 
+  console.log("dos semanas: " + dosSemanasDespues)
   dosSemanasDespues.setDate(dosSemanasDespues.getDate() + 14);
-  console.log(dosSemanasDespues);
+
   return dosSemanasDespues
 }
 
-export const cancelled = (Date) =>{
+export const cancelled = (date) =>{
 
-  const cincoDias = date;
+  const cincoDias = new Date(date);
+  console.log(cincoDias);
   cincoDias.setDate(cincoDias.getDate() + 5);
-  console.log(dosSemanasDespues);
   return cincoDias;
 }
 
