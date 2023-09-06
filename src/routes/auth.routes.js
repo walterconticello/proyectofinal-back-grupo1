@@ -11,7 +11,7 @@ const usernameValidator = check("username")
 const emailValidator = check("email")
 	.notEmpty().withMessage("El correo electrónico es obligatorio")
 	.isEmail().withMessage("Correo electrónico inválido")
-	.isLength({ max: 24 }).withMessage("El correo electrónico debe tener como máximo 24 caracteres");
+	.isLength({ max: 50 }).withMessage("El correo electrónico debe tener como máximo 24 caracteres");
 
 const passwordValidator = check("password")
 	.notEmpty().withMessage("La contraseña es obligatoria")
