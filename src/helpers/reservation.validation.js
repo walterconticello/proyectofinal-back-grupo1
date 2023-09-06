@@ -8,13 +8,13 @@ const currentDate = new Date();
 const zonedDate = zonedTimeToUtc(currentDate, timeZone);
 
  const date = format(zonedDate, 'yyyy-MM-dd HH:mm', { timeZone}) 
+ const currentSecund = currentDate.getTime() - (3600000 * 3);
 
 
 async function isReservationExists(IdField, reservationDate) {
-  const existingReservation = await ReservationModel.findOne({ //Esta andando mal es
-    IdField,
-    reservationDate,
+  const existingReservation = await ReservationModel.findOne({ IdField:IdField,ReservationTime:reservationDate
   });
+  console.log(existingReservation);
   return existingReservation !== null;
 }
 
@@ -24,9 +24,11 @@ async function isWithinOpeningHours(IdField, reservationDate) {
     return false;
   }
 
+  const reservation = Number(reservationDate.getHours());
+
   const openingHour = field.openHour;
   const closingHour = field.closeHour;
-  const reservationHour = reservationDate.getHours();
+  const reservationHour = reservation + 3;
   
 
   return reservationHour >= openingHour && reservationHour < closingHour;
@@ -34,8 +36,10 @@ async function isWithinOpeningHours(IdField, reservationDate) {
 
 const ValidationDate = async (ReservationTime, IdField) => {
   const reservationDate = ReservationTime; 
+  const time = reservationDate.getTime();
+  console.log(time);
 
-  if (reservationDate <= date) {
+  if (time <= currentSecund) {
     console.log("La fecha de reserva debe ser en el futuro.");
     return false;
   }
@@ -57,9 +61,9 @@ const ValidationDate = async (ReservationTime, IdField) => {
   return true; // Solo si todas las validaciones pasan, se retorna true.
 };
 
-export const ExpirationFunction = (date) =>{
+export const ExpirationFunction = (dateExpiration) =>{
 
-  const dosSemanasDespues = new Date(date); 
+  const dosSemanasDespues = new Date(dateExpiration); 
   console.log("dos semanas: " + dosSemanasDespues)
   dosSemanasDespues.setDate(dosSemanasDespues.getDate() + 14);
 

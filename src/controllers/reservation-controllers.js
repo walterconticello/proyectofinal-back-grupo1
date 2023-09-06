@@ -85,7 +85,6 @@ const getOwnerReservation = async (req, res) => {
       if(sportCenters){
         const fields = await fieldModel.find({idSportCenter : sportCenters._id})
         const fieldIds = fields.map(field => field.id);
-        console.log(fieldIds);
         if(fieldIds.length > 0){
           const reservations = [];
           for (const id of fieldIds) {
@@ -97,18 +96,19 @@ const getOwnerReservation = async (req, res) => {
           if(reservations.length > 0){
             res.status(200).json(reservations)
           }
-          res.status(200).json({ message : "no tiene reservas"});
         }else{
-          res.status(200).json({ message : "no tiene reservas"});
+          res.status(204).json({ message : "no tiene reservas"});
         }
       }else {
-        res.status(400).json({ message: "no existe el complejo" });
+        res.status(204).json({ message: "no existe el complejo" });
       }
     } else {
-      res.status(203).json({ message: "usted no es owner" });
+      res.status(204).json({ message: "usted no es owner" });
     };
   }catch(error){
+    console.log(error);
     res.status(404).json({ message: error.message });
+    
   }
 };
 
