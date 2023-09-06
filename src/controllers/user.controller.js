@@ -11,8 +11,6 @@ export const updateUser = async (req, res, next) => {
 			username,
 			email,
 		};
-
-		// Verificar si se proporciona una contraseña
 		if (password) {
 			const hashedPassword = await bcrypt.hash(password, 10);
 			userToUpdate.password = hashedPassword;
@@ -21,8 +19,6 @@ export const updateUser = async (req, res, next) => {
 		if (req.files && req.files.photo) {
 			const result = await uploadPhoto(req.files.photo.tempFilePath);
 			await fs.remove(req.files.photo.tempFilePath);
-
-			// Agregar la URL de la imagen de perfil y el public_id a userToUpdate
 			userToUpdate.photo = {
 				url: result.secure_url,
 				public_id: result.public_id,
