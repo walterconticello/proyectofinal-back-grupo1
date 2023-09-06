@@ -1,6 +1,5 @@
 import express from "express";
 const router = express.Router();
-import { auth } from "../middlewares/auth.js";
 import { verifyAdmin } from "../utils/verifyToken.js";
 import productsController from "../controllers/products.controller.js";
 
@@ -11,22 +10,12 @@ router.get("/products", productsController.getAllProducts);
 router.get("/products/:id", productsController.getProductById);
 
 //POST /products
-router.post("/products", auth, verifyAdmin, productsController.createProduct);
+router.post("/products", verifyAdmin, productsController.createProduct);
 
 //PUT /products/:id
-router.put(
-  "/products/:id",
-  auth,
-  verifyAdmin,
-  productsController.updateProduct
-);
+router.put("/products/:id", verifyAdmin, productsController.updateProduct);
 
 //DELETE /products/:id
-router.delete(
-  "/products/:id",
-  auth,
-  verifyAdmin,
-  productsController.deleteProduct
-);
+router.delete("/products/:id", verifyAdmin, productsController.deleteProduct);
 
 export default router;
