@@ -28,17 +28,19 @@ const postReservation = async (req, res) => {
           await reservation.save();
           res.status(201).json(reservation);
         } else {
-          res.status(400).json({ message: "Reserva Existente o Fecha incorrecta" });
+          res.status(404).json({ message: "Reserva Existente o Fecha incorrecta" });
         }
       } else {
-        res.status(400).json({ message: "Cancha no existente" });
+        res.status(404).json({ message: "Cancha no existente" });
       }
     } else {
-      res.status(400).json({ message: "Usuario no encontrado" });
+      res.status(404).json({ message: "Usuario no encontrado" });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
-    console.log(error);
+    res.status(error.code || 500).json({
+      message:
+        error.message || "Ups! Hubo un problema, por favor intenta más tarde",
+    });
   }
 };
 
@@ -50,10 +52,13 @@ const getAllReservation = async (req, res) => {
       const allReservation = await ReservationModel.find();
       res.status(200).json(allReservation);
     } else {
-      res.status(403).json({ message: "usted no es administrador" });
+      res.status(404).json({ message: "usted no es administrador" });
     }
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    res.status(error.code || 500).json({
+      message:
+        error.message || "Ups! Hubo un problema, por favor intenta más tarde",
+    });
   }
 };
 
@@ -70,18 +75,21 @@ const getUserReservation = async (req, res) => {
         res.status(200).json({ message: "usted no tiene reserva" });
       }
     }else {
-      res.status(304).json({ message: "usted no es usuario" });
+      res.status(404).json({ message: "usted no es usuario" });
     }
 
   }catch(error){
-    res.status(404).json({ message: error.message });
+    res.status(error.code || 500).json({
+      message:
+        error.message || "Ups! Hubo un problema, por favor intenta más tarde",
+    });
   }
 };
 // get Owner
 const getOwnerReservation = async (req, res) => {
-  const user = new mongoose.Types.ObjectId(req.user.id)
   try{
     if (req.user.isOwner === true) {
+      const user = new mongoose.Types.ObjectId(req.user.id)
       const sportCenters= await sportCenterModel.findOne({ownerId : user});
       if(sportCenters){
         const fields = await fieldModel.find({idSportCenter : sportCenters._id})
@@ -101,27 +109,37 @@ const getOwnerReservation = async (req, res) => {
           res.status(204).json({ message : "no tiene reservas"});
         }
       }else {
-        res.status(204).json({ message: "no existe el complejo" });
+        res.status(404).json({ message: "no existe el complejo" });
       }
     } else {
-      res.status(204).json({ message: "usted no es owner" });
+      res.status(404).json({ message: "usted no es owner" });
     };
   }catch(error){
-    console.log(error);
-    res.status(404).json({ message: error.message });
+    res.status(error.code || 500).json({
+      message:
+        error.message || "Ups! Hubo un problema, por favor intenta más tarde",
+    });
     
   }
 };
 
 
 const getReservationIdReservation = async (req, res) => {
-  const id = req.user.id;
-  const reservation = await ReservationModel.findById(id);
-  if (reservation) {
-    res.json(reservation);
-  } else {
-    res.status(404).json({ message: error.message });
+  try{
+    const id = req.user.id;
+    const reservation = await ReservationModel.findById(id);
+    if (reservation) {
+      res.json(reservation);
+    } else {
+      res.status(404).json({ message: error.message });
+    }
+  }catch(error){
+    res.status(error.code || 500).json({
+      message:
+        error.message || "Ups! Hubo un problema, por favor intenta más tarde",
+    });
   }
+  
 };
 
 const cancelledReservation = async (req, res) => {
@@ -135,10 +153,13 @@ const cancelledReservation = async (req, res) => {
       await reservation.save();
       res.status(200).json({ message: "Reservation cancelada" });
     } else {
-      res.status(404).json({ message: "Reservation not found" });
+      res.status(404).json({ message: "No puede cancelar" });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(error.code || 500).json({
+      message:
+        error.message || "Ups! Hubo un problema, por favor intenta más tarde",
+    });
   }
 };
 
@@ -165,7 +186,10 @@ cron.schedule('*/1 * * * *', async (res) => {
           console.log("No hay reserva con status cancelada")  ;
         }
     } catch(error){
-      res.status(500).json({ message: error.message });
+      res.status(error.code || 500).json({
+        message:
+          error.message || "Ups! Hubo un problema, por favor intenta más tarde",
+      });
     }
 });
 

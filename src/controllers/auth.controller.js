@@ -54,7 +54,6 @@ export const login = async (req, res, next) => {
 export const getAuthStatus = async (req, res) => {
   try {
     const id = req.id;
-
     const user = await User.findById(id);
     if (!user) return next(createError("Autenticación fallida", 401));
     res.status(200).json({ user });
