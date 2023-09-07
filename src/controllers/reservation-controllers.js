@@ -183,7 +183,7 @@ cron.schedule('*/1 * * * *', async (res) => {
         };
           };
       } else {
-          console.log("No hay reserva con status cancelada")  ;
+        res.status(200).json({ message: "No hay Reservas para vencidas para eliminar" });
         }
     } catch(error){
       res.status(error.code || 500).json({
