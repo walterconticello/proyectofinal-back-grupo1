@@ -12,6 +12,13 @@ export const uploadImage = async (filePath) => {
   });
 };
 
+export const uploadSportCenterImage = async (filePath) => {
+  return await cloudinary.uploader.upload(filePath, {
+    folder: "sportCenters",
+  });
+};
+
+
 export const deleteImage = async (id) => {
   await cloudinary.uploader.destroy(id);
 };

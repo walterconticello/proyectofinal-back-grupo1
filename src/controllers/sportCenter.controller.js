@@ -1,6 +1,9 @@
 import sportCenterModel from "../models/sportCenter.model.js";
 import validation from "../helpers/sportCenter.validation.js";
 import fieldsModel from "../models/fields.model.js";
+import { uploadSportCenterImage, deleteImage } from "../utils/cloudinary.js"
+import fs from "fs-extra"
+
 
 //Get
 
@@ -66,32 +69,34 @@ const postSportCenter = async (req, res) => {
       // validation.socialValidation(sportCenterData.social) &&
       // validation.photoValidation(sportCenterData.photo)
     ) {
-      if (isAdmin) {
-        const sportCenter = new sportCenterModel(sportCenterData);
-        await sportCenter.save();
-        return res
-          .status(201)
-          .json({ mensaje: "Centro deportivo creado con éxito" });
-      } else {
-        const sportCenter = await sportCenterModel.findOne({
+      const sportCenter = new sportCenterModel(sportCenterData);
+      if (req.files && req.files.image) {
+        const result = await uploadSportCenterImage(req.files.image.tempFilePath);
+        sportCenter.photo = {
+          url: result.secure_url,
+          public_id: result.public_id,
+        };
+        await fs.remove(req.files.image.tempFilePath);
+      }
+      if (!isAdmin) {
+        const ownerSportCenter = await sportCenterModel.findOne({
           _id: sportCenterData.ownerId,
         });
-        if (!sportCenter) {
+        if (!ownerSportCenter) {
           return res
             .status(404)
             .json({ mensaje: "No se encontró el centro deportivo" });
         }
-        if (sportCenter.ownerId !== ownerId) {
+        if (ownerSportCenter.ownerId !== ownerId) {
           return res
             .status(403)
             .json({ mensaje: "No tienes permiso para crear este centro deportivo" });
         }
-        const newSportCenter = new sportCenterModel(sportCenterData);
-        await newSportCenter.save();
-        return res
-          .status(201)
-          .json({ mensaje: "Centro deportivo creado con éxito" });
       }
+      await sportCenter.save();
+      return res
+        .status(201)
+        .json({ mensaje: "Centro deportivo creado con éxito" });
     } else {
       res.status(400).json({ mensaje: "Error en los datos ingresados" });
     }
