@@ -116,7 +116,11 @@ const putSportCenter = async (req, res) => {
     const sportCenterData = {
       name,
       address,
-      phone,
+      phone
+      //services,
+      //location,
+      //social,
+      //photo,
     };
     const sportCenter = await sportCenterModel.findById(req.params.id);
 
@@ -141,11 +145,23 @@ const putSportCenter = async (req, res) => {
       validation.nameValidation(sportCenterData.name) &&
       validation.addressValidation(sportCenterData.address) &&
       validation.phoneValidation(sportCenterData.phone)
-      // validation.locationValidation(sportCenterData.location) &&
-      // validation.socialValidation(sportCenterData.social) &&
-      // validation.photoValidation(sportCenterData.photo) &&
-      // validationResult
+      //validation.servicesValidation(sportCenterData.services) &&
+      //validation.locationValidation(sportCenterData.location) &&
+      //validation.socialValidation(sportCenterData.social) &&
+      //validation.photoValidation(sportCenterData.photo)
     ) {
+      if (req.files && req.files.image) {
+        const result = await uploadSportCenterImage(req.files.image.tempFilePath);
+
+        if (sportCenter.photo.public_id) {
+          await deleteImage(sportCenter.photo.public_id);
+        }
+
+        sportCenter.photo.url = result.secure_url;
+        sportCenter.photo.public_id = result.public_id;
+        await fs.remove(req.files.image.tempFilePath);
+      }
+
       await sportCenter.save();
       res.json({ mensaje: "Centro deportivo actualizado con éxito" });
     } else {
