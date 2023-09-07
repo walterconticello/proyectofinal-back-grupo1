@@ -6,9 +6,8 @@ import { zonedTimeToUtc, format } from "date-fns-tz";
 const timeZone = "America/Argentina/Buenos_Aires";
 const currentDate = new Date();
 const zonedDate = zonedTimeToUtc(currentDate, timeZone);
-
- const date = format(zonedDate, 'yyyy-MM-dd HH:mm', { timeZone}) 
- const currentSecund = currentDate.getTime() - (3600000 * 3);
+const dateTime = format(zonedDate, 'yyyy-MM-dd HH:mm', { timeZone}) 
+export const currentSecund = currentDate.getTime() - (3600000 * 3);
 
 
 async function isReservationExists(IdField, reservationDate) {

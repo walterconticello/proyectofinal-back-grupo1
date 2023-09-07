@@ -1,8 +1,9 @@
 import ReservationModel from "../models/reservation.model.js";
 import fieldModel from "../models/fields.model.js";
 import ValidationDate from "../helpers/reservation.validation.js";
-import {ExpirationFunction} from "../helpers/reservation.validation.js"
+import {ExpirationFunction , currentSecund } from "../helpers/reservation.validation.js"
 import sportCenterModel from "../models/sportCenter.model.js";
+import cron from "node-cron";
 import mongoose from "mongoose";
 //CREATE O POST
 
@@ -114,7 +115,7 @@ const getOwnerReservation = async (req, res) => {
 
 
 const getReservationIdReservation = async (req, res) => {
-  const id = req.params.id;
+  const id = req.user.id;
   const reservation = await ReservationModel.findById(id);
   if (reservation) {
     res.json(reservation);
@@ -125,10 +126,12 @@ const getReservationIdReservation = async (req, res) => {
 
 const cancelledReservation = async (req, res) => {
   try {
+    const userId = req.user.id;
     const reservationId = req.params.id;
     const reservation = await ReservationModel.findById(reservationId);
-    if (reservation) {
-      reservation.status = "cancelada";
+    console.log(reservation);
+    if (reservation.IdUser == userId || req.user.isOwner === true || req.user.isAdmin === true ) {
+      reservation.Status = "cancelada";
       await reservation.save();
       res.status(200).json({ message: "Reservation cancelada" });
     } else {
@@ -139,40 +142,36 @@ const cancelledReservation = async (req, res) => {
   }
 };
 
-const deleteIdReservation = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const reservation = await ReservationModel.findByIdAndDelete(id); //iria un findByDelete // aqui tengo que hacer que se eliminen si el owner o admin quieren y que se eliminen una vez pasada la fecha de expiracion. Esto sera un arreglo de Reservas Vencidas y se iran eliminando a medida que pase recorre el arreglo.
-    if (reservation) {
-      res.status(200).json({ message: "Reservation deleted" });
-    } else {
-      res.status(404).json({ message: "Reservation not found" });
-    }
-  } catch (err) {
-    res.status(404).json({ message: error.message });
-  }
-};
 
-// PUT
-
-const putReservation = async (req, res) => { //Cambiar el estado.
-  try {
-    const id = req.user.id;
-    const reservation = await ReservationModel.findById(id);
-    if (reservation) {
-      reservation.ReservationTime = req.body.ReservationTime;
-      await reservation.save();
-      res.status(200).json(reservation);
-      // }else{
-      //     res.status(404).json({ error: "Cancha  o horario no disponible" });
-      // }
-    } else {
-      res.status(404).json({ error: "Reserva no encontrada" });
+cron.schedule('*/1 * * * *', async (res) => {
+    try {
+      const reservationToDelete = await ReservationModel.find({Status : "cancelada"});
+      if(reservationToDelete.length > 0 ){
+        for(const statusDelete of reservationToDelete){
+          const StringExpiration = statusDelete.expirationDate;
+          const idDelete = reservationToDelete.map(reservationDelete => reservationDelete.id);
+          const timeExpiration = Number(StringExpiration.getTime());
+          if(timeExpiration < currentSecund){
+            for(const id of idDelete){
+              const deletes = await ReservationModel.findByIdAndDelete(id);
+              console.log(deletes);
+              if(deletes){
+                res.status(200).json({ message: "Reserva eliminada" });
+              };
+            };
+        };
+          };
+      } else {
+          console.log("No hay reserva con status cancelada")  ;
+        }
+    } catch(error){
+      res.status(500).json({ message: error.message });
     }
-  } catch (error) {
-    console.log(error);
-  }
-};
+});
+
+
+
+
 
 export default {
   postReservation,
@@ -180,7 +179,5 @@ export default {
   getUserReservation,
   getOwnerReservation,
   getReservationIdReservation,
-  deleteIdReservation,
-  putReservation,
   cancelledReservation,
 };

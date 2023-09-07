@@ -10,8 +10,6 @@ router.get("/reservation", auth, verifyAdmin, reservationControllers.getAllReser
 router.get("/reservation/user", auth, verifyUser , reservationControllers.getUserReservation);
 router.get("/reservation/owner", auth ,  reservationControllers.getOwnerReservation);
 router.get("/reservation/:id", auth,  reservationControllers.getReservationIdReservation);
-router.delete("/reservation/:id",  auth, reservationControllers.deleteIdReservation);
-router.delete("/reservation/:id", auth,  reservationControllers.cancelledReservation);
-router.put("/reservation/:id", auth, reservationControllers.putReservation);
+router.put("/reservation/:id", auth,  reservationControllers.cancelledReservation);
 
 export default router;
