@@ -191,9 +191,14 @@ const deleteSportCenter = async (req, res) => {
         .json({ message: "No tienes permiso para eliminar este centro deportivo" });
     }
 
-    const deleteSportCenter = await sportCenterModel.findByIdAndDelete(
+    const deletedSportCenter = await sportCenterModel.findByIdAndDelete(
       req.params.id
     );
+
+    if (deletedSportCenter.photo && deletedSportCenter.photo.public_id) {
+      await deleteImage(deletedSportCenter.photo.public_id);
+    }
+
     res.json({ mensaje: "Centro deportivo eliminado con éxito" });
   } catch (error) {
     res.status(500).json({ message: "Error al eliminar centro deportivo" });
