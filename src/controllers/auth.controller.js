@@ -9,11 +9,14 @@ export const register = async (req, res, next) => {
     const { username, email, password } = req.body;
     const hash = await bcrypt.hash(password, 10);
 
+    
+
     const newUser = new User({
       username,
       email,
       password: hash,
     });
+    
     console.log(newUser, "usuario");
     await newUser.save();
     res.status(200).json({ message: "Usuario creado con exito" });

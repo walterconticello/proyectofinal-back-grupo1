@@ -1,35 +1,27 @@
 import express from "express";
 import reservationControllers from "../controllers/reservation-controllers.js";
-import { verifyUser } from "../utils/verifyToken.js";
+import { verifyAdmin, verifyOwner, verifyUser } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
-router.post("/reservation", verifyUser, reservationControllers.postReservation);
-router.get("/reservation", verifyUser, reservationControllers.getReservation);
+router.post("/reservation", reservationControllers.postReservation);
+router.get(
+  "/reservation",
+  verifyAdmin,
+  reservationControllers.getAllReservation
+);
+router.get(
+  "/reservation/user",
+  verifyUser,
+  reservationControllers.getUserReservation
+);
+router.get("/reservation/owner", reservationControllers.getOwnerReservation);
 router.get(
   "/reservation/:id",
-  verifyUser,
   reservationControllers.getReservationIdReservation
 );
-router.get(
-  "/reservation/field/:fieldid",
-  verifyUser,
-  reservationControllers.getReservationByFieldId
-);
-router.delete(
-  "/reservation/:id",
-  verifyUser,
-  reservationControllers.deleteIdReservation
-);
-router.delete(
-  "/reservation/:id",
-  verifyUser,
-  reservationControllers.cancelledReservation
-);
-router.put(
-  "/reservation/:id",
-  verifyUser,
-  reservationControllers.putReservation
-);
+router.delete("/reservation/:id", reservationControllers.deleteIdReservation);
+router.delete("/reservation/:id", reservationControllers.cancelledReservation);
+router.put("/reservation/:id", reservationControllers.putReservation);
 
 export default router;

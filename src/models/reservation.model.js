@@ -12,8 +12,10 @@ const reservationSchema = new Schema(
       enum: ["confirmada", "cancelada", "pendiente"],
       default: "pendiente",
     },
+    expirationDate: { type: Date, required: true }
   },
   { versionKey: false }
 );
 
-export default mongoose.model("Reservations", reservationSchema);
+const ReservationModel = mongoose.model("reservations", reservationSchema);
+export default ReservationModel;

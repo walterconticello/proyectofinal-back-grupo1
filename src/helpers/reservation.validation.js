@@ -7,15 +7,13 @@ const timeZone = "America/Argentina/Buenos_Aires";
 const currentDate = new Date();
 const zonedDate = zonedTimeToUtc(currentDate, timeZone);
 
-const pattern = "d/M/yyyy HH:mm:ss (z)";
+const date = format(zonedDate, "yyyy-MM-dd HH:mm", { timeZone });
 
-const formattedDate = format(zonedDate, pattern, { timeZone });
-console.log(formattedDate);
-
-async function isReservationExists(IdField, ReservationTime) {
+async function isReservationExists(IdField, reservationDate) {
   const existingReservation = await ReservationModel.findOne({
+    //Esta andando mal es
     IdField,
-    ReservationTime,
+    reservationDate,
   });
   return existingReservation !== null;
 }
@@ -34,11 +32,11 @@ async function isWithinOpeningHours(IdField, reservationDate) {
 }
 
 const ValidationDate = async (ReservationTime, IdField) => {
-  const reservationDate = new Date(ReservationTime); // posible error de tipo date
+  const reservationDate = ReservationTime;
 
-  if (reservationDate <= zonedDate) {
+  if (reservationDate <= date) {
     console.log("La fecha de reserva debe ser en el futuro.");
-    return;
+    return false;
   }
 
   const isWithinHours = await isWithinOpeningHours(IdField, reservationDate);
@@ -46,16 +44,31 @@ const ValidationDate = async (ReservationTime, IdField) => {
     console.log(
       "La reserva debe estar dentro del horario de apertura y cierre del complejo."
     );
-    return;
+    return false;
   }
 
-  const reservationExists = await isReservationExists(IdField, ReservationTime);
+  const reservationExists = await isReservationExists(IdField, reservationDate);
   if (reservationExists) {
     console.log("Esta reserva ya existe.");
     return false;
   }
 
-  return true;
+  return true; // Solo si todas las validaciones pasan, se retorna true.
+};
+
+export const ExpirationFunction = (date) => {
+  const dosSemanasDespues = new Date(date);
+  console.log("dos semanas: " + dosSemanasDespues);
+  dosSemanasDespues.setDate(dosSemanasDespues.getDate() + 14);
+
+  return dosSemanasDespues;
+};
+
+export const cancelled = (date) => {
+  const cincoDias = new Date(date);
+  console.log(cincoDias);
+  cincoDias.setDate(cincoDias.getDate() + 5);
+  return cincoDias;
 };
 
 export default ValidationDate;
