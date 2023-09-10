@@ -100,7 +100,7 @@ const postSportCenter = async (req, res) => {
 
 
 
-//Put SportCenter
+/// Put SportCenter
 
 const putSportCenter = async (req, res) => {
   try {
@@ -142,6 +142,9 @@ const putSportCenter = async (req, res) => {
             );
             photo.url = result.secure_url;
             photo.public_id = result.public_id;
+            if (sportCenter.photo.public_id) {
+              await deleteImage(sportCenter.photo.public_id);
+            }
           }
           const updatedSportCenter = {
             ...bodySportCenter,
@@ -174,35 +177,33 @@ const putSportCenter = async (req, res) => {
   }
 };
 
-//Delete
+// Delete SportCenter
 
 const deleteSportCenter = async (req, res) => {
   try {
-    const sportCenter = await sportCenterModel.findById(req.params.id);
-    if (!sportCenter) {
-      return res.status(404).json({ message: "Centro deportivo no encontrado" });
-    }
+    const sportCenterId = req.params.id;
 
-    const ownerId = req.user.ownerId;
-    const isAdmin = req.user.isAdmin;
-
-    if (!isAdmin && sportCenter.ownerId !== ownerId) {
+    if (await validation.validateSportCenter(sportCenterId)) {
+      const sportCenter = await sportCenterModel.findById(sportCenterId);
+      if (req.user.id == sportCenter.ownerId || req.user.isAdmin) {
+        if (sportCenter.photo.public_id) {
+          await deleteImage(sportCenter.photo.public_id);
+        }
+        await sportCenterModel.findByIdAndDelete(sportCenterId);
+        res.json({ mensaje: "Centro deportivo eliminado con éxito" });
+      } else {
+        return res
+          .status(403)
+          .json({ mensaje: "No tienes permiso para eliminar este centro deportivo" });
+      }
+    } else {
       return res
-        .status(403)
-        .json({ message: "No tienes permiso para eliminar este centro deportivo" });
+        .status(404)
+        .json({ mensaje: "No se encontró el centro deportivo" });
     }
-
-    const deletedSportCenter = await sportCenterModel.findByIdAndDelete(
-      req.params.id
-    );
-
-    if (deletedSportCenter.photo && deletedSportCenter.photo.public_id) {
-      await deleteImage(deletedSportCenter.photo.public_id);
-    }
-
-    res.json({ mensaje: "Centro deportivo eliminado con éxito" });
   } catch (error) {
-    res.status(500).json({ message: "Error al eliminar centro deportivo" });
+    console.log(error);
+    res.status(500).json({ mensaje: "Error al eliminar centro deportivo" });
   }
 };
 
