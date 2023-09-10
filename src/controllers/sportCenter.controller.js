@@ -31,10 +31,10 @@ const getAllSportCenters = async (req, res) => {
 const getSportCenterById = async (req, res) => {
   try {
     const sportCenter = await sportCenterModel.findById(req.params.id);
-    const fields = await fieldsModel.find ({idSportCenter: sportCenter._id});
+    const fields = await fieldsModel.find({ idSportCenter: sportCenter._id });
     res.json({
-      ...sportCenter,
-      fields
+      ...sportCenter._doc,
+      fields,
     });
   } catch (error) {
     res.status(500).json({ mensaje: "Error al obtener el centro deportivo" });
@@ -45,26 +45,29 @@ const getSportCenterById = async (req, res) => {
 
 const postSportCenter = async (req, res) => {
   try {
-    const { name, address, phone, services, location, social, photo} = req.body;
+    const { ownerId, name, address, phone, services, location, social, photo } =
+      req.body;
 
     const sportCenterData = {
+      ownerId,
       name,
       address,
-      phone
+      phone,
     };
 
     if (
       validation.nameValidation(sportCenterData.name) &&
       validation.addressValidation(sportCenterData.address) &&
-      validation.phoneValidation(sportCenterData.phone) 
-      // &&
+      validation.phoneValidation(sportCenterData.phone)
       // validation.locationValidation(sportCenterData.location) &&
       // validation.socialValidation(sportCenterData.social) &&
       // validation.photoValidation(sportCenterData.photo)
     ) {
       const sportCenter = new sportCenterModel(sportCenterData);
       await sportCenter.save();
-      return res.status(201).json({ mensaje: "Centro deportivo creado con éxito" });
+      return res
+        .status(201)
+        .json({ mensaje: "Centro deportivo creado con éxito" });
     } else {
       res.status(400).json({ mensaje: "Error en los datos ingresados" });
     }
@@ -78,36 +81,36 @@ const postSportCenter = async (req, res) => {
 
 const putSportCenter = async (req, res) => {
   try {
-    const { name, address, phone, services, location, social, photo} = req.body;
+    const { name, address, phone, services, location, social, photo } =
+      req.body;
 
     const sportCenterData = {
       name,
       address,
       phone,
-      services,
-      location,
-      social,
-      photo
     };
-
     const sportCenter = await sportCenterModel.findById(req.params.id);
 
     if (!sportCenter) {
-      return res.status(404).json({ message: "Centro deportivo no encontrado" });
+      return res
+        .status(404)
+        .json({ message: "Centro deportivo no encontrado" });
     }
 
     sportCenter.set(sportCenterData);
+    console.log(sportCenterData);
 
-    const validationResult = await sportCenter.validate();
+    // const validationResult = await sportCenterModel.validate();
+    // console.log(validationResult);
 
     if (
       validation.nameValidation(sportCenterData.name) &&
       validation.addressValidation(sportCenterData.address) &&
-      validation.phoneValidation(sportCenterData.phone) &&
-      validation.locationValidation(sportCenterData.location) &&
-      validation.socialValidation(sportCenterData.social) &&
-      validation.photoValidation(sportCenterData.photo) &&
-      validationResult
+      validation.phoneValidation(sportCenterData.phone)
+      // validation.locationValidation(sportCenterData.location) &&
+      // validation.socialValidation(sportCenterData.social) &&
+      // validation.photoValidation(sportCenterData.photo) &&
+      // validationResult
     ) {
       await sportCenter.save();
       res.json({ mensaje: "Centro deportivo actualizado con éxito" });
@@ -124,7 +127,9 @@ const putSportCenter = async (req, res) => {
 
 const deleteSportCenter = async (req, res) => {
   try {
-    const deleteSportCenter = await sportCenterModel.findByIdAndDelete(req.params.id);
+    const deleteSportCenter = await sportCenterModel.findByIdAndDelete(
+      req.params.id
+    );
     if (deleteSportCenter) {
       res.json({ mensaje: "Centro deportivo eliminado con éxito" });
     } else {
@@ -134,7 +139,6 @@ const deleteSportCenter = async (req, res) => {
     res.status(500).json({ mensaje: "Error al eliminar centro deportivo" });
   }
 };
-
 
 export default {
   getAllSportCenters,

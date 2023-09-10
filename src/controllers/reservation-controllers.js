@@ -9,21 +9,21 @@ import mongoose from "mongoose";
 
 const postReservation = async (req, res) => {
   try {
-    const IdUser = req.user.id
+    const IdUser = req.user.id;
     const IdField = await fieldModel.findById(req.body.IdField);
-    const date = new Date (req.body.ReservationTime);
+    const date = new Date(req.body.ReservationTime);
     date.setHours(date.getHours() - 3);
     if (IdUser) {
       if (IdField) {
-        const isValid = await ValidationDate(date , IdField);
+        const isValid = await ValidationDate(date, IdField);
         if (isValid) {
           const expiration = await ExpirationFunction(date);
           const reservation = new ReservationModel({
-            IdUser: req.body.IdUser,
+            IdUser: req.user.id,
             IdSportCenter: req.body.IdSportCenter,
             IdField: req.body.IdField,
             ReservationTime: date,
-            expirationDate: expiration
+            expirationDate: expiration,
           });
           await reservation.save();
           res.status(201).json(reservation);
@@ -65,13 +65,13 @@ const getAllReservation = async (req, res) => {
 // get User
 
 const getUserReservation = async (req, res) => {
-  try{
-    if (!req.user.isAdmin  && !req.user.isOwner) {
+  try {
+    if (!req.user.isAdmin && !req.user.isOwner) {
       const idUser = req.user.id;
-      const reservationUser = await ReservationModel.find({IdUser : idUser});
+      const reservationUser = await ReservationModel.find({ IdUser: idUser });
       if (reservationUser) {
         res.json(reservationUser);
-      }else{
+      } else {
         res.status(200).json({ message: "usted no tiene reserva" });
       }
     }else {
@@ -83,6 +83,7 @@ const getUserReservation = async (req, res) => {
       message:
         error.message || "Ups! Hubo un problema, por favor intenta más tarde",
     });
+
   }
 };
 // get Owner
@@ -97,13 +98,13 @@ const getOwnerReservation = async (req, res) => {
         if(fieldIds.length > 0){
           const reservations = [];
           for (const id of fieldIds) {
-            const reservation = await ReservationModel.findOne({IdField : id});
+            const reservation = await ReservationModel.findOne({ IdField: id });
             if (reservations) {
               reservations.push(reservation);
             }
           }
-          if(reservations.length > 0){
-            res.status(200).json(reservations)
+          if (reservations.length > 0) {
+            res.status(200).json(reservations);
           }
         }else{
           res.status(204).json({ message : "no tiene reservas"});
@@ -119,10 +120,9 @@ const getOwnerReservation = async (req, res) => {
       message:
         error.message || "Ups! Hubo un problema, por favor intenta más tarde",
     });
-    
+
   }
 };
-
 
 const getReservationIdReservation = async (req, res) => {
   try{
@@ -192,10 +192,6 @@ cron.schedule('*/1 * * * *', async (res) => {
       });
     }
 });
-
-
-
-
 
 export default {
   postReservation,

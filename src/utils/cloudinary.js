@@ -12,6 +12,18 @@ export const uploadImage = async (filePath) => {
   });
 };
 
+export const uploadFieldImage = async (filePath) => {
+  return await cloudinary.uploader.upload(filePath, {
+    folder: "fields",
+  });
+};
+
+export const uploadPhoto = async (filePath) => {
+  return await cloudinary.uploader.upload(filePath, {
+    folder: "users",
+  });
+};
+
 export const deleteImage = async (id) => {
   await cloudinary.uploader.destroy(id);
 };

@@ -66,15 +66,14 @@ export const ExpirationFunction = (dateExpiration) =>{
   console.log("dos semanas: " + dosSemanasDespues)
   dosSemanasDespues.setDate(dosSemanasDespues.getDate() + 14);
 
-  return dosSemanasDespues
-}
+  return dosSemanasDespues;
+};
 
-export const cancelled = (date) =>{
-
+export const cancelled = (date) => {
   const cincoDias = new Date(date);
   console.log(cincoDias);
   cincoDias.setDate(cincoDias.getDate() + 5);
   return cincoDias;
-}
+};
 
 export default ValidationDate;

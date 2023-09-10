@@ -7,7 +7,7 @@ const sportCenterSchema = new Schema(
     ownerId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      // required: true,
+      required: true,
     },
 
     name: {
@@ -17,7 +17,7 @@ const sportCenterSchema = new Schema(
       lowercase: true,
       minlength: 3,
     },
-    
+
     address: {
       type: String,
       required: true,
@@ -27,11 +27,11 @@ const sportCenterSchema = new Schema(
       maxlenght: 30,
     },
 
-    phone : {
+    phone: {
       type: String,
       required: true,
     },
-    
+
     services: {
       bar: {
         type: Boolean,
@@ -48,12 +48,12 @@ const sportCenterSchema = new Schema(
     },
 
     photo: {
-      type: String,  
+      type: String,
     },
 
     social: {
       facebook: {
-        type: String,  
+        type: String,
       },
 
       instagram: {
@@ -63,18 +63,16 @@ const sportCenterSchema = new Schema(
 
     location: {
       latitude: {
-        type: String
+        type: String,
       },
 
       longitude: {
-        type: String
-      }
-    }
-
+        type: String,
+      },
+    },
   },
   { versionKey: false }
 );
-
 
 const sportCenterModel = mongoose.model("sportCenter", sportCenterSchema);
 
