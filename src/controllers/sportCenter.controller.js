@@ -100,72 +100,77 @@ const postSportCenter = async (req, res) => {
 
 
 
-
-
 //Put SportCenter
 
 const putSportCenter = async (req, res) => {
   try {
-    const { name, address, phone, services, location, social, photo } =
-      req.body;
-
-    const sportCenterData = {
-      name,
-      address,
-      phone
-      //services,
-      //location,
-      //social,
-      //photo,
+    const sportCenterId = req.params.id;
+    const bodySportCenter = {
+      name: req.body.name,
+      address: req.body.address,
+      phone: req.body.phone,
+      //services: req.body.services,
+      //location: req.body.location,
+      //social: req.body.social,
+      //photo: req.body.photo,
     };
-    const sportCenter = await sportCenterModel.findById(req.params.id);
 
-    if (!sportCenter) {
+    if (await validation.validateSportCenter(sportCenterId)) {
+      const sportCenter = await sportCenterModel.findById(sportCenterId);
+      if (req.user.id == sportCenter.ownerId || req.user.isAdmin) {
+        if (
+          !validation.sportCenterDataValidation(bodySportCenter)
+        ) {
+          return res
+            .status(400)
+            .json({ mensaje: "Error en los datos ingresados" });
+        } else if (
+          validation.nameValidation(bodySportCenter.name) &&
+          validation.addressValidation(bodySportCenter.address) &&
+          validation.phoneValidation(bodySportCenter.phone)
+          //validation.servicesValidation(bodySportCenter.services) &&
+          //validation.locationValidation(bodySportCenter.location) &&
+          //validation.socialValidation(bodySportCenter.social) 
+        ) {
+          const photo = {
+            url: "",
+            public_id: "",
+          };
+          if (req.files && req.files.image) {
+            const result = await uploadSportCenterImage(
+              req.files.image.tempFilePath
+            );
+            photo.url = result.secure_url;
+            photo.public_id = result.public_id;
+          }
+          const updatedSportCenter = {
+            ...bodySportCenter,
+            photo,
+          };
+          await sportCenterModel.findByIdAndUpdate(
+            sportCenterId,
+            updatedSportCenter
+          );
+          fs.remove(req.files.image.tempFilePath);
+          res.json({ mensaje: "Centro deportivo actualizado con éxito" });
+        } else {
+          return res
+            .status(400)
+            .json({ mensaje: "Error en los datos ingresados" });
+        }
+      } else {
+        return res
+          .status(403)
+          .json({ mensaje: "No tienes permiso para actualizar este centro deportivo" });
+      }
+    } else {
       return res
         .status(404)
-        .json({ message: "Centro deportivo no encontrado" });
+        .json({ mensaje: "No se encontró el centro deportivo" });
     }
-
-    const ownerId = req.user.ownerId;
-    const isAdmin = req.user.isAdmin;
-
-    if (!isAdmin && sportCenter.ownerId !== ownerId) {
-      return res
-        .status(403)
-        .json({ message: "No tienes permiso para actualizar este centro deportivo" });
-    }
-
-    sportCenter.set(sportCenterData);
-
-    if (
-      validation.nameValidation(sportCenterData.name) &&
-      validation.addressValidation(sportCenterData.address) &&
-      validation.phoneValidation(sportCenterData.phone)
-      //validation.servicesValidation(sportCenterData.services) &&
-      //validation.locationValidation(sportCenterData.location) &&
-      //validation.socialValidation(sportCenterData.social) &&
-      //validation.photoValidation(sportCenterData.photo)
-    ) {
-      if (req.files && req.files.image) {
-        const result = await uploadSportCenterImage(req.files.image.tempFilePath);
-
-        if (sportCenter.photo.public_id) {
-          await deleteImage(sportCenter.photo.public_id);
-        }
-
-        sportCenter.photo.url = result.secure_url;
-        sportCenter.photo.public_id = result.public_id;
-        await fs.remove(req.files.image.tempFilePath);
-      }
-
-      await sportCenter.save();
-      res.json({ mensaje: "Centro deportivo actualizado con éxito" });
-    } else {
-      res.status(400).json({ mensaje: "Error en los datos ingresados" });
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Error al actualizar centro deportivo" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ mensaje: "Error al actualizar centro deportivo" });
   }
 };
 
