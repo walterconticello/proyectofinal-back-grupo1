@@ -1,13 +1,17 @@
 import ReservationModel from "../models/reservation.model.js";
 import fieldModel from "../models/fields.model.js";
 import ValidationDate from "../helpers/reservation.validation.js";
-import {ExpirationFunction , currentSecund } from "../helpers/reservation.validation.js"
+import {
+  ExpirationFunction,
+  currentSecund,
+} from "../helpers/reservation.validation.js";
 import sportCenterModel from "../models/sportCenter.model.js";
 import cron from "node-cron";
 import mongoose from "mongoose";
 //CREATE O POST
 
 const postReservation = async (req, res) => {
+  console.log(req.user);
   try {
     const IdUser = req.user.id;
     const IdField = await fieldModel.findById(req.body.IdField);
@@ -28,7 +32,9 @@ const postReservation = async (req, res) => {
           await reservation.save();
           res.status(201).json(reservation);
         } else {
-          res.status(404).json({ message: "Reserva Existente o Fecha incorrecta" });
+          res
+            .status(404)
+            .json({ message: "Reserva Existente o Fecha incorrecta" });
         }
       } else {
         res.status(404).json({ message: "Cancha no existente" });
@@ -74,28 +80,28 @@ const getUserReservation = async (req, res) => {
       } else {
         res.status(200).json({ message: "usted no tiene reserva" });
       }
-    }else {
+    } else {
       res.status(404).json({ message: "usted no es usuario" });
     }
-
-  }catch(error){
+  } catch (error) {
     res.status(error.code || 500).json({
       message:
         error.message || "Ups! Hubo un problema, por favor intenta más tarde",
     });
-
   }
 };
 // get Owner
 const getOwnerReservation = async (req, res) => {
-  try{
+  try {
     if (req.user.isOwner === true) {
-      const user = new mongoose.Types.ObjectId(req.user.id)
-      const sportCenters= await sportCenterModel.findOne({ownerId : user});
-      if(sportCenters){
-        const fields = await fieldModel.find({idSportCenter : sportCenters._id})
-        const fieldIds = fields.map(field => field.id);
-        if(fieldIds.length > 0){
+      const user = new mongoose.Types.ObjectId(req.user.id);
+      const sportCenters = await sportCenterModel.findOne({ ownerId: user });
+      if (sportCenters) {
+        const fields = await fieldModel.find({
+          idSportCenter: sportCenters._id,
+        });
+        const fieldIds = fields.map((field) => field.id);
+        if (fieldIds.length > 0) {
           const reservations = [];
           for (const id of fieldIds) {
             const reservation = await ReservationModel.findOne({ IdField: id });
@@ -106,26 +112,25 @@ const getOwnerReservation = async (req, res) => {
           if (reservations.length > 0) {
             res.status(200).json(reservations);
           }
-        }else{
-          res.status(204).json({ message : "no tiene reservas"});
+        } else {
+          res.status(204).json({ message: "no tiene reservas" });
         }
-      }else {
+      } else {
         res.status(404).json({ message: "no existe el complejo" });
       }
     } else {
       res.status(404).json({ message: "usted no es owner" });
-    };
-  }catch(error){
+    }
+  } catch (error) {
     res.status(error.code || 500).json({
       message:
         error.message || "Ups! Hubo un problema, por favor intenta más tarde",
     });
-
   }
 };
 
 const getReservationIdReservation = async (req, res) => {
-  try{
+  try {
     const id = req.user.id;
     const reservation = await ReservationModel.findById(id);
     if (reservation) {
@@ -133,13 +138,12 @@ const getReservationIdReservation = async (req, res) => {
     } else {
       res.status(404).json({ message: error.message });
     }
-  }catch(error){
+  } catch (error) {
     res.status(error.code || 500).json({
       message:
         error.message || "Ups! Hubo un problema, por favor intenta más tarde",
     });
   }
-  
 };
 
 const cancelledReservation = async (req, res) => {
@@ -148,7 +152,11 @@ const cancelledReservation = async (req, res) => {
     const reservationId = req.params.id;
     const reservation = await ReservationModel.findById(reservationId);
     console.log(reservation);
-    if (reservation.IdUser == userId || req.user.isOwner === true || req.user.isAdmin === true ) {
+    if (
+      reservation.IdUser == userId ||
+      req.user.isOwner === true ||
+      req.user.isAdmin === true
+    ) {
       reservation.Status = "cancelada";
       await reservation.save();
       res.status(200).json({ message: "Reservation cancelada" });
@@ -163,34 +171,39 @@ const cancelledReservation = async (req, res) => {
   }
 };
 
-
-cron.schedule('*/1 * * * *', async (res) => {
-    try {
-      const reservationToDelete = await ReservationModel.find({Status : "cancelada"});
-      if(reservationToDelete.length > 0 ){
-        for(const statusDelete of reservationToDelete){
-          const StringExpiration = statusDelete.expirationDate;
-          const idDelete = reservationToDelete.map(reservationDelete => reservationDelete.id);
-          const timeExpiration = Number(StringExpiration.getTime());
-          if(timeExpiration < currentSecund){
-            for(const id of idDelete){
-              const deletes = await ReservationModel.findByIdAndDelete(id);
-              console.log(deletes);
-              if(deletes){
-                res.status(200).json({ message: "Reserva eliminada" });
-              };
-            };
-        };
-          };
-      } else {
-        res.status(200).json({ message: "No hay Reservas para vencidas para eliminar" });
+cron.schedule("*/1 * * * *", async (res) => {
+  try {
+    const reservationToDelete = await ReservationModel.find({
+      Status: "cancelada",
+    });
+    if (reservationToDelete.length > 0) {
+      for (const statusDelete of reservationToDelete) {
+        const StringExpiration = statusDelete.expirationDate;
+        const idDelete = reservationToDelete.map(
+          (reservationDelete) => reservationDelete.id
+        );
+        const timeExpiration = Number(StringExpiration.getTime());
+        if (timeExpiration < currentSecund) {
+          for (const id of idDelete) {
+            const deletes = await ReservationModel.findByIdAndDelete(id);
+            console.log(deletes);
+            if (deletes) {
+              res.status(200).json({ message: "Reserva eliminada" });
+            }
+          }
         }
-    } catch(error){
-      res.status(error.code || 500).json({
-        message:
-          error.message || "Ups! Hubo un problema, por favor intenta más tarde",
-      });
+      }
+    } else {
+      res
+        .status(200)
+        .json({ message: "No hay Reservas para vencidas para eliminar" });
     }
+  } catch (error) {
+    res.status(error.code || 500).json({
+      message:
+        error.message || "Ups! Hubo un problema, por favor intenta más tarde",
+    });
+  }
 });
 
 export default {

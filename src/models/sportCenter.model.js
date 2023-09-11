@@ -48,7 +48,8 @@ const sportCenterSchema = new Schema(
     },
 
     photo: {
-      type: String,
+      url: "string",
+      public_id: "string",
     },
 
     social: {

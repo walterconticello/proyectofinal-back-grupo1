@@ -6,10 +6,13 @@ const nameValidation = (name) => {
 };
 
 const openHourValidation = (hour) => {
+  hour = parseInt(hour);
   return typeof hour === "number" && hour >= 0 && hour <= 23;
 };
 
 const closeHourValidation = (hour) => {
+  hour = parseInt(hour);
+
   return typeof hour === "number" && hour >= 1 && hour <= 24;
 };
 

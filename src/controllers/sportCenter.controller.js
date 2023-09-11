@@ -1,9 +1,8 @@
 import sportCenterModel from "../models/sportCenter.model.js";
 import validation from "../helpers/sportCenter.validation.js";
 import fieldsModel from "../models/fields.model.js";
-import { uploadSportCenterImage, deleteImage } from "../utils/cloudinary.js"
-import fs from "fs-extra"
-
+import { uploadSportCenterImage, deleteImage } from "../utils/cloudinary.js";
+import fs from "fs-extra";
 
 //Get
 
@@ -47,8 +46,9 @@ const getSportCenterById = async (req, res) => {
 //Post
 
 const postSportCenter = async (req, res) => {
-  try { 
+  try {
     const bodySportCenter = {
+      ownerId: req.user.id,
       name: req.body.name,
       address: req.body.address,
       phone: req.body.phone,
@@ -58,47 +58,48 @@ const postSportCenter = async (req, res) => {
       //photo: req.body.photo,
     };
 
-    if(req.user.id==sportCenter.ownerId || req.user.isAdmin){
-      if(!validation.sportCenterDataValidation(bodySportCenter)){ 
-        return res.status(400).json({ mensaje: "Error en los datos ingresados" });
-      }
-      else if (
+    if (req.user.isOwner || req.user.isAdmin) {
+      if (
         validation.nameValidation(bodySportCenter.name) &&
         validation.addressValidation(bodySportCenter.address) &&
         validation.phoneValidation(bodySportCenter.phone)
         //validation.servicesValidation(bodySportCenter.services) &&
         //validation.locationValidation(bodySportCenter.location) &&
-        //validation.socialValidation(bodySportCenter.social) 
+        //validation.socialValidation(bodySportCenter.social)
       ) {
         const photo = {
           url: "",
           public_id: "",
         };
         if (req.files && req.files.image) {
-          const result = await uploadSportCenterImage(req.files.image.tempFilePath);
+          const result = await uploadSportCenterImage(
+            req.files.image.tempFilePath
+          );
           photo.url = result.secure_url;
           photo.public_id = result.public_id;
         }
         const newSportCenter = new sportCenterModel({
-          ...bodySportCenter, photo,
+          ...bodySportCenter,
+          photo,
         });
         await newSportCenter.save();
         fs.remove(req.files.image.tempFilePath);
-        res. json({ mensaje: "Centro deportivo creado con éxito" });
+        res.json({ mensaje: "Centro deportivo creado con éxito" });
       } else {
-        return res.status(400).json({ mensaje: "Error en los datos ingresados" });
+        return res
+          .status(400)
+          .json({ mensaje: "Error en los datos ingresados" });
       }
-    }
-    else{
-      return res.status(403).json({ mensaje: "No tienes permiso para crear un centro deportivo" });
+    } else {
+      return res
+        .status(403)
+        .json({ mensaje: "No tienes permiso para crear un centro deportivo" });
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ mensaje: "Error al crear centro deportivo" }); 
+    res.status(500).json({ mensaje: "Error al crear centro deportivo" });
   }
 };
-
-
 
 /// Put SportCenter
 
@@ -118,9 +119,7 @@ const putSportCenter = async (req, res) => {
     if (await validation.validateSportCenter(sportCenterId)) {
       const sportCenter = await sportCenterModel.findById(sportCenterId);
       if (req.user.id == sportCenter.ownerId || req.user.isAdmin) {
-        if (
-          !validation.sportCenterDataValidation(bodySportCenter)
-        ) {
+        if (!validation.sportCenterDataValidation(bodySportCenter)) {
           return res
             .status(400)
             .json({ mensaje: "Error en los datos ingresados" });
@@ -130,7 +129,7 @@ const putSportCenter = async (req, res) => {
           validation.phoneValidation(bodySportCenter.phone)
           //validation.servicesValidation(bodySportCenter.services) &&
           //validation.locationValidation(bodySportCenter.location) &&
-          //validation.socialValidation(bodySportCenter.social) 
+          //validation.socialValidation(bodySportCenter.social)
         ) {
           const photo = {
             url: "",
@@ -162,9 +161,9 @@ const putSportCenter = async (req, res) => {
             .json({ mensaje: "Error en los datos ingresados" });
         }
       } else {
-        return res
-          .status(403)
-          .json({ mensaje: "No tienes permiso para actualizar este centro deportivo" });
+        return res.status(403).json({
+          mensaje: "No tienes permiso para actualizar este centro deportivo",
+        });
       }
     } else {
       return res
@@ -192,9 +191,9 @@ const deleteSportCenter = async (req, res) => {
         await sportCenterModel.findByIdAndDelete(sportCenterId);
         res.json({ mensaje: "Centro deportivo eliminado con éxito" });
       } else {
-        return res
-          .status(403)
-          .json({ mensaje: "No tienes permiso para eliminar este centro deportivo" });
+        return res.status(403).json({
+          mensaje: "No tienes permiso para eliminar este centro deportivo",
+        });
       }
     } else {
       return res
