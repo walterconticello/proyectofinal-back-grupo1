@@ -1,3 +1,5 @@
+
+//permite nombres de hata 3 componentes con min de 3 y max de 50 caracteres
 const nameValidation = (name) => {
   const regex =
     /^([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\']+[\s])+([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])+[\s]?([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])?$/g;
@@ -9,17 +11,14 @@ const addressValidation = (address) => {
   return regex.test(address) && address.length >= 3 && address.length <= 50;
 };
 
-const idSportCenterValidation = (idSportCenter) => {
-  const regex = /^[0-9]+$/;
-  return (
-    regex.test(idSportCenter) && idSportCenter >= 1 && idSportCenter <= 100000
-  );
-};
+//Validacion de numero de telefono de 0a9 valido y de min 7 a max 20 numeros
 
 const phoneValidation = (phone) => {
   const regex = /^[0-9]+$/;
   return regex.test(phone) && phone.length >= 7 && phone.length <= 20;
 };
+
+// Necesito ayuda con Cloudinary
 
 const photoValidation = (photo) => {
   URL = require("url").URL;
@@ -54,7 +53,6 @@ const locationValidation = (location) => {
 export default {
   nameValidation,
   addressValidation,
-  idSportCenterValidation,
   phoneValidation,
   socialValidation,
   latitudeValidation,
