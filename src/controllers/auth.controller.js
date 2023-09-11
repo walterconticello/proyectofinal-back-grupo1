@@ -9,11 +9,14 @@ export const register = async (req, res, next) => {
     const { username, email, password } = req.body;
     const hash = await bcrypt.hash(password, 10);
 
+    
+
     const newUser = new User({
       username,
       email,
       password: hash,
     });
+    
     console.log(newUser, "usuario");
     await newUser.save();
     res.status(200).json({ message: "Usuario creado con exito" });
@@ -44,6 +47,7 @@ export const login = async (req, res, next) => {
 
     res
       .status(200)
+      .header("Authorization", `Bearer ${token}`)
       .json({ message: "Ingreso correcto", ok: true, user, token });
   } catch (error) {
     res
@@ -55,7 +59,6 @@ export const login = async (req, res, next) => {
 export const getAuthStatus = async (req, res) => {
   try {
     const id = req.id;
-
     const user = await User.findById(id);
     if (!user) return next(createError("Autenticación fallida", 401));
     res.status(200).json({ user });
