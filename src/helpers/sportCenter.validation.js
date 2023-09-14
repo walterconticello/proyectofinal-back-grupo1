@@ -1,34 +1,24 @@
+//OwnerID is validated in validateOwner
 
-//permite nombres de hata 3 componentes con min de 3 y max de 50 caracteres
 const nameValidation = (name) => {
-  const regex =
-    /^([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\']+[\s])+([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])+[\s]?([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])?$/g;
+  const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
   return regex.test(name) && name.length >= 3 && name.length <= 50;
-};
+}; //Validate it allow set names with spaces
 
 const addressValidation = (address) => {
   const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
   return regex.test(address) && address.length >= 3 && address.length <= 50;
 };
 
-//Validacion de numero de telefono de 0a9 valido y de min 7 a max 20 numeros
-
 const phoneValidation = (phone) => {
-  const regex = /^[0-9]+$/;
-  return regex.test(phone) && phone.length >= 7 && phone.length <= 20;
+  const regex = /^\+\d{1,3}\d{1,4}\d{1,4}\d{1,4}$/;
+  return regex.test(phone) && phone.length >= 7 && phone.length <= 16;
 };
 
-// Necesito ayuda con Cloudinary
-
-const photoValidation = (photo) => {
-  URL = require("url").URL;
-  try {
-    new URL(photo);
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
+const descriptionValidation = (description) => {
+  const regex = /^[\w\d\s.,!@#\$%\^&\*\(\)-_+=\[{\]};:'"<>?`~|\\]*$/;
+  return regex.test(description) && description.length >= 10 && description.length <= 400;
+}
 
 const socialValidation = (social) => {
   URL = require("url").URL;
@@ -54,8 +44,8 @@ export default {
   nameValidation,
   addressValidation,
   phoneValidation,
+  descriptionValidation,
   socialValidation,
   latitudeValidation,
-  locationValidation,
-  photoValidation,
+  locationValidation
 };

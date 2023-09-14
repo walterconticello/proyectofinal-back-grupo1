@@ -94,7 +94,7 @@ const sportCenterSchema = new Schema(
       trim: true,
       lowercase: false,
       minLenght: 3,
-      maxLenght: 30
+      maxLenght: 50
     },
 
     phone: {
@@ -102,13 +102,14 @@ const sportCenterSchema = new Schema(
       required: true,
       trim: true,
       minLenght: 7,
-      maxLenght: 15
+      maxLenght: 16
     },
 
     description: {
       type: String,
       trim: true,
       lowercase: false,
+      required: true,
       minLength: 10,
       maxLength: 400
     },
