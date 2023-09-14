@@ -20,7 +20,7 @@ const getAllSportCenters = async (req, res) => {
       };
       responseSportCenter.push(response);
     }
-    res.json(responseSportCenter);
+    res.status(200).json(responseSportCenter);
   } catch (error) {
     res
       .status(500)
