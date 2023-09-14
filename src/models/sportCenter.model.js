@@ -109,6 +109,11 @@ const sportCenterSchema = new Schema(
       maxLength: 400
     },
 
+    isActive: {
+      type: Boolean,
+      default: true,
+  },
+
     services: {
       bar: {
         type: Boolean,
