@@ -4,6 +4,7 @@ import fieldsModel from "../models/fields.model.js";
 import { uploadSportCenterImage, deleteImage } from "../utils/cloudinary.js";
 import fs from "fs-extra";
 import { createError } from "../utils/error.js";
+import fieldModel from "../models/fields.model.js";
 
 //Get
 
@@ -129,7 +130,7 @@ const putSportCenter = async (req, res, next) => {
         if(req.body.address) sportCenter.address = req.body.address;
         if(req.body.phone) sportCenter.phone = req.body.phone;
         if(req.body.description) sportCenter.description = req.body.description;
-        sportCenter.isActive = req.body.isActive; //Front has to send those via checkboxes
+        sportCenter.isActive = req.body.isActive; //Front has to send all those via checkboxes
         sportCenter.services.bar = req.body.services.bar;
         sportCenter.services.showers = req.body.services.showers;
         sportCenter.services.grill = req.body.services.grill;
@@ -192,27 +193,44 @@ const putSportCenter = async (req, res, next) => {
 
 // Delete SportCenter
 
-const deleteSportCenter = async (req, res) => {
+const deleteSportCenter = async (req, res, next) => {
   try {
     const sportCenterId = req.params.id;
-
-    if (await validation.validateSportCenter(sportCenterId)) {
-      const sportCenter = await sportCenterModel.findById(sportCenterId);
-      if (req.user.id == sportCenter.ownerId || req.user.isAdmin) {
-        if (sportCenter.photo.public_id) {
-          await deleteImage(sportCenter.photo.public_id);
+    const sportCenter = await sportCenterModel.findById(sportCenterId);
+    if(sportCenter){
+      if(sportCenter.ownerId == req.user.id || req.user.isAdmin){
+        const fields = await fieldModel.find({idSportCenter: { $eq: sportCenterId }, isActive: true });
+        if(fields){
+          const deletedSportCenter = await sportCenterModel.findByIdAndDelete(sportCenterId);
+          if(deletedSportCenter){
+            if(deletedSportCenter.photo && deletedSportCenter.photo.public_id){
+              await deleteImage(deletedSportCenter.photo.public_id);
+            }
+            res.status(200).json({
+              message: "Complejo eliminado",
+              sportCenter: deletedSportCenter,
+            });
+          }
         }
-        await sportCenterModel.findByIdAndDelete(sportCenterId);
-        res.json({ mensaje: "Centro deportivo eliminado con éxito" });
-      } else {
-        return res.status(403).json({
-          mensaje: "No tienes permiso para eliminar este centro deportivo",
-        });
+        else {
+          return next(
+            createError(
+              400,
+              "No puede eliminar el complejo si tiene canchas activas"
+            )
+          );
+        }
+      } else{
+        return next(
+          createError(
+            400,
+            "No está autorizado a eliminar este complejo"
+          )
+        );
       }
-    } else {
-      return res
-        .status(404)
-        .json({ mensaje: "No se encontró el centro deportivo" });
+    }
+    else{
+      return next(createError(404, "Complejo deportivo no encontrado"));
     }
   } catch (error) {
     console.log(error);

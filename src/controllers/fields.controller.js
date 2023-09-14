@@ -179,7 +179,7 @@ const deleteField = async (req, res, next) => {
             await deleteImage(deletedField.photo.public_id);
           }
           res.status(200).json({
-            message: "The Field has been Deleted",
+            message: "La cancha fue eliminada",
             field: deletedField,
           });
         } else {
