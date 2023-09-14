@@ -87,10 +87,10 @@ const postSportCenter = async (req, res, next) => {
       validation.addressValidation(bodySportCenter.address) &&
       validation.phoneValidation(bodySportCenter.phone) &&
       validation.descriptionValidation(bodySportCenter.description) &&
-      (bodySportCenter.social.facebook && validation.facebookValidation(bodySportCenter.social.facebook)) &&
-      (bodySportCenter.social.instagram && validation.instagramValidation(bodySportCenter.social.instagram)) &&
-      (bodySportCenter.location.latitude && validation.latitudeValidation(bodySportCenter.location.latitude)) &&
-      (bodySportCenter.location.longitude && validation.longitudeValidation(bodySportCenter.location.longitude))
+      ((bodySportCenter.social.facebook)? validation.facebookValidation(bodySportCenter.social.facebook) : true) &&
+      ((bodySportCenter.social.instagram)? validation.instagramValidation(bodySportCenter.social.instagram) : true) &&
+      ((bodySportCenter.location.latitude)? validation.latitudeValidation(bodySportCenter.location.latitude) : true) &&
+      ((bodySportCenter.location.longitude)? validation.longitudeValidation(bodySportCenter.location.longitude): true)
     ) {
       const photo = {
         url: "",
@@ -108,7 +108,9 @@ const postSportCenter = async (req, res, next) => {
         photo,
       });
       await newSportCenter.save();
-      fs.remove(req.files.image.tempFilePath);
+      if(req.files){
+        fs.remove(req.files.image.tempFilePath);
+      }
       res.status(201).json(newSportCenter);
     } else {
       return next(createError(400, "Los datos ingresados no son válidos"));

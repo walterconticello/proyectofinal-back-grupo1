@@ -150,14 +150,12 @@ const sportCenterSchema = new Schema(
       facebook: {
         type: String,
         trim: true,
-        minLenght: 7,
         maxLenght: 150
       },
     
       instagram: {
         type: String,
         trim: true,
-        minLenght: 7,
         maxLenght: 150
       },
     },
@@ -166,14 +164,12 @@ const sportCenterSchema = new Schema(
       latitude: {
         type: String,
         trim: true,
-        minLength: 1,
         maxLength: 50
       },
     
       longitude: {
         type: String,
         trim: true,
-        minLength: 1,
         maxLength: 50
       },
     },
