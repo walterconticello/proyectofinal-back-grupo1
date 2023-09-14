@@ -51,59 +51,69 @@ const getSportCenterById = async (req, res, next) => {
 
 //Post
 
-const postSportCenter = async (req, res) => {
+const postSportCenter = async (req, res, next) => {
   try {
     const bodySportCenter = {
       ownerId: req.user.id,
       name: req.body.name,
       address: req.body.address,
       phone: req.body.phone,
-      //services: req.body.services,
-      //location: req.body.location,
-      //social: req.body.social,
-      //photo: req.body.photo,
-    };
+      description: req.body.description,
+      services: {
 
-    if (req.user.isOwner || req.user.isAdmin) {
-      if (
-        validation.nameValidation(bodySportCenter.name) &&
-        validation.addressValidation(bodySportCenter.address) &&
-        validation.phoneValidation(bodySportCenter.phone)
-        //validation.servicesValidation(bodySportCenter.services) &&
-        //validation.locationValidation(bodySportCenter.location) &&
-        //validation.socialValidation(bodySportCenter.social)
-      ) {
-        const photo = {
-          url: "",
-          public_id: "",
-        };
-        if (req.files && req.files.image) {
-          const result = await uploadSportCenterImage(
-            req.files.image.tempFilePath
-          );
-          photo.url = result.secure_url;
-          photo.public_id = result.public_id;
-        }
-        const newSportCenter = new sportCenterModel({
-          ...bodySportCenter,
-          photo,
-        });
-        await newSportCenter.save();
-        fs.remove(req.files.image.tempFilePath);
-        res.json({ mensaje: "Centro deportivo creado con éxito" });
-      } else {
-        return res
-          .status(400)
-          .json({ mensaje: "Error en los datos ingresados" });
+      },
+      social: {
+
+      },
+      location: {
+
       }
+    };
+    if(req.body.services.bar) bodySportCenter.services.bar = req.body.services.bar;
+    if(req.body.services.showers) bodySportCenter.services.showers = req.body.services.showers;
+    if(req.body.services.grill) bodySportCenter.services.grill = req.body.services.grill;
+    if(req.body.services.parking) bodySportCenter.services.parking = req.body.services.parking;
+    if(req.body.services.dressingRoom) bodySportCenter.services.dressingRoom = req.body.services.dressingRoom;
+
+    if(req.body.social.facebook) bodySportCenter.social.facebook = req.body.social.facebook;
+    if(req.body.social.instagram) bodySportCenter.social.instagram = req.body.social.instagram;
+    
+    if(req.body.location.latitude) bodySportCenter.location.latitude = req.body.location.latitude;
+    if(req.body.location.longitude) bodySportCenter.location.longitude = req.body.location.longitude;
+
+    if (
+      validation.nameValidation(bodySportCenter.name) &&
+      validation.addressValidation(bodySportCenter.address) &&
+      validation.phoneValidation(bodySportCenter.phone) &&
+      validation.descriptionValidation(bodySportCenter.description) &&
+      (bodySportCenter.social.facebook && validation.facebookValidation(bodySportCenter.social.facebook)) &&
+      (bodySportCenter.social.instagram && validation.instagramValidation(bodySportCenter.social.instagram)) &&
+      (bodySportCenter.location.latitude && validation.latitudeValidation(bodySportCenter.location.latitude)) &&
+      (bodySportCenter.location.longitude && validation.longitudeValidation(bodySportCenter.location.longitude))
+    ) {
+      const photo = {
+        url: "",
+        public_id: "",
+      };
+      if (req.files && req.files.image) {
+        const result = await uploadSportCenterImage(
+          req.files.image.tempFilePath
+        );
+        photo.url = result.secure_url;
+        photo.public_id = result.public_id;
+      }
+      const newSportCenter = new sportCenterModel({
+        ...bodySportCenter,
+        photo,
+      });
+      await newSportCenter.save();
+      fs.remove(req.files.image.tempFilePath);
+      res.status(201).json(newSportCenter);
     } else {
-      return res
-        .status(403)
-        .json({ mensaje: "No tienes permiso para crear un centro deportivo" });
+      return next(createError(400, "Los datos ingresados no son válidos"));
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ mensaje: "Error al crear centro deportivo" });
+    res.status(500).json({ mensaje: error.message });
   }
 };
 
