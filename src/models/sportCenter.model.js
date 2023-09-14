@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const { Schema } = mongoose;
-
+/*
 const servicesSchema = new Schema({
   bar: {
     type: Boolean,
@@ -64,7 +64,7 @@ const locationSchema = new Schema({
     minLength: 1,
     maxLength: 50
   },
-});
+});*/
 
 const sportCenterSchema = new Schema(
   {
@@ -109,13 +109,69 @@ const sportCenterSchema = new Schema(
       maxLength: 400
     },
 
-    services: servicesSchema,
+    services: {
+      bar: {
+        type: Boolean,
+        default: false,
+      },
+      showers: {
+        type: Boolean,
+        default: false,
+      },
+      grill: {
+        type: Boolean,
+        default: false,
+      },
+      parking: {
+        type: Boolean,
+        default: false,
+      },
+      dressingRoom: {
+        type: Boolean,
+        default: false,
+      }
+    },
 
-    photo: photoSchema,
+    photo: {
+      url: {
+          type: String,
+      },
+      public_id: {
+          type: String,
+      }
+    },
 
-    social: socialSchema,
+    social: {
+      facebook: {
+        type: String,
+        trim: true,
+        minLenght: 7,
+        maxLenght: 150
+      },
+    
+      instagram: {
+        type: String,
+        trim: true,
+        minLenght: 7,
+        maxLenght: 150
+      },
+    },
 
-    location: locationSchema,
+    location: {
+      latitude: {
+        type: String,
+        trim: true,
+        minLength: 1,
+        maxLength: 50
+      },
+    
+      longitude: {
+        type: String,
+        trim: true,
+        minLength: 1,
+        maxLength: 50
+      },
+    },
   },
   { versionKey: false }
 );
