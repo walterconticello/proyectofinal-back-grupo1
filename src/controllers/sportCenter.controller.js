@@ -124,113 +124,65 @@ const putSportCenter = async (req, res, next) => {
     const sportCenterId = req.params.id;
     const sportCenter = await sportCenterModel.findById(sportCenterId);
     if(sportCenter){
-      if(req.body.name) sportCenter.name = req.body.name;
-      if(req.body.address) sportCenter.address = req.body.address;
-      if(req.body.phone) sportCenter.phone = req.body.phone;
-      if(req.body.description) sportCenter.description = req.body.description;
-      sportCenter.isActive = req.body.isActive; //Front has to send those via checkboxes
-      sportCenter.services.bar = req.body.services.bar;
-      sportCenter.services.showers = req.body.services.showers;
-      sportCenter.services.grill = req.body.services.grill;
-      sportCenter.services.parking = req.body.services.parking;
-      sportCenter.services.dressingRoom = req.body.services.dressingRoom;
-      if(req.body.social.facebook) sportCenter.social.facebook = req.body.social.facebook;
-      if(req.body.social.instagram) sportCenter.social.instagram = req.body.social.instagram;
-      if(req.body.location.latitude) sportCenter.location.latitude = req.body.location.latitude;
-      if(req.body.location.longitude) sportCenter.location.longitude = req.body.location.longitude;
+      if(sportCenter.ownerId == req.user.id || req.user.isAdmin){
+        if(req.body.name) sportCenter.name = req.body.name;
+        if(req.body.address) sportCenter.address = req.body.address;
+        if(req.body.phone) sportCenter.phone = req.body.phone;
+        if(req.body.description) sportCenter.description = req.body.description;
+        sportCenter.isActive = req.body.isActive; //Front has to send those via checkboxes
+        sportCenter.services.bar = req.body.services.bar;
+        sportCenter.services.showers = req.body.services.showers;
+        sportCenter.services.grill = req.body.services.grill;
+        sportCenter.services.parking = req.body.services.parking;
+        sportCenter.services.dressingRoom = req.body.services.dressingRoom;
+        if(req.body.social.facebook) sportCenter.social.facebook = req.body.social.facebook;
+        if(req.body.social.instagram) sportCenter.social.instagram = req.body.social.instagram;
+        if(req.body.location.latitude) sportCenter.location.latitude = req.body.location.latitude;
+        if(req.body.location.longitude) sportCenter.location.longitude = req.body.location.longitude;
 
-      if(
-        validation.nameValidation(req.body.name) &&
-        validation.addressValidation(req.body.address) &&
-        validation.phoneValidation(req.body.phone) &&
-        validation.descriptionValidation(req.body.description) &&
-        validation.facebookValidation(req.body.social.facebook) &&
-        validation.instagramValidation(req.body.social.instagram) &&
-        validation.latitudeValidation(req.body.location.latitude) &&
-        validation.longitudeValidation(req.body.location.longitude) &&
-        typeof req.body.isActive === "boolean" &&
-        typeof req.body.services.bar === "boolean" &&
-        typeof req.body.services.showers === "boolean" &&
-        typeof req.body.services.grill === "boolean" &&
-        typeof req.body.services.parking === "boolean" &&
-        typeof req.body.services.dressingRoom === "boolean"
-      ){
-        if(req.files && req.files.image){
-          const result = await uploadSportCenterImage(req.files.image.tempFilePath);
+        if(
+          validation.nameValidation(req.body.name) &&
+          validation.addressValidation(req.body.address) &&
+          validation.phoneValidation(req.body.phone) &&
+          validation.descriptionValidation(req.body.description) &&
+          validation.facebookValidation(req.body.social.facebook) &&
+          validation.instagramValidation(req.body.social.instagram) &&
+          validation.latitudeValidation(req.body.location.latitude) &&
+          validation.longitudeValidation(req.body.location.longitude) &&
+          typeof req.body.isActive === "boolean" &&
+          typeof req.body.services.bar === "boolean" &&
+          typeof req.body.services.showers === "boolean" &&
+          typeof req.body.services.grill === "boolean" &&
+          typeof req.body.services.parking === "boolean" &&
+          typeof req.body.services.dressingRoom === "boolean"
+        ){
+          if(req.files && req.files.image){
+            const result = await uploadSportCenterImage(req.files.image.tempFilePath);
 
-          if (sportCenter.photo.public_id) {
-            await deleteImage(sportCenter.photo.public_id);
-          }
-
-          sportCenter.photo.url = result.secure_url;
-          sportCenter.photo.public_id = result.public_id;
-
-          fs.remove(req.files.image.tempFilePath);
-        }
-        await sportCenter.save();
-        res.status(200).json(sportCenter);
-      } else{
-        return next(createError(400, "Información inválida"));
-      }
-
-    } else{
-      return next(createError(404, "Complejo deportivo no encontrado"));
-    }
-
-
-    if (await validation.validateSportCenter(sportCenterId)) {
-      const sportCenter = await sportCenterModel.findById(sportCenterId);
-      if (req.user.id == sportCenter.ownerId || req.user.isAdmin) {
-        if (!validation.sportCenterDataValidation(bodySportCenter)) {
-          return res
-            .status(400)
-            .json({ mensaje: "Error en los datos ingresados" });
-        } else if (
-          validation.nameValidation(bodySportCenter.name) &&
-          validation.addressValidation(bodySportCenter.address) &&
-          validation.phoneValidation(bodySportCenter.phone)
-          //validation.servicesValidation(bodySportCenter.services) &&
-          //validation.locationValidation(bodySportCenter.location) &&
-          //validation.socialValidation(bodySportCenter.social)
-        ) {
-          const photo = {
-            url: "",
-            public_id: "",
-          };
-          if (req.files && req.files.image) {
-            const result = await uploadSportCenterImage(
-              req.files.image.tempFilePath
-            );
-            photo.url = result.secure_url;
-            photo.public_id = result.public_id;
             if (sportCenter.photo.public_id) {
               await deleteImage(sportCenter.photo.public_id);
             }
+
+            sportCenter.photo.url = result.secure_url;
+            sportCenter.photo.public_id = result.public_id;
+
+            fs.remove(req.files.image.tempFilePath);
           }
-          const updatedSportCenter = {
-            ...bodySportCenter,
-            photo,
-          };
-          await sportCenterModel.findByIdAndUpdate(
-            sportCenterId,
-            updatedSportCenter
-          );
-          fs.remove(req.files.image.tempFilePath);
-          res.json({ mensaje: "Centro deportivo actualizado con éxito" });
-        } else {
-          return res
-            .status(400)
-            .json({ mensaje: "Error en los datos ingresados" });
+          await sportCenter.save();
+          res.status(200).json(sportCenter);
+        } else{
+          return next(createError(400, "Información inválida"));
         }
-      } else {
-        return res.status(403).json({
-          mensaje: "No tienes permiso para actualizar este centro deportivo",
-        });
+      } else{
+        return next(
+          createError(
+            400,
+            "No está autorizado a modificar  este complejo"
+          )
+        );
       }
-    } else {
-      return res
-        .status(404)
-        .json({ mensaje: "No se encontró el centro deportivo" });
+    } else{
+      return next(createError(404, "Complejo deportivo no encontrado"));
     }
   } catch (error) {
     console.log(error);
