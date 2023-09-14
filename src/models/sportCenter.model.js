@@ -5,27 +5,22 @@ const { Schema } = mongoose;
 const servicesSchema = new Schema({
   bar: {
     type: Boolean,
-    required: true,
     default: false,
   },
   showers: {
     type: Boolean,
-    required: true,
     default: false,
   },
   grill: {
     type: Boolean,
-    required: true,
     default: false,
   },
   parking: {
     type: Boolean,
-    required: true,
     default: false,
   },
   dressingRoom: {
     type: Boolean,
-    required: true,
     default: false,
   }
 });
@@ -59,15 +54,15 @@ const locationSchema = new Schema({
   latitude: {
     type: String,
     trim: true,
-    minLength: 3,
-    maxLength: 100
+    minLength: 1,
+    maxLength: 50
   },
 
   longitude: {
     type: String,
     trim: true,
-    minLength: 3,
-    maxLength: 100
+    minLength: 1,
+    maxLength: 50
   },
 });
 
