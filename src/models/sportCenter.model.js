@@ -2,6 +2,75 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
+const servicesSchema = new Schema({
+  bar: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  showers: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  grill: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  parking: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  dressingRoom: {
+    type: Boolean,
+    required: true,
+    default: false,
+  }
+});
+
+const photoSchema = new Schema({
+  url: {
+      type: String,
+  },
+  public_id: {
+      type: String,
+  }
+});
+
+const socialSchema = new Schema({
+  facebook: {
+    type: String,
+    trim: true,
+    minLenght: 7,
+    maxLenght: 150
+  },
+
+  instagram: {
+    type: String,
+    trim: true,
+    minLenght: 7,
+    maxLenght: 150
+  },
+});
+
+const locationSchema = new Schema({
+  latitude: {
+    type: String,
+    trim: true,
+    minLength: 3,
+    maxLength: 100
+  },
+
+  longitude: {
+    type: String,
+    trim: true,
+    minLength: 3,
+    maxLength: 100
+  },
+});
+
 const sportCenterSchema = new Schema(
   {
     ownerId: {
@@ -14,63 +83,43 @@ const sportCenterSchema = new Schema(
       type: String,
       required: true,
       trim: true,
-      lowercase: true,
-      minlength: 3,
+      lowercase: false,
+      minLength: 3,
+      maxLength: 50
     },
 
     address: {
       type: String,
       required: true,
       trim: true,
-      lowercase: true,
-      minlenght: 3,
-      maxlenght: 30,
+      lowercase: false,
+      minLenght: 3,
+      maxLenght: 30
     },
 
     phone: {
       type: String,
       required: true,
+      trim: true,
+      minLenght: 7,
+      maxLenght: 15
     },
 
-    services: {
-      bar: {
-        type: Boolean,
-      },
-      showers: {
-        type: Boolean,
-      },
-      Grill: {
-        type: Boolean,
-      },
-      parking: {
-        type: Boolean,
-      },
+    description: {
+      type: String,
+      trim: true,
+      lowercase: false,
+      minLength: 10,
+      maxLength: 400
     },
 
-    photo: {
-      url: "string",
-      public_id: "string",
-    },
+    services: servicesSchema,
 
-    social: {
-      facebook: {
-        type: String,
-      },
+    photo: photoSchema,
 
-      instagram: {
-        type: String,
-      },
-    },
+    social: socialSchema,
 
-    location: {
-      latitude: {
-        type: String,
-      },
-
-      longitude: {
-        type: String,
-      },
-    },
+    location: locationSchema,
   },
   { versionKey: false }
 );

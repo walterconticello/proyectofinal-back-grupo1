@@ -16,7 +16,7 @@ const fieldsSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        lowercase: true,
+        lowercase: false,
         minLength: 3,
         maxLength: 50
     },
