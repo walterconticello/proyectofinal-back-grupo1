@@ -3,6 +3,7 @@ import validation from "../helpers/sportCenter.validation.js";
 import fieldsModel from "../models/fields.model.js";
 import { uploadSportCenterImage, deleteImage } from "../utils/cloudinary.js";
 import fs from "fs-extra";
+import { createError } from "../utils/error.js";
 
 //Get
 
@@ -24,22 +25,27 @@ const getAllSportCenters = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ mensaje: "Error al obtener los centros deportivos" });
+      .json({ message: error.message });
   }
 };
 
 //Get by id
 
-const getSportCenterById = async (req, res) => {
+const getSportCenterById = async (req, res, next) => {
   try {
     const sportCenter = await sportCenterModel.findById(req.params.id);
-    const fields = await fieldsModel.find({ idSportCenter: sportCenter._id });
-    res.json({
-      ...sportCenter._doc,
-      fields,
-    });
+    if(sportCenter){
+      const fields = await fieldsModel.find({ idSportCenter: sportCenter._id });
+      res.status(200).json({
+        ...sportCenter._doc,
+        fields,
+      });
+    }
+    else{
+      return next(createError(404, "Centro deportivo no encontrado"));
+    }
   } catch (error) {
-    res.status(500).json({ mensaje: "Error al obtener el centro deportivo" });
+    res.status(500).json({ message: error.message });
   }
 };
 
