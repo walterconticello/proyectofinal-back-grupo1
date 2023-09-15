@@ -83,10 +83,10 @@ const createField = async (req, res, next) => {
             const result = await uploadFieldImage(req.files.image.tempFilePath);
             photo.url = result.secure_url;
             photo.public_id = result.public_id;
+            fs.remove(req.files.image.tempFilePath);
           }
           const newField = new fieldModel({ ...bodyfield, photo });
           await newField.save();
-          fs.remove(req.files.image.tempFilePath);
           res.status(201).json(newField);
         } else {
           return next(createError(404, "Informacion no válida"));

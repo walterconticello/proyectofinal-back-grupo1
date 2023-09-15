@@ -148,10 +148,10 @@ const putSportCenter = async (req, res, next) => {
           validation.addressValidation(req.body.address) &&
           validation.phoneValidation(req.body.phone) &&
           validation.descriptionValidation(req.body.description) &&
-          validation.facebookValidation(req.body.social.facebook) &&
-          validation.instagramValidation(req.body.social.instagram) &&
-          validation.latitudeValidation(req.body.location.latitude) &&
-          validation.longitudeValidation(req.body.location.longitude) &&
+          ((req.body.social.facebook)? validation.facebookValidation(req.body.social.facebook) : true) &&
+          ((req.body.social.instagram)? validation.instagramValidation(req.body.social.instagram) : true) &&
+          ((req.body.location.latitude)? validation.latitudeValidation(req.body.location.latitude) : true) &&
+          ((req.body.location.longitude)? validation.longitudeValidation(req.body.location.longitude) : true) &&
           typeof req.body.isActive === "boolean" &&
           typeof req.body.services.bar === "boolean" &&
           typeof req.body.services.showers === "boolean" &&
@@ -201,8 +201,8 @@ const deleteSportCenter = async (req, res, next) => {
     const sportCenter = await sportCenterModel.findById(sportCenterId);
     if(sportCenter){
       if(sportCenter.ownerId == req.user.id || req.user.isAdmin){
-        const fields = await fieldModel.find({idSportCenter: { $eq: sportCenterId }, isActive: true });
-        if(fields){
+        const fields = await fieldModel.find({idSportCenter: { $eq: sportCenterId }});
+        if(fields.length===0){
           const deletedSportCenter = await sportCenterModel.findByIdAndDelete(sportCenterId);
           if(deletedSportCenter){
             if(deletedSportCenter.photo && deletedSportCenter.photo.public_id){
@@ -218,7 +218,7 @@ const deleteSportCenter = async (req, res, next) => {
           return next(
             createError(
               400,
-              "No puede eliminar el complejo si tiene canchas activas"
+              "No puede eliminar el complejo si tiene canchas creadas, eliminelas primero"
             )
           );
         }
