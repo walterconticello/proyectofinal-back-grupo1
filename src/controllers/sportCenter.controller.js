@@ -147,20 +147,20 @@ const putSportCenter = async (req, res, next) => {
         if(req.body.location.longitude) sportCenter.location.longitude = req.body.location.longitude;
 
         if(
-          validation.nameValidation(req.body.name) &&
-          validation.addressValidation(req.body.address) &&
-          validation.phoneValidation(req.body.phone) &&
-          validation.descriptionValidation(req.body.description) &&
+          validation.nameValidation(sportCenter.name) &&
+          validation.addressValidation(sportCenter.address) &&
+          validation.phoneValidation(sportCenter.phone) &&
+          validation.descriptionValidation(sportCenter.description) &&
           ((req.body.social.facebook)? validation.facebookValidation(req.body.social.facebook) : true) &&
           ((req.body.social.instagram)? validation.instagramValidation(req.body.social.instagram) : true) &&
           ((req.body.location.latitude)? validation.latitudeValidation(req.body.location.latitude) : true) &&
           ((req.body.location.longitude)? validation.longitudeValidation(req.body.location.longitude) : true) &&
-          typeof req.body.isActive === "boolean" &&
-          typeof req.body.services.bar === "boolean" &&
-          typeof req.body.services.showers === "boolean" &&
-          typeof req.body.services.grill === "boolean" &&
-          typeof req.body.services.parking === "boolean" &&
-          typeof req.body.services.dressingRoom === "boolean"
+          typeof sportCenter.isActive === "boolean" &&
+          typeof sportCenter.services.bar === "boolean" &&
+          typeof sportCenter.services.showers === "boolean" &&
+          typeof sportCenter.services.grill === "boolean" &&
+          typeof sportCenter.services.parking === "boolean" &&
+          typeof sportCenter.services.dressingRoom === "boolean"
         ){
           if(req.files && req.files.image){
             const result = await uploadSportCenterImage(req.files.image.tempFilePath);
@@ -192,7 +192,7 @@ const putSportCenter = async (req, res, next) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ mensaje: "Error al actualizar centro deportivo" });
+    res.status(500).json({ mensaje: error.message });
   }
 };
 
