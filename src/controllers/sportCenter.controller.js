@@ -61,7 +61,6 @@ const postSportCenter = async (req, res, next) => {
       phone: req.body.phone,
       description: req.body.description,
       services: {
-
       },
       social: {
 
@@ -70,17 +69,21 @@ const postSportCenter = async (req, res, next) => {
 
       }
     };
-    if(req.body.services.bar) bodySportCenter.services.bar = req.body.services.bar;
-    if(req.body.services.showers) bodySportCenter.services.showers = req.body.services.showers;
-    if(req.body.services.grill) bodySportCenter.services.grill = req.body.services.grill;
-    if(req.body.services.parking) bodySportCenter.services.parking = req.body.services.parking;
-    if(req.body.services.dressingRoom) bodySportCenter.services.dressingRoom = req.body.services.dressingRoom;
-
-    if(req.body.social.facebook) bodySportCenter.social.facebook = req.body.social.facebook;
-    if(req.body.social.instagram) bodySportCenter.social.instagram = req.body.social.instagram;
-    
-    if(req.body.location.latitude) bodySportCenter.location.latitude = req.body.location.latitude;
-    if(req.body.location.longitude) bodySportCenter.location.longitude = req.body.location.longitude;
+    if(req.body.services){
+      if(req.body.services.bar) bodySportCenter.services.bar = req.body.services.bar;
+      if(req.body.services.showers) bodySportCenter.services.showers = req.body.services.showers;
+      if(req.body.services.grill) bodySportCenter.services.grill = req.body.services.grill;
+      if(req.body.services.parking) bodySportCenter.services.parking = req.body.services.parking;
+      if(req.body.services.dressingRoom) bodySportCenter.services.dressingRoom = req.body.services.dressingRoom;
+    }
+    if(req.body.social){
+      if(req.body.social.facebook) bodySportCenter.social.facebook = req.body.social.facebook;
+      if(req.body.social.instagram) bodySportCenter.social.instagram = req.body.social.instagram;
+    }
+    if(req.body.location){
+      if(req.body.location.latitude) bodySportCenter.location.latitude = req.body.location.latitude;
+      if(req.body.location.longitude) bodySportCenter.location.longitude = req.body.location.longitude;
+    }
 
     if (
       validation.nameValidation(bodySportCenter.name) &&
