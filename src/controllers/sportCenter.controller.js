@@ -105,15 +105,13 @@ const postSportCenter = async (req, res, next) => {
         );
         photo.url = result.secure_url;
         photo.public_id = result.public_id;
+        fs.remove(req.files.image.tempFilePath);
       }
       const newSportCenter = new sportCenterModel({
         ...bodySportCenter,
         photo,
       });
       await newSportCenter.save();
-      if(req.files){
-        fs.remove(req.files.image.tempFilePath);
-      }
       res.status(201).json(newSportCenter);
     } else {
       return next(createError(400, "Los datos ingresados no son válidos"));
@@ -135,32 +133,32 @@ const putSportCenter = async (req, res, next) => {
         if(req.body.address) sportCenter.address = req.body.address;
         if(req.body.phone) sportCenter.phone = req.body.phone;
         if(req.body.description) sportCenter.description = req.body.description;
-        sportCenter.isActive = req.body.isActive; //Front has to send all those via checkboxes
-        sportCenter.services.bar = req.body.services.bar;
-        sportCenter.services.showers = req.body.services.showers;
-        sportCenter.services.grill = req.body.services.grill;
-        sportCenter.services.parking = req.body.services.parking;
-        sportCenter.services.dressingRoom = req.body.services.dressingRoom;
-        if(req.body.social.facebook) sportCenter.social.facebook = req.body.social.facebook;
-        if(req.body.social.instagram) sportCenter.social.instagram = req.body.social.instagram;
-        if(req.body.location.latitude) sportCenter.location.latitude = req.body.location.latitude;
-        if(req.body.location.longitude) sportCenter.location.longitude = req.body.location.longitude;
+        if(typeof req.body.isActive === "boolean") sportCenter.isActive = req.body.isActive; //Front has to send all those via checkboxes
+        if(req.body.services && typeof req.body.services.bar === "boolean") sportCenter.services.bar = req.body.services.bar;
+        if(req.body.services && typeof req.body.services.showers === "boolean") sportCenter.services.showers = req.body.services.showers;
+        if(req.body.services && typeof req.body.services.grill === "boolean") sportCenter.services.grill = req.body.services.grill;
+        if(req.body.services && typeof req.body.services.parking === "boolean") sportCenter.services.parking = req.body.services.parking;
+        if(req.body.services && typeof req.body.services.dressingRoom === "boolean") sportCenter.services.dressingRoom = req.body.services.dressingRoom;
+        if(req.body.social && req.body.social.facebook) sportCenter.social.facebook = req.body.social.facebook;
+        if(req.body.social && req.body.social.instagram) sportCenter.social.instagram = req.body.social.instagram;
+        if(req.body.social && req.body.location.latitude) sportCenter.location.latitude = req.body.location.latitude;
+        if(req.body.social && req.body.location.longitude) sportCenter.location.longitude = req.body.location.longitude;
 
         if(
           validation.nameValidation(sportCenter.name) &&
           validation.addressValidation(sportCenter.address) &&
           validation.phoneValidation(sportCenter.phone) &&
           validation.descriptionValidation(sportCenter.description) &&
-          ((req.body.social.facebook)? validation.facebookValidation(req.body.social.facebook) : true) &&
-          ((req.body.social.instagram)? validation.instagramValidation(req.body.social.instagram) : true) &&
-          ((req.body.location.latitude)? validation.latitudeValidation(req.body.location.latitude) : true) &&
-          ((req.body.location.longitude)? validation.longitudeValidation(req.body.location.longitude) : true) &&
-          typeof sportCenter.isActive === "boolean" &&
-          typeof sportCenter.services.bar === "boolean" &&
-          typeof sportCenter.services.showers === "boolean" &&
-          typeof sportCenter.services.grill === "boolean" &&
-          typeof sportCenter.services.parking === "boolean" &&
-          typeof sportCenter.services.dressingRoom === "boolean"
+          ((req.body.social && req.body.social.facebook)? validation.facebookValidation(req.body.social.facebook) : true) &&
+          ((req.body.social && req.body.social.instagram)? validation.instagramValidation(req.body.social.instagram) : true) &&
+          ((req.body.social && req.body.location.latitude)? validation.latitudeValidation(req.body.location.latitude) : true) &&
+          ((req.body.social && req.body.location.longitude)? validation.longitudeValidation(req.body.location.longitude) : true)
+          // typeof sportCenter.isActive === "boolean" &&
+          // typeof sportCenter.services.bar === "boolean" &&
+          // typeof sportCenter.services.showers === "boolean" &&
+          // typeof sportCenter.services.grill === "boolean" &&
+          // typeof sportCenter.services.parking === "boolean" &&
+          // typeof sportCenter.services.dressingRoom === "boolean"
         ){
           if(req.files && req.files.image){
             const result = await uploadSportCenterImage(req.files.image.tempFilePath);
