@@ -1,6 +1,5 @@
 import commentModel from "../models/comments.model.js";
 import validation from "../helpers/comments.validation.js";
-import jwt from "jsonwebtoken";
 import { createError } from "../utils/error.js";
 
 
@@ -57,7 +56,7 @@ const getCommentsBySportCenter = async (req, res, next) => {
 const createComment = async (req, res, next) => {
   try {
     const token = req.header("access_token");
-    const { id } = jwt.verify(token, process.env.JWT);
+    const id = req.user.id;
     if (id) {
       const bodyComment = {
         text: req.body.text,
@@ -92,7 +91,7 @@ const createComment = async (req, res, next) => {
 const updateComment = async (req, res, next) => {
   try {
     const token = req.header("access_token");
-    const { id } = jwt.verify(token, process.env.JWT);
+    const id = req.user.id;
     if (id) {
       const comment = await commentModel.findById(req.params.id);
       if (comment) {
@@ -128,7 +127,7 @@ const updateComment = async (req, res, next) => {
 const deleteComment = async (req, res, next) => {
   try {
     const token = req.header("access_token");
-    const { id } = jwt.verify(token, process.env.JWT);
+    const id = req.user.id;
     if (id) {
       const comment = await commentModel.findById(req.params.id);
       if (comment) {
