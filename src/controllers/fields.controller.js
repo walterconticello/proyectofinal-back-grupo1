@@ -83,10 +83,10 @@ const createField = async (req, res, next) => {
             const result = await uploadFieldImage(req.files.image.tempFilePath);
             photo.url = result.secure_url;
             photo.public_id = result.public_id;
+            fs.remove(req.files.image.tempFilePath);
           }
           const newField = new fieldModel({ ...bodyfield, photo });
           await newField.save();
-          fs.remove(req.files.image.tempFilePath);
           res.status(201).json(newField);
         } else {
           return next(createError(404, "Informacion no válida"));
@@ -179,7 +179,7 @@ const deleteField = async (req, res, next) => {
             await deleteImage(deletedField.photo.public_id);
           }
           res.status(200).json({
-            message: "The Field has been Deleted",
+            message: "La cancha fue eliminada",
             field: deletedField,
           });
         } else {

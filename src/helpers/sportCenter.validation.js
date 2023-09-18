@@ -1,61 +1,61 @@
+//OwnerID is validated in validateOwner
 
-//permite nombres de hata 3 componentes con min de 3 y max de 50 caracteres
 const nameValidation = (name) => {
-  const regex =
-    /^([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\']+[\s])+([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])+[\s]?([A-Za-zÁÉÍÓÚñáéíóúÑ]{0}?[A-Za-zÁÉÍÓÚñáéíóúÑ\'])?$/g;
+  const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
+  console.log(1)
   return regex.test(name) && name.length >= 3 && name.length <= 50;
-};
+}; //Validate it allow set names with spaces
 
 const addressValidation = (address) => {
   const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
+  console.log(2)
   return regex.test(address) && address.length >= 3 && address.length <= 50;
 };
 
-//Validacion de numero de telefono de 0a9 valido y de min 7 a max 20 numeros
-
 const phoneValidation = (phone) => {
-  const regex = /^[0-9]+$/;
-  return regex.test(phone) && phone.length >= 7 && phone.length <= 20;
+  const regex = /^\+\d{1,3}\d{1,4}\d{1,4}\d{1,4}$/; //You've to put + before
+  console.log(3)
+  return regex.test(phone) && phone.length >= 7 && phone.length <= 16;
 };
 
-// Necesito ayuda con Cloudinary
+const descriptionValidation = (description) => {
+  // const regex = /^[\w\d\s.,!@#\$%\^&\*\(\)-_+=\[{\]};:'"<>?`~|\\]*$/;
+  //I've commented this regex, because it is not necessary
+  console.log(4)
+  return /*regex.test(description) && */ description.length >= 10 && description.length <= 400;
+}
 
-const photoValidation = (photo) => {
-  URL = require("url").URL;
-  try {
-    new URL(photo);
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
+const facebookValidation = (facebook) => {
+  const regex= /^https?:\/\/(www\.)?facebook\.com\/[a-zA-Z0-9.-_~!$&'()*+,;=:@?%]+\/?$/;
+  console.log(5)
+  return regex.test(facebook) && facebook.length >=0 && facebook.length <= 150;
+}
 
-const socialValidation = (social) => {
-  URL = require("url").URL;
-  try {
-    new URL(social);
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
+const instagramValidation = (instagram) => {
+  const regex= /^https?:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9_]+\/?$/;
+  console.log(6)
+  return regex.test(instagram) && instagram.length >=0 && instagram.length <= 150;
+}
 
 const latitudeValidation = (latitude) => {
-  const regex = /^[0-9]+$/;
-  return regex.test(latitude) && latitude >= 0 && latitude <= 90;
+  const regex = /^-?((\d|[1-8]\d)(\.\d{1,6})?|90(\.0{1,9})?)$/;
+  console.log(7)
+  return regex.test(latitude) && latitude.length >= 0 && latitude.length <= 50;
 };
 
-const locationValidation = (location) => {
-  const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
-  return regex.test(location) && location.length >= 3 && location.length <= 50;
+const longitudeValidation = (longitude) => {
+  const regex = /^-?((\d|[1-9]\d|1[0-7]\d)(\.\d{1,6})?|180(\.0{1,9})?)$/;
+  console.log(8)
+  return regex.test(longitude) && longitude.length >= 0 && longitude.length <= 50;
 };
 
 export default {
   nameValidation,
   addressValidation,
   phoneValidation,
-  socialValidation,
+  descriptionValidation,
+  facebookValidation,
+  instagramValidation,
   latitudeValidation,
-  locationValidation,
-  photoValidation,
+  longitudeValidation
 };
