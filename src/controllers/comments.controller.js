@@ -11,7 +11,7 @@ const getCommentsByUser = async (req, res, next) => {
       .find({ userId: req.params.user })
       .populate({
         path: "userId",
-        select: ["username", "email"], //Add profile photo field
+        select: ["username", "email", "photo"], //Add profile photo field
       });
     const docs = await commentModel.find({ userId: req.params.user }).count();
     if (comments.length > 0) {

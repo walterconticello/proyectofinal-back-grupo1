@@ -6,7 +6,7 @@ const commentsSchema = new Schema({
     text: {
         type: String,
         required: true,
-        trim: true,
+        trim: false,
         minLength: 5,
         maxLength: 500
     },
