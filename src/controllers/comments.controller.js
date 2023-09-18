@@ -41,11 +41,12 @@ const getCommentsBySportCenter = async (req, res, next) => {
       .find({ sportCenterId: req.params.sportcenter })
       .count();
     docs = Math.ceil(docs / 10);
-    if (comments.length > 0) {
-      res.status(200).json({ comments, pages: docs });
-    } else {
-      return next(createError(404, "No hay comentarios"));
-    }
+    // if (comments.length > 0) {
+    //   res.status(200).json({ comments, pages: docs });
+    // } else {
+    //   return next(createError(404, "No hay comentarios"));
+    // }
+    res.status(200).json({ comments, pages: docs });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
