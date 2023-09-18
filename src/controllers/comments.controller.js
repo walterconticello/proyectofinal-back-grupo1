@@ -34,7 +34,7 @@ const getCommentsBySportCenter = async (req, res, next) => {
       .skip(10 * (page - 1))
       .populate({
         path: "userId",
-        select: ["username", "email"], //Add profile photo field
+        select: ["username", "email", "photo"], //Add profile photo field
       });
     let docs = await commentModel
       .find({ sportCenterId: req.params.sportcenter })
