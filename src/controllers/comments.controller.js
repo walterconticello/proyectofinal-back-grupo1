@@ -1,6 +1,5 @@
 import commentModel from "../models/comments.model.js";
 import validation from "../helpers/comments.validation.js";
-import jwt from "jsonwebtoken";
 import { createError } from "../utils/error.js";
 
 
@@ -11,7 +10,7 @@ const getCommentsByUser = async (req, res, next) => {
       .find({ userId: req.params.user })
       .populate({
         path: "userId",
-        select: ["username", "email"], //Add profile photo field
+        select: ["username", "email", "photo"], //Add profile photo field
       });
     const docs = await commentModel.find({ userId: req.params.user }).count();
     if (comments.length > 0) {
@@ -35,17 +34,18 @@ const getCommentsBySportCenter = async (req, res, next) => {
       .skip(10 * (page - 1))
       .populate({
         path: "userId",
-        select: ["username", "email"], //Add profile photo field
+        select: ["username", "email", "photo"], //Add profile photo field
       });
     let docs = await commentModel
       .find({ sportCenterId: req.params.sportcenter })
       .count();
     docs = Math.ceil(docs / 10);
-    if (comments.length > 0) {
-      res.status(200).json({ comments, pages: docs });
-    } else {
-      return next(createError(404, "No hay comentarios"));
-    }
+    // if (comments.length > 0) {
+    //   res.status(200).json({ comments, pages: docs });
+    // } else {
+    //   return next(createError(404, "No hay comentarios"));
+    // }
+    res.status(200).json({ comments, pages: docs });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
@@ -56,7 +56,7 @@ const getCommentsBySportCenter = async (req, res, next) => {
 const createComment = async (req, res, next) => {
   try {
     const token = req.header("access_token");
-    const { id } = jwt.verify(token, process.env.JWT);
+    const id = req.user.id;
     if (id) {
       const bodyComment = {
         text: req.body.text,
@@ -91,7 +91,7 @@ const createComment = async (req, res, next) => {
 const updateComment = async (req, res, next) => {
   try {
     const token = req.header("access_token");
-    const { id } = jwt.verify(token, process.env.JWT);
+    const id = req.user.id;
     if (id) {
       const comment = await commentModel.findById(req.params.id);
       if (comment) {
@@ -127,7 +127,7 @@ const updateComment = async (req, res, next) => {
 const deleteComment = async (req, res, next) => {
   try {
     const token = req.header("access_token");
-    const { id } = jwt.verify(token, process.env.JWT);
+    const id = req.user.id;
     if (id) {
       const comment = await commentModel.findById(req.params.id);
       if (comment) {
