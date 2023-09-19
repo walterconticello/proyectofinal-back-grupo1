@@ -1,26 +1,28 @@
 import { createError } from "./error.js";
 import jwt from "jsonwebtoken";
+import User from "../models/User.model.js"
 
-export const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization;
+export const verifyToken = async (req, res, next) => {
+  try {
+    const token = req.header("Authorization");
+    const tokenParts = token.split(" ");
 
-  if (!token) {
-    return next(createError(401, "Acceso denegado"));
-  }
+    if (tokenParts.length !== 2 || tokenParts[0] !== "Bearer") {
+      return res.status(401).json({ message: "Token inválido" });
+    }
 
-  const tokenParts = token.split(" ");
-  if (tokenParts.length !== 2 || tokenParts[0] !== "Bearer") {
-    return next(createError(401, "Token inválido"));
-  }
+    const jwtToken = tokenParts[1];
+    const { id } = jwt.verify(jwtToken, process.env.JWT);
+    req.id = id;
 
-  const jwtToken = tokenParts[1];
-
-  jwt.verify(jwtToken, process.env.JWT, (err, user) => {
-    if (err) return next(createError(403, "El token no es válido"));
+    const user = await User.findById(id);
     req.user = user;
     next();
-  });
+  } catch (error) {
+    res.status(401).json({ message: "Acceso denegado" });
+  }
 };
+
 
 export const verifyUser = (req, res, next) => {
   verifyToken(req, res, (err) => {
