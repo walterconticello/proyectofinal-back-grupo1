@@ -16,7 +16,7 @@ const postReservation = async (req, res) => {
     const IdUser = req.user.id;
     const IdField = await fieldModel.findById(req.body.IdField);
     const date = new Date(req.body.ReservationTime);
-    date.setHours(date.getHours() - 3);
+    /*date.setHours(date.getHours() - 3);*/
     if (IdUser) {
       if (IdField) {
         const isValid = await ValidationDate(date, IdField);
