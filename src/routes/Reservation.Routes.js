@@ -15,6 +15,7 @@ router.get(
   "/reservation/:id",
   reservationControllers.getReservationIdReservation
 );
+router.get("/reservation/field/:field", verifyUser, reservationControllers.getReservationByField);
 router.put("/reservation/:id", reservationControllers.cancelledReservation);
 router.get(
   "/reservation",

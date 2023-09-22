@@ -68,6 +68,21 @@ const getAllReservation = async (req, res) => {
   }
 };
 
+//get by field
+const getReservationByField = async (req, res) => {
+  try{
+    const fieldId = req.params.field;
+    const reservations = await ReservationModel.find({IdField: fieldId});
+    res.status(200).json(reservations);
+  }
+  catch (error) {
+    res.status(error.code || 500).json({
+      message:
+        error.message || "Ups! Hubo un problema, por favor intenta más tarde",
+    });
+  }
+}
+
 // get User
 
 const getUserReservation = async (req, res) => {
@@ -212,5 +227,6 @@ export default {
   getUserReservation,
   getOwnerReservation,
   getReservationIdReservation,
+  getReservationByField,
   cancelledReservation,
 };
