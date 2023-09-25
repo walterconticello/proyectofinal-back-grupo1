@@ -9,4 +9,4 @@ const bodyParser = async (req, res, next) => {
     }
 }
 
-export default bodyParser;
+export { bodyParser };
