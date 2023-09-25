@@ -68,14 +68,13 @@ const locationSchema = new Schema({
 
 const sportCenterSchema = new Schema(
   {
-
     name: {
       type: String,
       required: true,
       trim: true,
       lowercase: false,
       minLength: 3,
-      maxLength: 50
+      maxLength: 50,
     },
 
     address: {
@@ -84,7 +83,7 @@ const sportCenterSchema = new Schema(
       trim: true,
       lowercase: false,
       minLenght: 3,
-      maxLenght: 50
+      maxLenght: 50,
     },
 
     phone: {
@@ -92,27 +91,27 @@ const sportCenterSchema = new Schema(
       required: true,
       trim: true,
       minLenght: 7,
-      maxLenght: 16
+      maxLenght: 16,
     },
 
     description: {
       type: String,
       trim: true,
       lowercase: false,
-      required: true,
+      required: false,
       minLength: 10,
-      maxLength: 400
+      maxLength: 400,
     },
 
     isActive: {
       type: Boolean,
       default: true,
-  },
+    },
 
-  ownerId: {
-    type: mongoose.Types.ObjectId,
-    required: true,
-  },
+    ownerId: {
+      type: mongoose.Types.ObjectId,
+      required: true,
+    },
 
     services: {
       bar: {
@@ -134,18 +133,18 @@ const sportCenterSchema = new Schema(
       dressingRoom: {
         type: Boolean,
         default: false,
-      }
+      },
     },
 
     photo: {
       url: {
-          type: String,
-          default: ""
+        type: String,
+        default: "",
       },
       public_id: {
-          type: String,
-          default: ""
-      }
+        type: String,
+        default: "",
+      },
     },
 
     social: {
@@ -153,14 +152,14 @@ const sportCenterSchema = new Schema(
         type: String,
         trim: true,
         maxLenght: 150,
-        default: ""
+        default: "",
       },
-    
+
       instagram: {
         type: String,
         trim: true,
         maxLenght: 150,
-        default: ""
+        default: "",
       },
     },
 
@@ -169,14 +168,14 @@ const sportCenterSchema = new Schema(
         type: String,
         trim: true,
         maxLength: 50,
-        default: ""
+        default: "",
       },
-    
+
       longitude: {
         type: String,
         trim: true,
         maxLength: 50,
-        default: ""
+        default: "",
       },
     },
   },
