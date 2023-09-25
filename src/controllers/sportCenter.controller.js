@@ -68,8 +68,6 @@ const getSportCenterOwner = async (req, res, next) => {
 const postSportCenter = async (req, res, next) => {
   // console.log(req.body);
   try {
-    const bodyData = JSON.parse(req.body.data);
-    req.body = { ...req.body, ...bodyData };
     const bodySportCenter = {
       ownerId: req.user.id,
       name: req.body.name,
