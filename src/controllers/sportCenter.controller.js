@@ -47,6 +47,22 @@ const getSportCenterById = async (req, res, next) => {
   }
 };
 
+//GetSportCenterOwner 
+
+const getSportCenterOwner = async (req, res, next) => {
+  try {
+    console.log(req.params.id);
+    const sportCenter = await sportCenterModel.find({ ownerId: req.params.id });
+    if (sportCenter) {
+      res.status(200).json(sportCenter);
+    } else {
+      return next(createError(404, "Centro deportivo no encontrado"));
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 //Post
 
 const postSportCenter = async (req, res, next) => {
@@ -280,6 +296,7 @@ const deleteSportCenter = async (req, res, next) => {
 };
 
 export default {
+  getSportCenterOwner ,
   getAllSportCenters,
   getSportCenterById,
   postSportCenter,

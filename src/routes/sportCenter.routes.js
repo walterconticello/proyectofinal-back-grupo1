@@ -7,6 +7,7 @@ const router = express.Router();
 router.post("/sportCenter", verifyOwner, sportCenterController.postSportCenter);
 router.get("/sportCenter", sportCenterController.getAllSportCenters);
 router.get("/sportCenter/:id", sportCenterController.getSportCenterById);
+router.get("/sportCenter/owner/:id", sportCenterController.getSportCenterOwner);
 router.put(
   "/sportCenter/:id",
   verifyOwner,
