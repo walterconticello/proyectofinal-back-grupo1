@@ -159,9 +159,29 @@ const updateField = async (req, res, next) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message });
+    console.log(error.message);
+    // res.status(500).json({ message: error.message });
   }
 };
+
+// Put State 
+
+const putState = async (req,res,next) =>{
+  try {
+    console.log(req.params);
+    const field = await fieldModel.findById(req.params.id);
+    if(field){
+      field.isActive = !field.isActive;
+      await field.save();
+      return res.status(200).json({ message: 'Estado actualizado correctamente', isActive: field.isActive });
+    }
+
+    
+  } catch (error) {
+    
+  }
+}
+
 
 //DELETE
 const deleteField = async (req, res, next) => {
@@ -204,6 +224,7 @@ const deleteField = async (req, res, next) => {
 
 export default {
   createField,
+  putState,
   getAllFields,
   getFieldByID,
   updateField,
