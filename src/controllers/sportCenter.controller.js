@@ -152,8 +152,6 @@ const postSportCenter = async (req, res, next) => {
 /// Put SportCenter
 
 const putSportCenter = async (req, res, next) => {
-  console.log("req.body ", req.body);
-  console.log("req.params ", req.params);
   try {
     const sportCenterId = req.params.id;
     const sportCenter = await sportCenterModel.findById(sportCenterId);
