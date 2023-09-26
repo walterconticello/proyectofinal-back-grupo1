@@ -14,6 +14,7 @@ async function isReservationExists(IdField, reservationDate) {
   const existingReservation = await ReservationModel.findOne({
     IdField: IdField,
     ReservationTime: reservationDate,
+    Status : "pendiente" || "cornfirmada",
   });
   console.log(existingReservation);
   return existingReservation !== null;
