@@ -47,7 +47,7 @@ const getSportCenterById = async (req, res, next) => {
   }
 };
 
-//GetSportCenterOwner 
+//GetSportCenterOwner
 
 const getSportCenterOwner = async (req, res, next) => {
   try {
@@ -104,23 +104,21 @@ const postSportCenter = async (req, res, next) => {
     }
 
     if (
-      true ||
-      (validation.nameValidation(bodySportCenter.name) &&
-        validation.addressValidation(bodySportCenter.address) &&
-        validation.phoneValidation(bodySportCenter.phone) &&
-        validation.descriptionValidation(bodySportCenter.description) &&
-        (bodySportCenter.social.facebook
-          ? validation.facebookValidation(bodySportCenter.social.facebook)
-          : true) &&
-        (bodySportCenter.social.instagram
-          ? validation.instagramValidation(bodySportCenter.social.instagram)
-          : true) &&
-        (bodySportCenter.location.latitude
-          ? validation.latitudeValidation(bodySportCenter.location.latitude)
-          : true) &&
-        (bodySportCenter.location.longitude
-          ? validation.longitudeValidation(bodySportCenter.location.longitude)
-          : true))
+      validation.nameValidation(bodySportCenter.name) &&
+      validation.addressValidation(bodySportCenter.address) &&
+      validation.phoneValidation(bodySportCenter.phone) &&
+      (bodySportCenter.social.facebook
+        ? validation.facebookValidation(bodySportCenter.social.facebook)
+        : true) &&
+      (bodySportCenter.social.instagram
+        ? validation.instagramValidation(bodySportCenter.social.instagram)
+        : true) &&
+      (bodySportCenter.location.latitude
+        ? validation.latitudeValidation(bodySportCenter.location.latitude)
+        : true) &&
+      (bodySportCenter.location.longitude
+        ? validation.longitudeValidation(bodySportCenter.location.longitude)
+        : true)
     ) {
       // console.log(req.files);
 
@@ -154,6 +152,8 @@ const postSportCenter = async (req, res, next) => {
 /// Put SportCenter
 
 const putSportCenter = async (req, res, next) => {
+  console.log("req.body ", req.body);
+  console.log("req.params ", req.params);
   try {
     const sportCenterId = req.params.id;
     const sportCenter = await sportCenterModel.findById(sportCenterId);
@@ -162,8 +162,6 @@ const putSportCenter = async (req, res, next) => {
         if (req.body.name) sportCenter.name = req.body.name;
         if (req.body.address) sportCenter.address = req.body.address;
         if (req.body.phone) sportCenter.phone = req.body.phone;
-        if (req.body.description)
-          sportCenter.description = req.body.description;
         if (typeof req.body.isActive === "boolean")
           sportCenter.isActive = req.body.isActive; //Front has to send all those via checkboxes
         if (req.body.services && typeof req.body.services.bar === "boolean")
@@ -294,7 +292,7 @@ const deleteSportCenter = async (req, res, next) => {
 };
 
 export default {
-  getSportCenterOwner ,
+  getSportCenterOwner,
   getAllSportCenters,
   getSportCenterById,
   postSportCenter,
