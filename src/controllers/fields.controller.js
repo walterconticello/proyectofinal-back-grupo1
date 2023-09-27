@@ -39,6 +39,21 @@ const getOwnerFields = async (req , res ) =>{
     res.status(500).json({message: error.message});
   }
 }
+//Get filds by ID sportCenter
+
+const getFieldBySportCenter = async (req, res ) =>{
+  try {
+    const field = await fieldModel.find({idSportCenter : req.params.id});
+    if(field.length > 0 && req.user.isOwner == true){
+      return res.status(200).json(field);
+    }else{
+      res.status(404).json("no tiene fields");
+    }
+    
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
 
 //GET by ID
 const getFieldByID = async (req, res, next) => {
@@ -249,6 +264,7 @@ const deleteField = async (req, res, next) => {
 export default {
   createField,
   getOwnerFields,
+  getFieldBySportCenter,
   putState,
   getAllFields,
   getFieldByID,
