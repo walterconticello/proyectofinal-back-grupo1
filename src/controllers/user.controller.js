@@ -6,10 +6,13 @@ import fs from "fs-extra";
 
 export const updateUser = async (req, res, next) => {
 	try {
-		const { username, email, password } = req.body;
+		const { username, email, password , isOwner , isAdmin , state } = req.body;
 		const userToUpdate = {
 			username,
 			email,
+			isOwner ,
+			 isAdmin , 
+			 state,
 		};
 		if (password) {
 			const hashedPassword = await bcrypt.hash(password, 10);

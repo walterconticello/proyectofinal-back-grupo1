@@ -51,7 +51,6 @@ const getSportCenterById = async (req, res, next) => {
 
 const getSportCenterOwner = async (req, res, next) => {
   try {
-    console.log(req.params.id);
     const sportCenter = await sportCenterModel.find({ ownerId: req.params.id });
     if (sportCenter) {
       res.status(200).json(sportCenter);

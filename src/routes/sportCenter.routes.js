@@ -8,7 +8,7 @@ const router = express.Router();
 router.post("/sportCenter", verifyOwner, bodyParser, sportCenterController.postSportCenter);
 router.get("/sportCenter", sportCenterController.getAllSportCenters);
 router.get("/sportCenter/:id", sportCenterController.getSportCenterById);
-router.get("/sportCenter/owner/:id", sportCenterController.getSportCenterOwner);
+router.get("/sportCenter/owner/:id",verifyOwner, sportCenterController.getSportCenterOwner);
 router.put(
   "/sportCenter/:id",
   verifyOwner,

@@ -13,6 +13,7 @@ router.post("/fields", verifyOwner, fieldsController.createField); //this route 
 router.get("/fields", fieldsController.getAllFields);
 router.get("/fields/:id", fieldsController.getFieldByID);
 router.get("/fieldsPage/:page", fieldsController.getPage);
+router.get("/fieldsOwner" , verifyOwner, fieldsController.getOwnerFields);
 router.put("/fields/:id", verifyOwner, fieldsController.updateField); //this route is only for owners
 router.put("/fields/state/:id" ,verifyOwner, fieldsController.putState)
 router.delete("/fields/:id", verifyOwner, fieldsController.deleteField); //this route is only for owners

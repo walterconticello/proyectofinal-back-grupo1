@@ -4,7 +4,7 @@ import { uploadFieldImage, deleteImage } from "../utils/cloudinary.js";
 import fs from "fs-extra";
 import sportCenterModel from "../models/sportCenter.model.js";
 import { createError } from "../utils/error.js";
-
+import mongoose from "mongoose";
 //GET
 const getAllFields = async (req, res) => {
   try {
@@ -15,6 +15,30 @@ const getAllFields = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+const getOwnerFields = async (req , res ) =>{
+  try{
+    const sportCenter = await sportCenterModel.find({ ownerId: req.user.id })
+    if(sportCenter.length > 0 && req.user.isOwner == true){
+      const sportCenters = sportCenter.map((center) => center._id)
+      let fields = [];
+      for(const id of sportCenters ){
+        const field = await fieldModel.find({idSportCenter : id})
+        fields = fields.concat(field);
+      }
+      console.log(fields);
+      if (fields.length > 0) {
+        return res.status(200).json(fields);
+      }
+      console.log(fields);
+      res.status(404).json("no tiene sport Center");
+    }
+  }catch (error){
+    console.log(error);
+    console.log(error.message);
+    res.status(500).json({message: error.message});
+  }
+}
 
 //GET by ID
 const getFieldByID = async (req, res, next) => {
@@ -224,6 +248,7 @@ const deleteField = async (req, res, next) => {
 
 export default {
   createField,
+  getOwnerFields,
   putState,
   getAllFields,
   getFieldByID,
