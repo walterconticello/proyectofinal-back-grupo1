@@ -265,7 +265,6 @@ const deleteField = async (req, res, next) => {
 export default {
   createField,
   getOwnerFields,
-  getFieldBySportCenter,
   putState,
   getAllFields,
   getFieldsBySportCenterId,
