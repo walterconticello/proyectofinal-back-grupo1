@@ -54,11 +54,12 @@ const postReservation = async (req, res) => {
 
 const getAllReservation = async (req, res) => {
   try {
-    if (req.user.isAdmin === true) {
+    if (req.user.isAdmin == true) {
       const allReservation = await ReservationModel.find();
       res.status(200).json(allReservation);
     } else {
       res.status(404).json({ message: "usted no es administrador" });
+      console.log(message);
     }
   } catch (error) {
     res.status(error.code || 500).json({
