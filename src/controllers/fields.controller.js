@@ -15,15 +15,33 @@ const getAllFields = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+//getFieldsBySportCenterId
+const getFieldsBySportCenterId = async (req, res, next) => {
+  try {
+    const sportCenterId = req.params.id;
+    const fields = await fieldModel.find({ idSportCenter: sportCenterId });
 
-const getOwnerFields = async (req , res ) =>{
-  try{
-    const sportCenter = await sportCenterModel.find({ ownerId: req.user.id })
-    if(sportCenter.length > 0 && req.user.isOwner == true){
-      const sportCenters = sportCenter.map((center) => center._id)
+    if (fields.length > 0) {
+      res.status(200).json(fields);
+    } else {
+      return next(
+        createError(404, "Couldn't find fields for this sport center")
+      );
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getOwnerFields = async (req, res) => {
+  try {
+    const sportCenter = await sportCenterModel.find({ ownerId: req.user.id });
+    if (sportCenter.length > 0 && req.user.isOwner == true) {
+      const sportCenters = sportCenter.map((center) => center._id);
       let fields = [];
-      for(const id of sportCenters ){
-        const field = await fieldModel.find({idSportCenter : id})
+      for (const id of sportCenters) {
+        const field = await fieldModel.find({ idSportCenter: id });
         fields = fields.concat(field);
       }
       console.log(fields);
@@ -33,12 +51,12 @@ const getOwnerFields = async (req , res ) =>{
       console.log(fields);
       res.status(404).json("no tiene sport Center");
     }
-  }catch (error){
+  } catch (error) {
     console.log(error);
     console.log(error.message);
-    res.status(500).json({message: error.message});
+    res.status(500).json({ message: error.message });
   }
-}
+};
 
 //GET by ID
 const getFieldByID = async (req, res, next) => {
@@ -188,24 +206,22 @@ const updateField = async (req, res, next) => {
   }
 };
 
-// Put State 
+// Put State
 
-const putState = async (req,res,next) =>{
+const putState = async (req, res, next) => {
   try {
     console.log(req.params);
     const field = await fieldModel.findById(req.params.id);
-    if(field){
+    if (field) {
       field.isActive = !field.isActive;
       await field.save();
-      return res.status(200).json({ message: 'Estado actualizado correctamente', isActive: field.isActive });
+      return res.status(200).json({
+        message: "Estado actualizado correctamente",
+        isActive: field.isActive,
+      });
     }
-
-    
-  } catch (error) {
-    
-  }
-}
-
+  } catch (error) {}
+};
 
 //DELETE
 const deleteField = async (req, res, next) => {
@@ -251,6 +267,7 @@ export default {
   getOwnerFields,
   putState,
   getAllFields,
+  getFieldsBySportCenterId,
   getFieldByID,
   updateField,
   deleteField,
