@@ -54,17 +54,24 @@ const postReservation = async (req, res) => {
 
 const getAllReservation = async (req, res) => {
   try {
-    if (req.user.isAdmin == true) {
-      const allReservation = await ReservationModel.find();
-      res.status(200).json(allReservation);
-    } else {
-      res.status(404).json({ message: "usted no es administrador" });
-      console.log(message);
+    const page = parseInt(req.query.page) || 1;  // Página actual
+    const pageSize = parseInt(req.query.pageSize) || 10;  // Elementos por página
+
+    const skip = (page - 1) * pageSize;  // Calcula el índice de inicio
+    const limit = pageSize;  // Límite de elementos por página
+
+    let query = {};
+
+    // Si el usuario no es administrador, limita la búsqueda a sus reservas
+    if (!req.user.isAdmin) {
+      query = { userId: req.user._id };  // Ajusta según tu modelo de datos
     }
+
+    const allReservation = await ReservationModel.find(query).skip(skip).limit(limit);
+    res.status(200).json(allReservation);
   } catch (error) {
     res.status(error.code || 500).json({
-      message:
-        error.message || "Ups! Hubo un problema, por favor intenta más tarde",
+      message: error.message || "Hubo un problema, por favor intenta más tarde",
     });
   }
 };
