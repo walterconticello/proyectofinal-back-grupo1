@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { createError } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 import { verifyToken } from "../utils/verifyToken.js";
+import registerSuccess from "../middlewares/nodemailer.js";
 
 export const register = async (req, res, next) => {
   try {
@@ -19,6 +20,7 @@ export const register = async (req, res, next) => {
 
     console.log(newUser, "usuario");
     await newUser.save();
+    await registerSuccess(email)
     res.status(200).json({ message: "Usuario creado con exito" });
   } catch (err) {
     res.status(400).json({ message: err.message });
