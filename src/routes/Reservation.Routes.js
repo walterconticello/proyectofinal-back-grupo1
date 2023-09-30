@@ -4,6 +4,11 @@ import { verifyAdmin, verifyOwner, verifyUser } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
+router.get(
+  "/reservation/:id",
+  reservationControllers.getReservationIdReservation
+);
+router.put("/reservation/:id", reservationControllers.cancelledReservation);
 router.post("/reservation", verifyUser, reservationControllers.postReservation);
 router.get(
   "/reservation/user",
@@ -11,20 +16,15 @@ router.get(
   reservationControllers.getUserReservation
 );
 router.get(
-  "/reservation/owner",
-  verifyOwner,
-  reservationControllers.getOwnerReservation
-);
-router.get(
-  "/reservation/:id",
-  reservationControllers.getReservationIdReservation
-);
-router.get(
   "/reservation/field/:field",
   verifyUser,
   reservationControllers.getReservationByField
 );
-router.put("/reservation/:id", reservationControllers.cancelledReservation);
+router.get(
+  "/reservation/owner",
+  verifyOwner,
+  reservationControllers.getOwnerReservation
+);
 router.get(
   "/reservation",
   verifyAdmin,
