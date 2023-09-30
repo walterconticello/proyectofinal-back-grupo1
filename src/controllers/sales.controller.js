@@ -22,7 +22,7 @@ const createSale = async (req, res) => {
 
 const getSales = async (req, res) => {
   try {
-    const sales = await Sale.find();
+    const sales = await Sale.find().populate("productId").populate("userId");
     res.status(200).json(sales);
   } catch (error) {
     console.error("Error fetching sales:", error);
