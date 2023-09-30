@@ -10,12 +10,20 @@ router.get(
   verifyUser,
   reservationControllers.getUserReservation
 );
-router.get("/reservation/owner", reservationControllers.getOwnerReservation);
+router.get(
+  "/reservation/owner",
+  verifyOwner,
+  reservationControllers.getOwnerReservation
+);
 router.get(
   "/reservation/:id",
   reservationControllers.getReservationIdReservation
 );
-router.get("/reservation/field/:field", verifyUser, reservationControllers.getReservationByField);
+router.get(
+  "/reservation/field/:field",
+  verifyUser,
+  reservationControllers.getReservationByField
+);
 router.put("/reservation/:id", reservationControllers.cancelledReservation);
 router.get(
   "/reservation",
