@@ -11,7 +11,7 @@ router.get(
 router.put("/reservation/:id", reservationControllers.cancelledReservation);
 router.post("/reservation", verifyUser, reservationControllers.postReservation);
 router.get(
-  "/reservation/user",
+  "/reservationUser",
   verifyUser,
   reservationControllers.getUserReservation
 );
@@ -21,7 +21,7 @@ router.get(
   reservationControllers.getReservationByField
 );
 router.get(
-  "/reservation/owner",
+  "/reservationOwner",
   verifyOwner,
   reservationControllers.getOwnerReservation
 );
