@@ -1,6 +1,10 @@
 import productSchema from "../models/product.model.js";
 import validation from "../helpers/products.validation.js";
-import { uploadImage, deleteImage } from "../utils/cloudinary.js";
+import {
+  uploadImage,
+  deleteImage,
+  uploadProductImage,
+} from "../utils/cloudinary.js";
 import fs from "fs-extra";
 //GET
 
@@ -32,13 +36,14 @@ const getProductById = async (req, res) => {
 
 //POST
 const createProduct = async (req, res) => {
+  console.log(req.body);
   try {
     const { name, description, price, stock, categories } = req.body;
     console.log(req.files);
     let image;
 
     if (req.files && req.files.image) {
-      const result = await uploadImage(req.files.image.tempFilePath);
+      const result = await uploadProductImage(req.files.image.tempFilePath);
       await fs.remove(req.files.image.tempFilePath);
       image = {
         url: result.secure_url,
@@ -107,6 +112,10 @@ const updateProduct = async (req, res) => {
 
     if (req.files && req.files.image) {
       const result = await uploadImage(req.files.image.tempFilePath);
+      if (product.image.public_id) {
+        await deleteImage(product.image.public_id);
+      }
+
       await fs.remove(req.files.image.tempFilePath);
       image = {
         url: result.secure_url,

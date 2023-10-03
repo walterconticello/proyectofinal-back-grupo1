@@ -18,6 +18,12 @@ export const uploadSportCenterImage = async (filePath) => {
   });
 };
 
+export const uploadProductImage = async (filePath) => {
+  return await cloudinary.uploader.upload(filePath, {
+    folder: "products",
+  });
+};
+
 export const uploadFieldImage = async (filePath) => {
   return await cloudinary.uploader.upload(filePath, {
     folder: "fields",

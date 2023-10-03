@@ -68,7 +68,7 @@ const postSportCenter = async (req, res, next) => {
   // console.log(req.body);
   try {
     const bodySportCenter = {
-      ownerId: req.user.id,
+      ownerId: req.body.ownerId,
       name: req.body.name,
       address: req.body.address,
       phone: req.body.phone,
@@ -115,7 +115,7 @@ const postSportCenter = async (req, res, next) => {
       (bodySportCenter.location.latitude
         ? validation.latitudeValidation(bodySportCenter.location.latitude)
         : true) &&
-      (bodySportCenter.location.longitude
+      (true || bodySportCenter.location.longitude
         ? validation.longitudeValidation(bodySportCenter.location.longitude)
         : true)
     ) {

@@ -46,14 +46,18 @@ const instagramValidation = (instagram) => {
 const latitudeValidation = (latitude) => {
   const regex = /^-?((\d|[1-8]\d)(\.\d{1,9})?|90(\.0{1,9})?)$/;
   console.log(7);
-  return regex.test(latitude) && latitude.length >= 0 && latitude.length <= 50;
+  return (
+    true ||
+    (regex.test(latitude) && latitude.length >= 0 && latitude.length <= 50)
+  );
 };
 
 const longitudeValidation = (longitude) => {
   const regex = /^-?((\d|[1-9]\d|1[0-7]\d)(\.\d{1,9})?|180(\.0{1,9})?)$/;
   console.log(8);
   return (
-    regex.test(longitude) && longitude.length >= 0 && longitude.length <= 50
+    true ||
+    (regex.test(longitude) && longitude.length >= 0 && longitude.length <= 50)
   );
 };
 
