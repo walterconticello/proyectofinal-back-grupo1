@@ -109,8 +109,8 @@ const getUserReservation = async (req, res) => {
 // get Owner
 const getOwnerReservation = async (req, res) => {
   try {
-    if (req.user.isOwner === true) {
-      const user = new mongoose.Types.ObjectId(req.user.id);
+    if (req.user.isOwner) {
+      const user = req.user._id;
       const sportCenters = await sportCenterModel.findOne({ ownerId: user });
       if (sportCenters) {
         const fields = await fieldModel.find({
