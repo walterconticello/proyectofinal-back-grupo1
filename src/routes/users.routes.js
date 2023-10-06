@@ -43,7 +43,7 @@ router.delete("/:id", verifyUser, deleteUser);
 // GET
 router.get("/:id", verifyUser, getUser);
 
-// GET ALL (solo para administradores)
+// GET ALL
 router.get("/", getUsers);
 
 export default router;
