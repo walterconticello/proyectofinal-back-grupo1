@@ -1,6 +1,6 @@
 const bodyParser = async (req, res, next) => {
     try {
-        const bodyData = JSON.parse(req.body.data); //You have to put your json on a object called "data", from frontend
+        const bodyData = JSON.parse(req.body.data);
         req.body = { ...req.body, ...bodyData };
         next();
     }
