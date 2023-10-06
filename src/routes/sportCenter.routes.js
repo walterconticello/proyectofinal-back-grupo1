@@ -1,27 +1,22 @@
 import express from "express";
 import sportCenterController from "../controllers/sportCenter.controller.js";
-import { auth } from "../middlewares/auth.js";
 import { verifyOwner } from "../utils/verifyToken.js";
+import { bodyParser } from "../middlewares/receive.js";
 
 const router = express.Router();
 
-router.post(
-  "/sportCenter",
-  auth,
-  verifyOwner,
-  sportCenterController.postSportCenter
-);
+router.post("/sportCenter", verifyOwner, bodyParser, sportCenterController.postSportCenter);
 router.get("/sportCenter", sportCenterController.getAllSportCenters);
 router.get("/sportCenter/:id", sportCenterController.getSportCenterById);
+router.get("/sportCenter/owner/:id",verifyOwner, sportCenterController.getSportCenterOwner);
 router.put(
   "/sportCenter/:id",
-  auth,
   verifyOwner,
+  bodyParser,
   sportCenterController.putSportCenter
 );
 router.delete(
   "/sportCenter/:id",
-  auth,
   verifyOwner,
   sportCenterController.deleteSportCenter
 );

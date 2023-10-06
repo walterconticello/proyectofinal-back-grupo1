@@ -14,8 +14,6 @@ import complexRouter from "./routes/sportCenter.routes.js";
 import connectDB from "./database/db.js";
 import fileUpload from "express-fileupload";
 
-// dotenv.config();
-
 const app = express();
 
 app.set("port", process.env.PORT || 5500);

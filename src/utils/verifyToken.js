@@ -1,51 +1,59 @@
+import { createError } from "./error.js";
 import jwt from "jsonwebtoken";
-import { createError } from "../utils/error.js";
-import User from "../models/User.model.js";
+import User from "../models/User.model.js"
 
-export const verifyToken = (req, res, next) => {
-  const token = req.headers["access_token"];
+export const verifyToken = async (req, res, next) => {
+  try {
+    const token = req.header("Authorization");
+    const tokenParts = token.split(" ");
 
-  if (!token) {
-    return next(createError(401, "Acceso denegado"));
-  }
+    if (tokenParts.length !== 2 || tokenParts[0] !== "Bearer") {
+      return res.status(401).json({ message: "Token inválido" });
+    }
 
-  jwt.verify(token, process.env.JWT, (err, user) => {
-    if (err) return next(createError(403, "El token no es valido"));
+    const jwtToken = tokenParts[1];
+    const { id } = jwt.verify(jwtToken, process.env.JWT);
+    req.id = id;
+
+    const user = await User.findById(id);
     req.user = user;
     next();
-  });
+  } catch (error) {
+    res.status(401).json({ message: "Acceso denegado" });
+  }
 };
+
 
 export const verifyUser = (req, res, next) => {
   verifyToken(req, res, (err) => {
-    if (err) return next(createError(403, "No estas autorizado!"));
+    if (err) return next(createError(403, "No estás autorizado!"));
     if (req.user.id || req.user.isAdmin || req.user.isOwner) {
       next();
     } else {
-      next(createError(403, "No estas autorizado!"));
+      next(createError(403, "No estás autorizado!"));
     }
   });
 };
 
 export const verifyOwner = async (req, res, next) => {
   verifyToken(req, res, (err) => {
-    if (err) return next(createError(403, "No estas autorizado!"));
+    if (err) return next(createError(403, "No estás autorizado!"));
     if (req.user.isOwner || req.user.isAdmin) {
       next();
     } else {
-      next(createError(403, "No estas autorizado!"));
+      next(createError(403, "No estás autorizado!"));
     }
   });
 };
 
 export const verifyAdmin = (req, res, next) => {
   verifyToken(req, res, (err) => {
-    if (err) return next(createError(403, "No estas autorizado!"));
+    if (err) return next(createError(403, "No estás autorizado!"));
 
     if (req.user.isAdmin) {
       next();
     } else {
-      next(createError(403, "No estas autorizado como administrador!"));
+      next(createError(403, "No estás autorizado como administrador!"));
     }
   });
 };

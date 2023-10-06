@@ -1,6 +1,7 @@
 import express from "express";
 import { check, validationResult } from "express-validator";
-import { login, register } from "../controllers/auth.controller.js";
+import { getAuthStatus, login, register } from "../controllers/auth.controller.js";
+import { verifyToken, verifyUser } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ const usernameValidator = check("username")
 const emailValidator = check("email")
 	.notEmpty().withMessage("El correo electrónico es obligatorio")
 	.isEmail().withMessage("Correo electrónico inválido")
-	.isLength({ max: 24 }).withMessage("El correo electrónico debe tener como máximo 24 caracteres");
+	.isLength({ max: 50 }).withMessage("El correo electrónico debe tener como máximo 24 caracteres");
 
 const passwordValidator = check("password")
 	.notEmpty().withMessage("La contraseña es obligatoria")
@@ -35,5 +36,7 @@ router.post(
 	],
 	login
 );
+
+router.get("/check", verifyUser, getAuthStatus);
 
 export default router;

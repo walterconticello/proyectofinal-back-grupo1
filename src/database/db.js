@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-const URI = process.env.URI; //Getting URI from .env
-const DB = process.env.DB; //Getting database name from .env
+const URI = process.env.URI;
+const DB = process.env.DB;
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(`${URI}/${DB}`, {
+    await mongoose.connect(URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -15,4 +15,3 @@ const connectDB = async () => {
 };
 
 export default connectDB;
-

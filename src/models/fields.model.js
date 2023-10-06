@@ -2,21 +2,12 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const photoSchema = new Schema({
-    url: {
-        type: String,
-    },
-    public_id: {
-        type: String,
-    }
-});
-
 const fieldsSchema = new Schema({
     name: {
         type: String,
         required: true,
         trim: true,
-        lowercase: true,
+        lowercase: false,
         minLength: 3,
         maxLength: 50
     },
@@ -36,7 +27,7 @@ const fieldsSchema = new Schema({
         type: Number,
         required: true,
         min: 0,
-        max: 100000 //Max price $100.000
+        max: 100000
     },
     size: {
         type: Number,
@@ -46,7 +37,6 @@ const fieldsSchema = new Schema({
     },
     isActive: {
         type: Boolean,
-        required: true,
         default: true,
     },
     idSportCenter: {
@@ -54,7 +44,14 @@ const fieldsSchema = new Schema({
         required: true,
         immutable: true,
     },
-    photo: photoSchema
+    photo: {
+        url: {
+            type: String,
+        },
+        public_id: {
+            type: String,
+        }
+    }
 }, {versionKey: false});
 
 const fieldModel = mongoose.model("fields", fieldsSchema);

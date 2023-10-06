@@ -1,51 +1,34 @@
 import express from "express";
 import reservationControllers from "../controllers/reservation-controllers.js";
-import { verifyUser } from "../utils/verifyToken.js";
-import { auth } from "../middlewares/auth.js";
+import { verifyAdmin, verifyOwner, verifyUser } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
-router.post(
-  "/reservation",
-  auth,
-  verifyUser,
-  reservationControllers.postReservation
-);
-router.get(
-  "/reservation",
-  auth,
-  verifyUser,
-  reservationControllers.getReservation
-);
 router.get(
   "/reservation/:id",
-  auth,
-  verifyUser,
   reservationControllers.getReservationIdReservation
 );
+router.put("/reservation/:id", reservationControllers.cancelledReservation);
+router.post("/reservation", verifyUser, reservationControllers.postReservation);
 router.get(
-  "/reservation/field/:fieldid",
-  auth,
+  "/reservationUser",
   verifyUser,
-  reservationControllers.getReservationByFieldId
+  reservationControllers.getUserReservation
 );
-router.delete(
-  "/reservation/:id",
-  auth,
+router.get(
+  "/reservation/field/:field",
   verifyUser,
-  reservationControllers.deleteIdReservation
+  reservationControllers.getReservationByField
 );
-router.delete(
-  "/reservation/:id",
-  auth,
-  verifyUser,
-  reservationControllers.cancelledReservation
+router.get(
+  "/reservationOwner",
+  verifyOwner,
+  reservationControllers.getOwnerReservation
 );
-router.put(
-  "/reservation/:id",
-  auth,
-  verifyUser,
-  reservationControllers.putReservation
+router.get(
+  "/reservation",
+  verifyAdmin,
+  reservationControllers.getAllReservation
 );
 
 export default router;

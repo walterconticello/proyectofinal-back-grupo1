@@ -3,7 +3,7 @@ import sportCenterModel from "../models/sportCenter.model.js";
 
 const textValidation = (text) => {
     return (typeof text === 'string') && text.trim().length >= 5 && text.trim().length <= 500;
-} //We could use a test() method of a regex instead of the typeof
+}
 
 const ratingValidation = (rating) => {
     return (typeof rating === 'number') && (rating >= 0) && (rating <= 10);

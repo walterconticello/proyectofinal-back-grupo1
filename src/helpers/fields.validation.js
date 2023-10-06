@@ -6,10 +6,13 @@ const nameValidation = (name) => {
 };
 
 const openHourValidation = (hour) => {
+  hour = parseInt(hour);
   return typeof hour === "number" && hour >= 0 && hour <= 23;
 };
 
 const closeHourValidation = (hour) => {
+  hour = parseInt(hour);
+
   return typeof hour === "number" && hour >= 1 && hour <= 24;
 };
 
@@ -33,8 +36,6 @@ const sizeValidation = (size) => {
 
 const validateSportCenter = async (sportCenter) => {
   const center = await sportCenterModel.findById(sportCenter);
-
-  //Validate ownershipId equal to IdSportCenter
   return center;
 };
 
