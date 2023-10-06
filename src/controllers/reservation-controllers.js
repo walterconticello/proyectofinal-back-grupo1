@@ -202,23 +202,12 @@ cron.schedule("*/1 * * * *", async (res) => {
         if (timeExpiration < currentSecund) {
           for (const id of idDelete) {
             const deletes = await ReservationModel.findByIdAndDelete(id);
-            console.log(deletes);
-            if (deletes) {
-              res.status(200).json({ message: "Reserva eliminada" });
-            }
           }
         }
       }
-    } else {
-      res
-        .status(200)
-        .json({ message: "No hay Reservas para vencidas para eliminar" });
     }
   } catch (error) {
-    res.status(error.code || 500).json({
-      message:
-        error.message || "Ups! Hubo un problema, por favor intenta más tarde",
-    });
+    console.log(error);
   }
 });
 
