@@ -74,7 +74,6 @@ const postSportCenter = async (req, res, next) => {
       name: req.body.name,
       address: req.body.address,
       phone: req.body.phone,
-      // description: req.body.description,
       services: {},
       social: {},
       location: {},
@@ -161,7 +160,7 @@ const putSportCenter = async (req, res, next) => {
         if (req.body.address) sportCenter.address = req.body.address;
         if (req.body.phone) sportCenter.phone = req.body.phone;
         if (typeof req.body.isActive === "boolean")
-          sportCenter.isActive = req.body.isActive; //Front has to send all those via checkboxes
+          sportCenter.isActive = req.body.isActive;
         if (req.body.services && typeof req.body.services.bar === "boolean")
           sportCenter.services.bar = req.body.services.bar;
         if (req.body.services && typeof req.body.services.showers === "boolean")
@@ -200,12 +199,6 @@ const putSportCenter = async (req, res, next) => {
           (req.body.location && req.body.location.longitude
             ? validation.longitudeValidation(req.body.location.longitude)
             : true)
-          // typeof sportCenter.isActive === "boolean" &&
-          // typeof sportCenter.services.bar === "boolean" &&
-          // typeof sportCenter.services.showers === "boolean" &&
-          // typeof sportCenter.services.grill === "boolean" &&
-          // typeof sportCenter.services.parking === "boolean" &&
-          // typeof sportCenter.services.dressingRoom === "boolean"
         ) {
           if (req.files && req.files.image) {
             const result = await uploadSportCenterImage(

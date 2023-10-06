@@ -15,6 +15,7 @@ const getAllFields = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 //getFieldsBySportCenterId
 const getFieldsBySportCenterId = async (req, res, next) => {
   try {
@@ -87,7 +88,6 @@ const getPage = async (req, res) => {
 
 //POST
 const createField = async (req, res, next) => {
-  //Only for the owner of the sportCenter, validate that
   try {
     const bodyfield = {
       name: req.body.name,
@@ -148,8 +148,6 @@ const createField = async (req, res, next) => {
 
 //PUT
 const updateField = async (req, res, next) => {
-  //For activate or deactivate a field, update that
-  //Only for the owner of the sportCenter, validate that
   try {
     const field = await fieldModel.findById(req.params.id);
     if (field) {
@@ -219,7 +217,6 @@ const putState = async (req, res, next) => {
 
 //DELETE
 const deleteField = async (req, res, next) => {
-  //Only for the owner of the sportCenter, validate that
   try {
     const field = await fieldModel.findById(req.params.id);
     if (field) {
@@ -227,7 +224,7 @@ const deleteField = async (req, res, next) => {
       if (sportCenter.ownerId == req.user.id || req.user.isAdmin) {
         const deletedField = await fieldModel.findOneAndDelete({
           _id: { $eq: req.params.id },
-        }); //$eq: req.params.id means that the id from params must be equa to the field's id
+        });
         if (deletedField) {
           if (deletedField.photo && deletedField.photo.public_id) {
             await deleteImage(deletedField.photo.public_id);

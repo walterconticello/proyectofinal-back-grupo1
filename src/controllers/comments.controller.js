@@ -10,7 +10,7 @@ const getCommentsByUser = async (req, res, next) => {
       .find({ userId: req.params.user })
       .populate({
         path: "userId",
-        select: ["username", "email", "photo"], //Add profile photo field
+        select: ["username", "email", "photo"],
       });
     const docs = await commentModel.find({ userId: req.params.user }).count();
     if (comments.length > 0) {
@@ -34,17 +34,12 @@ const getCommentsBySportCenter = async (req, res, next) => {
       .skip(10 * (page - 1))
       .populate({
         path: "userId",
-        select: ["username", "email", "photo"], //Add profile photo field
+        select: ["username", "email", "photo"],
       });
     let docs = await commentModel
       .find({ sportCenterId: req.params.sportcenter })
       .count();
     docs = Math.ceil(docs / 10);
-    // if (comments.length > 0) {
-    //   res.status(200).json({ comments, pages: docs });
-    // } else {
-    //   return next(createError(404, "No hay comentarios"));
-    // }
     res.status(200).json({ comments, pages: docs });
   } catch (error) {
     console.log(error);
@@ -98,7 +93,6 @@ const updateComment = async (req, res, next) => {
         if (id == comment.userId) {
           if (req.body.text) comment.text = req.body.text;
           if (req.body.rating) comment.rating = req.body.rating;
-
           if (
             validation.ratingValidation(comment.rating) &&
             validation.textValidation(comment.text)
