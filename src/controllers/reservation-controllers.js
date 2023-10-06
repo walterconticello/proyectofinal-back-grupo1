@@ -190,7 +190,9 @@ const cancelledReservation = async (req, res) => {
   }
 };
 
-cron.schedule("*/1 * * * *", async (res) => {
+//Cron for delete the oldest reservations
+
+cron.schedule("*/1 * * * *", async () => {
   try {
     const reservationToDelete = await ReservationModel.find({
       Status: "cancelada",
@@ -205,23 +207,12 @@ cron.schedule("*/1 * * * *", async (res) => {
         if (timeExpiration < currentSecund) {
           for (const id of idDelete) {
             const deletes = await ReservationModel.findByIdAndDelete(id);
-            if (deletes) {
-              res.status(200).json({ message: "Reserva eliminada" });
-            }
           }
         }
       }
-    } else {
-      res
-        .status(200)
-        .json({ message: "No hay Reservas para vencidas para eliminar" });
     }
   } catch (error) {
     console.log(error);
-    res.status(error.code || 500).json({
-      message:
-        error.message || "Ups! Hubo un problema, por favor intenta más tarde",
-    });
   }
 });
 
