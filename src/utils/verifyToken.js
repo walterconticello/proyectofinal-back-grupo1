@@ -1,55 +1,59 @@
+import { createError } from "./error.js";
 import jwt from "jsonwebtoken";
-import { createError } from "../utils/error.js";
+import User from "../models/User.model.js"
 
-export const verifyToken = (req, res, next) => {
-	const token = req.headers["access_token"]
-	if (!token) {
-		return next(createError(401, "Acceso denegado"))
-	}
+export const verifyToken = async (req, res, next) => {
+  try {
+    const token = req.header("Authorization");
+    const tokenParts = token.split(" ");
 
-	jwt.verify(token, process.env.JWT, (err, user) => {
-		if (err) return next(createError(403, "El token no es valido"));
-		req.user = user;
-		next();
-	});
+    if (tokenParts.length !== 2 || tokenParts[0] !== "Bearer") {
+      return res.status(401).json({ message: "Token inválido" });
+    }
+
+    const jwtToken = tokenParts[1];
+    const { id } = jwt.verify(jwtToken, process.env.JWT);
+    req.id = id;
+
+    const user = await User.findById(id);
+    req.user = user;
+    next();
+  } catch (error) {
+    res.status(401).json({ message: "Acceso denegado" });
+  }
 };
 
+
 export const verifyUser = (req, res, next) => {
-	verifyToken(req, res, (err) => {
-		if (err) return next(createError(403, "No estas autorizado!"));
-		if (req.user.id === req.params.id || req.user.isAdmin) {
-			next();
-		} else {
-			next(createError(403, "No estas autorizado!"));
-		}
-	});
+  verifyToken(req, res, (err) => {
+    if (err) return next(createError(403, "No estás autorizado!"));
+    if (req.user.id || req.user.isAdmin || req.user.isOwner) {
+      next();
+    } else {
+      next(createError(403, "No estás autorizado!"));
+    }
+  });
 };
 
 export const verifyOwner = async (req, res, next) => {
-	try {
-		const user = await User.findById(req.params.id);
-		if (!user) {
-			return res.status(404).json({ message: "Usuario no encontrado" });
-		}
-
-		if (req.user.isAdmin || user.isOwner) {
-			next();
-		} else {
-			return res.status(403).json({ message: "No estás autorizado para realizar esta acción" });
-		}
-	} catch (error) {
-		return res.status(500).json({ message: "Error interno del servidor" });
-	}
+  verifyToken(req, res, (err) => {
+    if (err) return next(createError(403, "No estás autorizado!"));
+    if (req.user.isOwner || req.user.isAdmin) {
+      next();
+    } else {
+      next(createError(403, "No estás autorizado!"));
+    }
+  });
 };
 
 export const verifyAdmin = (req, res, next) => {
-	verifyToken(req, res, (err) => {
-		if (err) return next(createError(403, "No estas autorizado!"));
+  verifyToken(req, res, (err) => {
+    if (err) return next(createError(403, "No estás autorizado!"));
 
-		if (req.user.isAdmin) {
-			next();
-		} else {
-			next(createError(403, "No estas autorizado como administrador!"));
-		}
-	});
+    if (req.user.isAdmin) {
+      next();
+    } else {
+      next(createError(403, "No estás autorizado como administrador!"));
+    }
+  });
 };

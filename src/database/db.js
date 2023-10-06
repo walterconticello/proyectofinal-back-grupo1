@@ -4,7 +4,7 @@ const DB = process.env.DB; //Getting database name from .env
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(`${URI}/${DB}`, {
+    await mongoose.connect(URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -15,4 +15,3 @@ const connectDB = async () => {
 };
 
 export default connectDB;
-

@@ -1,64 +1,80 @@
 import mongoose from "mongoose";
 import ReservationModel from "../models/reservation.model.js";
-import SportCenterModel from "../models/sportCenter.model.js";
+import FieldsModel from "../models/fields.model.js";
 import { zonedTimeToUtc, format } from "date-fns-tz";
 
 const timeZone = "America/Argentina/Buenos_Aires";
 const currentDate = new Date();
+console.log(currentDate);
 const zonedDate = zonedTimeToUtc(currentDate, timeZone);
+const dateTime = format(zonedDate, "yyyy-MM-dd HH:mm", { timeZone });
+export const currentSecund = currentDate.getTime() - 3600000 * 3;
 
-const pattern = "d/M/yyyy HH:mm:ss (z)";
-
-const formattedDate = format(zonedDate, pattern, { timeZone });
-console.log(formattedDate);
-
-async function isReservationExists(IdField, ReservationTime) {
+async function isReservationExists(IdField, reservationDate) {
   const existingReservation = await ReservationModel.findOne({
-    IdField,
-    ReservationTime,
+    IdField: IdField,
+    ReservationTime: reservationDate,
+    Status : "pendiente" || "confirmada",
   });
+  console.log(existingReservation);
   return existingReservation !== null;
 }
 
-async function isWithinOpeningHours(IdSportCenter, reservationDate) {
-  const sportCenter = await SportCenterModel.findById(IdSportCenter);
-  if (!sportCenter) {
+async function isWithinOpeningHours(IdField, reservationDate) {
+  const field = await FieldsModel.findById(IdField);
+  if (!field) {
     return false;
   }
 
-  const openingHour = sportCenter.openHour;
-  const closingHour = sportCenter.closeHour;
-  const reservationHour = reservationDate.getHours();
+  const reservation = Number(reservationDate.getHours());
+
+  const openingHour = field.openHour;
+  const closingHour = field.closeHour;
+  const reservationHour = reservation + 3;
 
   return reservationHour >= openingHour && reservationHour < closingHour;
 }
 
-const ValidationDate = async (ReservationTime, IdField, IdSportCenter) => {
-  const reservationDate = new Date(ReservationTime);
+const ValidationDate = async (ReservationTime, IdField) => {
+  const reservationDate = ReservationTime;
+  const time = reservationDate.getTime();
+  console.log(time);
 
-  if (reservationDate <= zonedDate) {
+  if (time <= currentSecund) {
     console.log("La fecha de reserva debe ser en el futuro.");
-    return;
+    return false;
   }
 
-  const isWithinHours = await isWithinOpeningHours(
-    IdSportCenter,
-    reservationDate
-  );
+  const isWithinHours = await isWithinOpeningHours(IdField, reservationDate);
   if (!isWithinHours) {
     console.log(
       "La reserva debe estar dentro del horario de apertura y cierre del complejo."
     );
-    return;
+    return false;
   }
 
-  const reservationExists = await isReservationExists(IdField, ReservationTime);
+  const reservationExists = await isReservationExists(IdField, reservationDate);
   if (reservationExists) {
     console.log("Esta reserva ya existe.");
-    return;
+    return false;
   }
 
-  return true;
+  return true; // Solo si todas las validaciones pasan, se retorna true.
+};
+
+export const ExpirationFunction = (dateExpiration) => {
+  const dosSemanasDespues = new Date(dateExpiration);
+  console.log("dos semanas: " + dosSemanasDespues);
+  dosSemanasDespues.setDate(dosSemanasDespues.getDate() + 14);
+
+  return dosSemanasDespues;
+};
+
+export const cancelled = (date) => {
+  const cincoDias = new Date(date);
+  console.log(cincoDias);
+  cincoDias.setDate(cincoDias.getDate() + 5);
+  return cincoDias;
 };
 
 export default ValidationDate;
