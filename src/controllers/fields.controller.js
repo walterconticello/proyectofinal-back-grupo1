@@ -44,16 +44,13 @@ const getOwnerFields = async (req, res) => {
         const field = await fieldModel.find({ idSportCenter: id });
         fields = fields.concat(field);
       }
-      console.log(fields);
       if (fields.length > 0) {
         return res.status(200).json(fields);
       }
-      console.log(fields);
       res.status(404).json("no tiene sport Center");
     }
   } catch (error) {
     console.log(error);
-    console.log(error.message);
     res.status(500).json({ message: error.message });
   }
 };
@@ -121,7 +118,6 @@ const createField = async (req, res, next) => {
             public_id: "",
           };
           if (req.files && req.files.image) {
-            console.log(req.files.image);
             const result = await uploadFieldImage(req.files.image.tempFilePath);
             photo.url = result.secure_url;
             photo.public_id = result.public_id;
@@ -201,8 +197,7 @@ const updateField = async (req, res, next) => {
     }
   } catch (error) {
     console.log(error);
-    console.log(error.message);
-    // res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -210,7 +205,6 @@ const updateField = async (req, res, next) => {
 
 const putState = async (req, res, next) => {
   try {
-    console.log(req.params);
     const field = await fieldModel.findById(req.params.id);
     if (field) {
       field.isActive = !field.isActive;

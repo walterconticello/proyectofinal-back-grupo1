@@ -11,7 +11,6 @@ import mongoose from "mongoose";
 //CREATE O POST
 
 const postReservation = async (req, res) => {
-  console.log(req.user);
   try {
     const IdUser = req.user.id;
     const IdField = await fieldModel.findById(req.body.IdField);
@@ -43,6 +42,7 @@ const postReservation = async (req, res) => {
       res.status(404).json({ message: "Usuario no encontrado" });
     }
   } catch (error) {
+    console.log(error);
     res.status(error.code || 500).json({
       message:
         error.message || "Ups! Hubo un problema, por favor intenta más tarde",
@@ -59,9 +59,9 @@ const getAllReservation = async (req, res) => {
       res.status(200).json(allReservation);
     } else {
       res.status(404).json({ message: "usted no es administrador" });
-      console.log(message);
     }
   } catch (error) {
+    console.log(error);
     res.status(error.code || 500).json({
       message:
         error.message || "Ups! Hubo un problema, por favor intenta más tarde",
@@ -77,6 +77,7 @@ const getReservationByField = async (req, res) => {
     res.status(200).json(reservations);
   }
   catch (error) {
+    console.log(error);
     res.status(error.code || 500).json({
       message:
         error.message || "Ups! Hubo un problema, por favor intenta más tarde",
@@ -100,6 +101,7 @@ const getUserReservation = async (req, res) => {
       res.status(404).json({ message: "usted no es usuario" });
     }
   } catch (error) {
+    console.log(error);
     res.status(error.code || 500).json({
       message:
         error.message || "Ups! Hubo un problema, por favor intenta más tarde",
@@ -138,6 +140,7 @@ const getOwnerReservation = async (req, res) => {
       res.status(404).json({ message: "usted no es owner" });
     }
   } catch (error) {
+    console.log(error);
     res.status(error.code || 500).json({
       message:
         error.message || "Ups! Hubo un problema, por favor intenta más tarde",
@@ -155,6 +158,7 @@ const getReservationIdReservation = async (req, res) => {
       res.status(404).json({ message: error.message });
     }
   } catch (error) {
+    console.log(error);
     res.status(error.code || 500).json({
       message:
         error.message || "Ups! Hubo un problema, por favor intenta más tarde",
@@ -167,7 +171,6 @@ const cancelledReservation = async (req, res) => {
     const userId = req.user.id;
     const reservationId = req.params.id;
     const reservation = await ReservationModel.findById(reservationId);
-    console.log(reservation);
     if (
       reservation.IdUser == userId ||
       req.user.isOwner === true ||
@@ -180,6 +183,7 @@ const cancelledReservation = async (req, res) => {
       res.status(404).json({ message: "No puede cancelar" });
     }
   } catch (error) {
+    console.log(error);
     res.status(error.code || 500).json({
       message:
         error.message || "Ups! Hubo un problema, por favor intenta más tarde",
@@ -202,7 +206,6 @@ cron.schedule("*/1 * * * *", async (res) => {
         if (timeExpiration < currentSecund) {
           for (const id of idDelete) {
             const deletes = await ReservationModel.findByIdAndDelete(id);
-            console.log(deletes);
             if (deletes) {
               res.status(200).json({ message: "Reserva eliminada" });
             }
@@ -215,6 +218,7 @@ cron.schedule("*/1 * * * *", async (res) => {
         .json({ message: "No hay Reservas para vencidas para eliminar" });
     }
   } catch (error) {
+    console.log(error);
     res.status(error.code || 500).json({
       message:
         error.message || "Ups! Hubo un problema, por favor intenta más tarde",

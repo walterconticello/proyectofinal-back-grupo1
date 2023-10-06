@@ -16,11 +16,10 @@ export const register = async (req, res, next) => {
       email,
       password: hash,
     });
-
-    console.log(newUser, "usuario");
     await newUser.save();
     res.status(200).json({ message: "Usuario creado con exito" });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ message: err.message });
   }
 };
@@ -47,6 +46,7 @@ export const login = async (req, res, next) => {
       .header("Authorization", `Bearer ${token}`)
       .json({ message: "Ingreso correcto", ok: true, user, token });
   } catch (error) {
+    console.log(error);
     res
       .status(error.code || 500)
       .json({ message: error.message || "algo explotó :|" });
@@ -61,6 +61,7 @@ export const getAuthStatus = async (req, res) => {
     if (!user) throw new CustomError("Autenticación fallida", 401);
     res.status(200).json({ user });
   } catch (error) {
+    console.log(error);
     res.status(error.code || 500).json({
       message:
         error.message || "Ups! Hubo un problema, por favor intenta más tarde",

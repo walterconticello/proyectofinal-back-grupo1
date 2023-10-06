@@ -11,8 +11,8 @@ export const updateUser = async (req, res, next) => {
 			username,
 			email,
 			isOwner ,
-			 isAdmin , 
-			 state,
+			isAdmin , 
+			state,
 		};
 		if (password) {
 			const hashedPassword = await bcrypt.hash(password, 10);
@@ -38,6 +38,7 @@ export const updateUser = async (req, res, next) => {
 
 		res.status(200).json(updatedUser);
 	} catch (err) {
+		console.log(err);
 		next(err);
 	}
 };
@@ -48,6 +49,7 @@ export const deleteUser = async (req, res, next) => {
 		await User.findByIdAndDelete(req.params.id);
 		res.status(200).json("El usuario se elimino")
 	} catch (err) {
+		console.log(err);
 		next(err);
 	}
 }
@@ -57,6 +59,7 @@ export const getUser = async (req, res, next) => {
 		const user = await User.findById(req.params.id);
 		res.status(200).json(user)
 	} catch (err) {
+		console.log(err);
 		next(err);
 	}
 }
@@ -66,6 +69,7 @@ export const getUsers = async (req, res, next) => {
 		const users = await User.find();
 		res.status(200).json(users)
 	} catch (err) {
+		console.log(err);
 		next(err);
 	}
 }

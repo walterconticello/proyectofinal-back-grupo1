@@ -13,6 +13,7 @@ const getAllProducts = async (req, res) => {
     const products = await productSchema.find();
     res.status(200).json({ products });
   } catch (err) {
+    console.log(err);
     res.status(400).json({ message: err.message });
   }
 };
@@ -36,10 +37,8 @@ const getProductById = async (req, res) => {
 
 //POST
 const createProduct = async (req, res) => {
-  console.log(req.body);
   try {
     const { name, description, price, stock, categories } = req.body;
-    console.log(req.files);
     let image;
 
     if (req.files && req.files.image) {
@@ -106,7 +105,6 @@ const updateProduct = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    console.log(req.body);
     const { name, description, price, stock, categories } = req.body;
     let image;
 

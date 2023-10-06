@@ -24,6 +24,7 @@ const getAllSportCenters = async (req, res) => {
     }
     res.status(200).json(responseSportCenter);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -43,6 +44,7 @@ const getSportCenterById = async (req, res, next) => {
       return next(createError(404, "Centro deportivo no encontrado"));
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -58,6 +60,7 @@ const getSportCenterOwner = async (req, res, next) => {
       return next(createError(404, "Centro deportivo no encontrado"));
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -65,7 +68,6 @@ const getSportCenterOwner = async (req, res, next) => {
 //Post
 
 const postSportCenter = async (req, res, next) => {
-  // console.log(req.body);
   try {
     const bodySportCenter = {
       ownerId: req.body.ownerId,
@@ -119,7 +121,6 @@ const postSportCenter = async (req, res, next) => {
         ? validation.longitudeValidation(bodySportCenter.location.longitude)
         : true)
     ) {
-      // console.log(req.files);
 
       const photo = {
         url: "",
@@ -137,13 +138,13 @@ const postSportCenter = async (req, res, next) => {
         ...bodySportCenter,
         photo,
       });
-      // console.log(newSportCenter);
       await newSportCenter.save();
       res.status(201).json(newSportCenter);
     } else {
       return next(createError(400, "Los datos ingresados no son válidos"));
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ mensaje: error.message });
   }
 };
