@@ -2,15 +2,6 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-// const photoSchema = new Schema({
-//     url: {
-//         type: String,
-//     },
-//     public_id: {
-//         type: String,
-//     }
-// });
-
 const fieldsSchema = new Schema({
     name: {
         type: String,
@@ -36,7 +27,7 @@ const fieldsSchema = new Schema({
         type: Number,
         required: true,
         min: 0,
-        max: 100000 //Max price $100.000
+        max: 100000
     },
     size: {
         type: Number,
