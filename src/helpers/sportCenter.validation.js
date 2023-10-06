@@ -1,9 +1,7 @@
-//OwnerID is validated in validateOwner
-
 const nameValidation = (name) => {
   const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
   return regex.test(name) && name.length >= 3 && name.length <= 50;
-}; //Validate it allow set names with spaces
+};
 
 const addressValidation = (address) => {
   const regex = /^[ A-Za-z\u00C0-\u024F0-9,.\:\(\)\[\]\'\"\`]+$/;
@@ -16,10 +14,8 @@ const phoneValidation = (phone) => {
 };
 
 const descriptionValidation = (description) => {
-  // const regex = /^[\w\d\s.,!@#\$%\^&\*\(\)-_+=\[{\]};:'"<>?`~|\\]*$/;
-  //I've commented this regex, because it is not necessary
   return (
-    /*regex.test(description) && */ description.length >= 10 &&
+    description.length >= 10 &&
     description.length <= 400
   );
 };

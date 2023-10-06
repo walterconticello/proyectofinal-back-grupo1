@@ -36,8 +36,6 @@ const sizeValidation = (size) => {
 
 const validateSportCenter = async (sportCenter) => {
   const center = await sportCenterModel.findById(sportCenter);
-
-  //Validate ownershipId equal to IdSportCenter
   return center;
 };
 

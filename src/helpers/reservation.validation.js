@@ -51,7 +51,7 @@ const ValidationDate = async (ReservationTime, IdField) => {
     return false;
   }
 
-  return true; // Solo si todas las validaciones pasan, se retorna true.
+  return true;
 };
 
 export const ExpirationFunction = (dateExpiration) => {
