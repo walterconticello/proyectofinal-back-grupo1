@@ -5,8 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "babel-node index.js",
-    "dev": "nodemon --exec babel-node src/index.js"
+    "dev": "nodemon --exec babel-node src/index.js",
+    "build": "babel src -d build",
+    "start": "node build/index.js"
   },
   "keywords": [
     "request",
@@ -20,6 +21,10 @@
   "author": "Grupo 1 (46i) - RollingCode",
   "license": "ISC",
   "dependencies": {
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.0",
+    "@babel/node": "^7.22.19",
+    "@babel/preset-env": "^7.22.20",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "bcryptjs": "^2.4.3",
@@ -38,5 +43,8 @@
     "morgan": "^1.10.0",
     "node-cron": "^3.0.2",
     "nodemon": "^3.0.1"
+  },
+  "devDependencies": {
+    "babel-plugin-module-resolver": "^5.0.0"
   }
 }
