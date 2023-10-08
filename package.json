@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon --exec babel-node src/index.js",
     "build": "babel src -d public",
-    "start": "node index.js"
+    "start": "node src/index.js"
   },
   "keywords": [
     "request",
