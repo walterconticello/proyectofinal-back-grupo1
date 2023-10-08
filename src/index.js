@@ -35,6 +35,10 @@ const initApp = async () => {
   }
 };
 
+app.get ("/", (req, res) => {
+  res.json("Hola api")
+})
+
 initApp();
 
 //MIDDLEWARE
