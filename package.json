@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --exec babel-node src/index.js",
-    "build": "babel src -d build",
+    "build": "babel src -d public",
     "start": "node index.js"
   },
   "keywords": [
