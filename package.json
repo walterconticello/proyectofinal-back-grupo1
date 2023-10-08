@@ -2,10 +2,10 @@
   "name": "backgrupo1",
   "version": "1.0.0",
   "description": "Backend del proyecto de canchas",
-  "main": "src/index.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "babel-node src/index.js",
+    "start": "babel-node index.js",
     "dev": "nodemon --exec babel-node src/index.js"
   },
   "keywords": [
