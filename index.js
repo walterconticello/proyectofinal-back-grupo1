@@ -9,7 +9,7 @@ import productsRoute from "./src/routes/products.routes.js";
 import salesRoute from "./src/routes/sales.routes.js";
 import usersRoute from "./src/routes/users.routes.js";
 import commentsRoute from "./src/routes/comments.routes.js";
-// import reservationroutes from "./src/routes/reservation.routes.js";
+import reservationroutes from "./src/routes/Reservation.Routes.js";
 import complexRouter from "./src/routes/sportCenter.routes.js";
 import connectDB from "./src/database/db.js";
 import fileUpload from "express-fileupload";
@@ -64,7 +64,7 @@ app.use("/api", fieldsRoute);
 app.use("/api", productsRoute);
 app.use("/api", salesRoute);
 app.use("/api", commentsRoute);
-// app.use("/api", reservationroutes);
+app.use("/api", reservationroutes);
 app.use("/api", complexRouter);
 
 app.use((err, req, res, next) => {
