@@ -19,6 +19,17 @@
         </pre>
       <br>
       <h2>Variables de entorno</h2>
+        <pre>
+            <code>
+        PORT = Numero del puerto donde correra la api ("")
+    URI = Direccion de la base de datos.
+    DB = Nombre de la base de datos
+    JWT = Clave secreta proporcionada por JWT
+    CLOUD_NAME= Nombre proporcionado por Cloudinary
+    API_KEY= Clave proporcionada por Cloudinary
+    API_SECRET= Clave secreta proporcionada por Cloudinary
+                </code>
+            </pre>
       <br>
         <h2>Librerias utilizadas</h2>
         <ul><li>liberias...</li><ul>
