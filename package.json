@@ -5,9 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --exec babel-node src/index.js",
+    "dev": "nodemon --exec babel-node index.js",
     "build": "babel src -d public",
-    "start": "node src/index.js"
+    "start": "node index.js"
   },
   "keywords": [
     "request",
