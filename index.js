@@ -50,7 +50,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cors(
   {
-    origin: [],
+    origin: ["https://proyectofinal-back-grupo1.vercel.app/"],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true
   }
