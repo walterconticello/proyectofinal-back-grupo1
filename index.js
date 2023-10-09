@@ -9,7 +9,7 @@ import productsRoute from "./src/routes/products.routes.js";
 import salesRoute from "./src/routes/sales.routes.js";
 import usersRoute from "./src/routes/users.routes.js";
 import commentsRoute from "./src/routes/comments.routes.js";
-import reservationroutes from "./src/routes/reservation.routes.js";
+// import reservationroutes from "./src/routes/reservation.routes.js";
 import complexRouter from "./src/routes/sportCenter.routes.js";
 import connectDB from "./src/database/db.js";
 import fileUpload from "express-fileupload";
@@ -48,13 +48,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan("dev"));
-app.use(cors(
-  {
-    origin: [""],
-    methods: ["POST", "GET", "PUT", "DELETE"],
-    credentials: true
-  }
-));
+app.use(cors());
 
 app.use(
   fileUpload({
@@ -70,7 +64,7 @@ app.use("/api", fieldsRoute);
 app.use("/api", productsRoute);
 app.use("/api", salesRoute);
 app.use("/api", commentsRoute);
-app.use("/api", reservationroutes);
+// app.use("/api", reservationroutes);
 app.use("/api", complexRouter);
 
 app.use((err, req, res, next) => {
