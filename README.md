@@ -21,7 +21,7 @@
       <h2>Variables de entorno</h2>
         <pre>
             <code>
-        PORT = Numero del puerto donde correra la api ("")
+    PORT = Numero del puerto donde correra la api ("")
     URI = Direccion de la base de datos.
     DB = Nombre de la base de datos
     JWT = Clave secreta proporcionada por JWT
@@ -32,7 +32,20 @@
             </pre>
       <br>
         <h2>Librerias utilizadas</h2>
-        <ul><li>liberias...</li><ul>
+        <ul>
+    <li><a href="https://babeljs.io/docs/">babel</a> (v1.7.0)</li>
+    <li><a href="https://www.npmjs.com/package/bcryptjs">bcryptjs</a> (v2.4.3)</li>
+    <li><a href="https://cloudinary.com">cloudinary</a> (v1.40.0)</li>
+    <li><a href="https://www.npmjs.com/package/cors">cors</a> (v2.8.5)</li>
+    <li><a href="https://date-fns.org">date-fns</a> (v2.30.0)</li>
+    <li><a href="https://www.npmjs.com/package/dotenv">dotenv</a> (v16.3.1)</li>
+    <li><a href="https://expressjs.com">express</a> (v4.18.2)</li>
+    <li><a href="https://jwt.io">jsonwebtoken</a> (v9.0.1)</li>
+    <li><a href="hhttps://mongoosejs.com">mongoose</a> (v7.3.3)</li>
+    <li><a href="https://www.npmjs.com/package/morgan">morgan</a> (v1.10.0)</li>
+    <li><a href="https://www.npmjs.com/package/node-cron">node-cron</a> (v3.0.2)</li>
+    <li><a href="https://www.npmjs.com/package/nodemon">nodemon</a> (v3.0.1)</li>
+  </ul>
         <br>
         <h2>Grupo de desarrolladores</h2>
             <ul>
