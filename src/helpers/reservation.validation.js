@@ -15,7 +15,7 @@ async function isReservationExists(IdField, reservationDate) {
     ReservationTime: reservationDate,
     Status : "pendiente" || "confirmada",
   });
-  return existingReservation !== null;
+  return existingReservation;
 }
 
 async function isWithinOpeningHours(IdField, reservationDate) {
@@ -34,6 +34,8 @@ async function isWithinOpeningHours(IdField, reservationDate) {
 }
 
 const ValidationDate = async (ReservationTime, IdField) => {
+  console.log("Reservation Time: " + ReservationTime);
+  console.log("Id Field: " + IdField);
   const reservationDate = ReservationTime;
   const time = reservationDate.getTime();
 
@@ -42,11 +44,13 @@ const ValidationDate = async (ReservationTime, IdField) => {
   }
 
   const isWithinHours = await isWithinOpeningHours(IdField, reservationDate);
+  console.log("isWithinHours" + isWithinHours);
   if (!isWithinHours) {
     return false;
   }
 
   const reservationExists = await isReservationExists(IdField, reservationDate);
+  console.log("reservationExists" + reservationExists);
   if (reservationExists) {
     return false;
   }

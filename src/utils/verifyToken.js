@@ -10,15 +10,17 @@ export const verifyToken = async (req, res, next) => {
     if (tokenParts.length !== 2 || tokenParts[0] !== "Bearer") {
       return res.status(401).json({ message: "Token inválido" });
     }
-
     const jwtToken = tokenParts[1];
+    console.log(jwtToken + " " + process.env.JWT)
     const { id } = jwt.verify(jwtToken, process.env.JWT);
+
     req.id = id;
 
     const user = await User.findById(id);
     req.user = user;
     next();
   } catch (error) {
+    console.log(error.message)
     res.status(401).json({ message: "Acceso denegado" });
   }
 };
