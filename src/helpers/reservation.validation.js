@@ -20,7 +20,6 @@ async function isReservationExists(IdField, reservationDate) {
 
 async function isWithinOpeningHours(IdField, reservationDate) {
   const field = await FieldsModel.findById(IdField);
-  console.log("field: "+ field);
   if (!field) {
     return false;
   }
@@ -36,16 +35,10 @@ async function isWithinOpeningHours(IdField, reservationDate) {
   if(reservationHour === -2) reservationHour = 22;
   if(reservationHour === -3) reservationHour = 21;
 
-  console.log("openingHour: " + openingHour);
-  console.log("closingHour: " + closingHour);
-  console.log("reservationHour: " + reservationHour);
-
   return reservationHour >= openingHour && reservationHour < closingHour;
 }
 
 const ValidationDate = async (ReservationTime, IdField) => {
-  console.log("Reservation Time: " + ReservationTime);
-  console.log("Id Field: " + IdField);
   const reservationDate = ReservationTime;
   const time = reservationDate.getTime();
 
@@ -54,13 +47,11 @@ const ValidationDate = async (ReservationTime, IdField) => {
   }
 
   const isWithinHours = await isWithinOpeningHours(IdField, reservationDate);
-  console.log("isWithinHours " + isWithinHours);
   if (!isWithinHours) {
     return false;
   }
 
   const reservationExists = await isReservationExists(IdField, reservationDate);
-  console.log("reservationExists " + reservationExists);
   if (reservationExists) {
     return false;
   }
