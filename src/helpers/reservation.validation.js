@@ -20,6 +20,7 @@ async function isReservationExists(IdField, reservationDate) {
 
 async function isWithinOpeningHours(IdField, reservationDate) {
   const field = await FieldsModel.findById(IdField);
+  console.log("field: "+ field);
   if (!field) {
     return false;
   }
@@ -44,13 +45,13 @@ const ValidationDate = async (ReservationTime, IdField) => {
   }
 
   const isWithinHours = await isWithinOpeningHours(IdField, reservationDate);
-  console.log("isWithinHours" + isWithinHours);
+  console.log("isWithinHours " + isWithinHours);
   if (!isWithinHours) {
     return false;
   }
 
   const reservationExists = await isReservationExists(IdField, reservationDate);
-  console.log("reservationExists" + reservationExists);
+  console.log("reservationExists " + reservationExists);
   if (reservationExists) {
     return false;
   }
