@@ -30,6 +30,9 @@ async function isWithinOpeningHours(IdField, reservationDate) {
   const openingHour = field.openHour;
   const closingHour = field.closeHour;
   const reservationHour = reservation + 3;
+  console.log("openingHour: " + openingHour);
+  console.log("closingHour: " + closingHour);
+  console.log("reservationHour: " + reservationHour);
 
   return reservationHour >= openingHour && reservationHour < closingHour;
 }
