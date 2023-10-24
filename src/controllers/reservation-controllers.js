@@ -17,7 +17,7 @@ const postReservation = async (req, res) => {
     const date = new Date(req.body.ReservationTime);
     if (IdUser) {
       if (IdField) {
-        const isValid = await ValidationDate(date, IdField);
+        const isValid = await ValidationDate(date, req.body.IdField);
         if (isValid) {
           const expiration = await ExpirationFunction(date);
           const reservation = new ReservationModel({
