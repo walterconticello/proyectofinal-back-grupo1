@@ -8,7 +8,7 @@ import {
 import sportCenterModel from "../models/sportCenter.model.js";
 import cron from "node-cron";
 import mongoose from "mongoose";
-//CREATE O POST
+
 
 const postReservation = async (req, res) => {
   try {
@@ -49,7 +49,7 @@ const postReservation = async (req, res) => {
   }
 };
 
-//GET's
+
 
 const getAllReservation = async (req, res) => {
   try {
@@ -68,7 +68,7 @@ const getAllReservation = async (req, res) => {
   }
 };
 
-//get by field
+
 const getReservationByField = async (req, res) => {
   try{
     const fieldId = req.params.field;
@@ -84,7 +84,7 @@ const getReservationByField = async (req, res) => {
   }
 }
 
-// get User
+
 
 const getUserReservation = async (req, res) => {
   try {
@@ -107,7 +107,7 @@ const getUserReservation = async (req, res) => {
     });
   }
 };
-// get Owner
+
 const getOwnerReservation = async (req, res) => {
   try {
     if (req.user.isOwner) {
@@ -190,7 +190,6 @@ const cancelledReservation = async (req, res) => {
   }
 };
 
-//Cron for delete the oldest reservations
 
 cron.schedule("*/1 * * * *", async () => {
   try {
