@@ -3,7 +3,6 @@ import validation from "../helpers/comments.validation.js";
 import { createError } from "../utils/error.js";
 
 
-//GET by User
 const getCommentsByUser = async (req, res, next) => {
   try {
     const comments = await commentModel
@@ -24,7 +23,6 @@ const getCommentsByUser = async (req, res, next) => {
   }
 };
 
-//GET by SportCenter
 const getCommentsBySportCenter = async (req, res, next) => {
   try {
     const page = parseInt(req.params.page);
@@ -47,7 +45,6 @@ const getCommentsBySportCenter = async (req, res, next) => {
   }
 };
 
-//POST
 const createComment = async (req, res, next) => {
   try {
     const token = req.header("access_token");
@@ -82,7 +79,6 @@ const createComment = async (req, res, next) => {
   }
 };
 
-//PUT
 const updateComment = async (req, res, next) => {
   try {
     const token = req.header("access_token");
@@ -117,7 +113,6 @@ const updateComment = async (req, res, next) => {
   }
 };
 
-//DELETE
 const deleteComment = async (req, res, next) => {
   try {
     const token = req.header("access_token");
