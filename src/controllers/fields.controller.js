@@ -5,7 +5,8 @@ import fs from "fs-extra";
 import sportCenterModel from "../models/sportCenter.model.js";
 import { createError } from "../utils/error.js";
 import mongoose from "mongoose";
-//GET
+
+
 const getAllFields = async (req, res) => {
   try {
     const allFields = await fieldModel.find();
@@ -16,7 +17,8 @@ const getAllFields = async (req, res) => {
   }
 };
 
-//getFieldsBySportCenterId
+
+
 const getFieldsBySportCenterId = async (req, res, next) => {
   try {
     const sportCenterId = req.params.id;
@@ -56,7 +58,7 @@ const getOwnerFields = async (req, res) => {
   }
 };
 
-//GET by ID
+
 const getFieldByID = async (req, res, next) => {
   try {
     const field = await fieldModel.findById(req.params.id);
@@ -71,7 +73,7 @@ const getFieldByID = async (req, res, next) => {
   }
 };
 
-//GET by page
+
 const getPage = async (req, res) => {
   try {
     const page = parseInt(req.params.page);
@@ -86,7 +88,7 @@ const getPage = async (req, res) => {
   }
 };
 
-//POST
+
 const createField = async (req, res, next) => {
   try {
     const bodyfield = {
@@ -146,7 +148,7 @@ const createField = async (req, res, next) => {
   }
 };
 
-//PUT
+
 const updateField = async (req, res, next) => {
   try {
     const field = await fieldModel.findById(req.params.id);
@@ -199,7 +201,6 @@ const updateField = async (req, res, next) => {
   }
 };
 
-// Put State
 
 const putState = async (req, res, next) => {
   try {
@@ -215,7 +216,7 @@ const putState = async (req, res, next) => {
   } catch (error) {}
 };
 
-//DELETE
+
 const deleteField = async (req, res, next) => {
   try {
     const field = await fieldModel.findById(req.params.id);
