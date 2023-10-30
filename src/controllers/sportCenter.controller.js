@@ -6,7 +6,7 @@ import fs from "fs-extra";
 import { createError } from "../utils/error.js";
 import fieldModel from "../models/fields.model.js";
 
-//Get
+
 
 const getAllSportCenters = async (req, res) => {
   try {
@@ -29,7 +29,7 @@ const getAllSportCenters = async (req, res) => {
   }
 };
 
-//Get by id
+
 
 const getSportCenterById = async (req, res, next) => {
   try {
@@ -49,7 +49,6 @@ const getSportCenterById = async (req, res, next) => {
   }
 };
 
-//GetSportCenterOwner
 
 const getSportCenterOwner = async (req, res, next) => {
   try {
@@ -65,7 +64,7 @@ const getSportCenterOwner = async (req, res, next) => {
   }
 };
 
-//Post
+
 
 const postSportCenter = async (req, res, next) => {
   try {
@@ -148,7 +147,6 @@ const postSportCenter = async (req, res, next) => {
   }
 };
 
-/// Put SportCenter
 
 const putSportCenter = async (req, res, next) => {
   try {
@@ -233,7 +231,7 @@ const putSportCenter = async (req, res, next) => {
   }
 };
 
-// Delete SportCenter
+
 
 const deleteSportCenter = async (req, res, next) => {
   try {
